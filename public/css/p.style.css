@@ -1,0 +1,166 @@
+.perfil-main {
+  display: flex;
+  padding-top: 8rem;
+  min-height: calc(100vh - 100px);
+  background: var(--light-bg);
+}
+
+.perfil-aside {
+  width: 260px;
+  background: var(--color);
+  color: white;
+  padding: 2rem 1rem;
+  position: fixed;
+  flex-shrink: 0;
+  top: 7rem;
+  bottom: 0;
+}
+
+.perfil-aside h3 {
+  font-size: 1.8rem;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.perfil-menu {
+  list-style: none;
+}
+
+.perfil-menu li {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.perfil-menu li:hover,
+.perfil-menu li.activo {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.perfil-contenido {
+  margin-left: 280px;
+  padding: 3rem;
+  flex: 1;
+  background: var(--light-bg);
+  overflow-y: auto;
+}
+
+.perfil-formulario {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  background: white;
+  padding: 3rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.perfil-formulario label {
+  font-weight: bold;
+  color: var(--color);
+  margin-bottom: 0.3rem;
+}
+
+.perfil-formulario input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  font-size: 1.5rem;
+  background: #f9f9f9;
+}
+
+.solicitudes-lista, .cargo-lista, .coordinadores-lista {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.solicitudes-lista li,
+.cargo-lista li,
+.coordinadores-lista li {
+  border-bottom: 1px solid #ddd;
+  padding: 1rem 0;
+  font-size: 1.5rem;
+}
+
+.btn-editar {
+  margin-top: 2rem;
+  background: var(--button-color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 0.8rem;
+  width: 400px;
+  box-shadow: var(--shadow);
+}
+
+.cerrar-modal {
+  float: right;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.btn-guardar {
+  background: var(--color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.input-busqueda {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+}
+
+.coordinador-card {
+  background: #fff;
+  border-radius: 0.6rem;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.coordinador-card h3 {
+  color: var(--color);
+  margin-bottom: 0.6rem;
+}
+
+footer {
+  position: relative;
+  z-index: 0;
+}

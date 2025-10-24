@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+:root {
+    --color-background: #EBEDEE;
+    --color-white: #FFFFFF;
+    --color-black: #141414;
+    --color-gray-light: #DFDFDF;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+    --color-hover-options : #F7F7F7;
+}
+
+
+* {
+    box-sizing: border-box;
+    font-family: "Poppins", serif;
+    margin: 0; 
+    padding: 0;
+}
+body{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background-color: var(--color-white);
+}
+.left{
+    width: 40%;
+    height: 100%;   
+}
+.left img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.left img{
+    transition: opacity 0.6s ease-in-out;
+    opacity: 1;
+    display: block;
+}
+.left img.fade-out{
+    opacity: 0;
+}
+.left img.fade-in{
+    opacity: 1;
+}
+.right{
+    border:4px sold blue;
+    width: 60%;
+    height: 100%;
+}
+.right .top{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem 0 1.8rem;
+}
+.right .brand{
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    gap: 0.1rem;
+}
+.right .top img{
+    width: 1.5rem;
+}
+.right .top a{
+    color: var(--color-black);
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+.forms{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90%;
+    width: 100%;
+}
+.forms .welcome-message{
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    text-align: center;
+    width: 100%;
+}
+.forms .login-description{
+
+    font-size: 0.7rem;
+    margin-bottom: 1.6rem;
+    text-align: center;
+}
+.forms .login-option{
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--color-gray-light);
+    border-radius: 0.3rem;
+    cursor: pointer;
+    gap: 0.5rem;
+    height: 2.5rem;
+    width: 18rem;
+    justify-content: center;
+    margin-bottom: 0.6rem;
+}
+.forms .login-option:hover{
+    background-color: var(--color-hover-options);
+}
+.forms .login-option img{
+    width: 1.2rem;
+    height: 1.5rem;
+}
+.forms .login-option span{
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.forms .line-with-text{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-black);
+    font-size: 0.8rem;
+    margin: 1.5rem 0;
+}
+.forms .line-with-text::before,
+.forms .line-with-text::after{
+    content: '';
+    border-bottom: 2px solid var(--color-black);
+    flex: 1;
+    margin: 0 0.6rem;
+}
+
+form,
+form .input-container{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+form .input-container input{
+    border-radius: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    height: 2.4rem;
+    outline: none;
+    padding: 0.2rem 0.5rem;
+}
+form .options-container{
+    display: flex;
+    align-items: center;
+    font-size: 0.7rem;
+    justify-content: space-between;
+    margin: 0.3rem 0 2rem;
+}
+form .options-container .checkbox{
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+form .options-container input{
+    cursor: pointer;
+}
+form .options-container label,
+form .options-container a{
+    color: var(--color-black);
+    font-weight: 600;
+}
+/*-------------------------------------------------------*/
+/*Este segemento de la clase boton es de la etiqueta a del html este tendra que ser eliminado ya que el verdadero es button de abajo,
+Este no sirve ya que da ingreso al sitio web sin verificar correo y contraseña el otro si pero aun no esta programado,
+Esta escrito solo para que puedas ver el sitio de momento luego se elimina*/
+form .boton{
+    background-color: var(--color-black);
+    border-radius: 0.3rem;
+    color: var(--color-white);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 500;
+    height: 2.5rem;
+    text-decoration: none;
+    text-align: center;
+    padding: 10px;
+}
+/*-------------------------------------------------------*/
+form button{
+    background-color: var(--color-black);
+    border-radius: 0.3rem;
+    color: var(--color-white);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 500;
+    height: 2.5rem;
+}
+
+
+.register{
+    display: none;
+}
+.register .footer-note{
+    color: var(--color-black);
+    font-size: 0.6rem;
+    width: 18rem;
+    margin-top: 2.5rem;
+    text-align: center;
+}
+.register .footer-note a{
+    color: var(--color-black);
+    font-weight: 500;
+}
+.right.active .login{
+    display: none;
+}
+.right.active .register{
+    display: block;
+}
+@media (max-width: 800px){
+    .left{
+        display: none;
+    }
+    .right{
+        width: 100%;
+    }
+}

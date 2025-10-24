@@ -1,0 +1,50 @@
+.notificaciones-main {
+  padding-top: 9rem;
+  background: var(--light-bg);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.notificaciones-container {
+  width: 80%;
+  max-width: 900px;
+  margin-top: 2rem;
+}
+
+.notificacion-card {
+  background: white;
+  border-left: 6px solid var(--color);
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0.6rem;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease-in-out;
+}
+
+.notificacion-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.notificacion-card h3 {
+  font-size: 1.8rem;
+  color: var(--color);
+  margin-bottom: 0.5rem;
+}
+
+.notificacion-card p {
+  font-size: 1.4rem;
+  color: #444;
+  margin-bottom: 0.8rem;
+}
+
+.notificacion-card a {
+  font-size: 1.3rem;
+  color: var(--secondary-color);
+  font-weight: bold;
+}
+
+.notificacion-card a:hover {
+  text-decoration: underline;
+}
