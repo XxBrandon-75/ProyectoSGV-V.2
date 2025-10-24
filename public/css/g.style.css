@@ -1,14 +1,14 @@
 :root {
   --color: #7f0000; 
   --secondary-color: #db8d07; /* dorado elegante */
-  --tertiary-color: rgb(12, 45, 162); /*12,45,162*/
+  --tertiary-color: rgb(14, 7, 37); /*12,45,162*/
   --text-color: #222;
   --light-bg: #f5f6f8;
   --gray: #dcdcdc;
   --white: #ffffff;
   --font-main: 'Segoe UI', 'Roboto', sans-serif;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --button-color: linear-gradient(90deg, rgb(56, 0, 0) 0%, rgb(0, 93, 22));
+  --button-color: linear-gradient(90deg,#db8d07, #f0b133) 0%;/* rgb(199, 255, 95));*/
 }
 
 * {
@@ -78,11 +78,11 @@ header {
 .barra-navegacion {
   display: flex;
   align-items: center;
+  gap: 2rem;
 }
 
 .barra-navegacion a {
-  color: var(--white);
-  margin: 0 1.5rem;
+ color: var(--white);
   font-size: 1.5rem;
   font-weight: 500;
   position: relative;
@@ -103,6 +103,12 @@ header {
   width: 100%;
 }
 
+.menu-icons{
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
 .menu-icons div {
   color: white;
   font-size: 2rem;
@@ -118,45 +124,49 @@ header {
 .footer {
   background: var(--tertiary-color);
   color: var(--white);
-  padding: 1.5rem 5%;
-  margin-top: 0;
+  padding: 3rem 7%;
   position: relative;
-  z-index:10;
+  z-index: 10;
 }
 
 .inicio-footer{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 2rem;
+  gap: 3rem;
 }
 
 .contenedor-inicio-footer{
-  flex-basis: 200px;
-  flex-grow: 1;
+ flex: 1 1 250px;
+  min-width: 230px;
 }
 
 .contenedor-inicio-footer h2{
   font-size: 1.8rem;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.8rem;
   border-left: 4px solid var(--secondary-color);
   padding-left: 1rem;
-  line-height: 1.2;
+  line-height: 1.3;
 }
 .contenedor-inicio-footer h2 span{
   display: block;
-  margin-top: 0;
   color: var(--secondary-color);
   font-size: 1.6rem;
 }
 .contenedor-inicio-footer a{
   display: block;
   color: #eaeaea;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
   font-size: 1.4rem;
 }
 .contenedor-inicio-footer a:hover{
   color: var(--secondary-color);
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 58%;
+  }
 }
 
 @media (max-width: 768px) {
@@ -164,23 +174,24 @@ header {
     font-size: 55%;
   }
 
+  /* Menú hamburguesa */
   #menu-bar {
-    display: initial;
+    display: block;
   }
 
   .barra-navegacion {
     position: absolute;
     top: 100%;
     left: -100%;
-    background: var(--color);
     width: 75%;
-    height: 100vh;
+    height: calc(100vh - 70px);
+    background: var(--color);
     flex-direction: column;
     align-items: flex-start;
     justify-content: start;
     padding-top: 5rem;
     box-shadow: var(--shadow);
-    transition: 0.3s ease;
+    transition: 0.4s ease;
   }
 
   .barra-navegacion.active {
@@ -189,16 +200,20 @@ header {
 
   .barra-navegacion a {
     display: block;
-    padding: 1.5rem;
-    margin: 1rem 2rem;
+    padding: 1.5rem 2rem;
+    margin: 0.5rem 0;
     background: transparent;
     border-left: 4px solid transparent;
-    width: 80%;
+    width: 100%;
   }
 
   .barra-navegacion a:hover {
     border-left: 4px solid var(--secondary-color);
     background: rgba(255, 255, 255, 0.05);
+  }
+
+  .menu-icons {
+    gap: 1rem;
   }
 
   .inicio {
@@ -210,8 +225,44 @@ header {
   .contenedor-derecho img {
     margin-top: 3rem;
   }
+  /* Footer */
+  .inicio-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-  .contenedor-inicio-footer{
-    flex-basis: 100%;
+  .contenedor-inicio-footer {
+    flex: 1 1 100%;
+    min-width: unset;
+  }
+
+  .footer {
+    text-align: left;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 50%;
+  }
+
+  header {
+    padding: 1rem 5%;
+  }
+
+  .logo h2 {
+    font-size: 1.6rem;
+  }
+
+  .barra-navegacion {
+    width: 100%;
+  }
+
+  .footer {
+    padding: 2rem 5%;
+  }
+
+  .contenedor-inicio-footer h2 {
+    font-size: 1.6rem;
   }
 }

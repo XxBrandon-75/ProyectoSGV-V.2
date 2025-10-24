@@ -14,6 +14,13 @@
       <h2 id="form-titulo">Agregar nueva especialidad</h2>
       <input type="hidden" id="index-editar">
 
+      <div class="campo-imagen">
+       <label for="imagen" class="label-imagen">
+        <i class="fa-solid fa-image"></i> Imagen +
+      </label>
+      <input type="file" id="imagen" accept="image/*" style="display: none;">
+      </div>
+
       <label for="nombre">Nombre</label>
       <input type="text" id="nombre" required>
 
@@ -58,16 +65,29 @@
     </div>
   </section>
 
-  <div id="modal-inscripcion" class="modal">
+<div id="modal-inscripcion" class="modal" style="display:none;">
     <div class="modal-contenido">
-      <span class="cerrar-modal" id="cerrar-modal">&times;</span>
-      <h2 id="titulo-inscripcion"></h2>
-      <p id="descripcion-inscripcion"></p>
-      <p><strong>Inicio:</strong> <span id="inicio-inscripcion"></span></p>
-      <p><strong>Cierre:</strong> <span id="cierre-inscripcion"></span></p>
-      <form id="form-inscripcion" class="form-inscripcion"></form>
+      
+      <button id="cerrar-modal" class="modal-cerrar" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="modal-header">
+        <img src="/ProyectoSGV/public/img/cruz_roja_logo.png" alt="Logo cruz roja">
+        <h3 id="modal-titulo-fijo">Inscripción a Especialidad</h3>
+      </div>
+      <div class="modal-body">
+        <h2 id="titulo-inscripcion"></h2>
+        <p id="descripcion-inscripcion"></p>
+        <div class="modal-datos">
+          <p><strong>Inicio:</strong> <span id="inicio-inscripcion"></span></p>
+          <p><strong>Cierre:</strong> <span id="cierre-inscripcion"></span></p>
+        </div>
+        <form id="form-inscripcion" class="form-inscripcion"></form>
+      </div>
     </div>
-  </div>
+</div>
+
 <script>
     const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
 </script>

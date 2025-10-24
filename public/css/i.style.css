@@ -1,143 +1,212 @@
-.inicio {
-  padding: 7rem 6% 0.5rem 6%;
-  background: var(--light-bg);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 5rem;
-  min-height: 50vh;
+.hero-inicio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10rem 7% 5rem 7%; /* Más padding para hacerlo más amplio */
+    background: var(--light-bg);
+    min-height: 70vh;
+    gap: 3rem;
+}
+
+.hero-contenido {
+    flex: 1 1 50%;
+    max-width: 600px;
+}
+
+.hero-contenido h1 {
+    font-size: 4.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--color); /* Título principal en Rojo Institucional */
+    margin-bottom: 1rem;
+}
+
+.hero-contenido h2 {
+    font-size: 2rem;
+    color: var(--text-color);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.hero-contenido span {
+    color: var(--secondary-color); /* Toque de Dorado Elegante */
+}
+
+.hero-contenido p {
+    font-size: 1.7rem;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+    text-align: justify;
+}
+
+.hero-imagen {
+    flex: 1 1 40%;
+    text-align: right;
+}
+
+.hero-imagen img {
+    max-width: 100%;
+    height: auto;
 
 }
 
-.inicio-principal {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+/* Botón de llamado a la acción */
+.btn-principal {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--secondary-color);
+    color: var(--white);
+    font-weight: 600;
+    padding: 1.2rem 2.5rem;
+    border-radius: 0.5rem;
+    font-size: 1.6rem;
+    transition: background 0.3s ease;
+    text-transform: uppercase;
+}
+.btn-principal i {
+    transition: transform 0.3s ease;
+}
+.btn-principal:hover {
+    background: var(--color);
+}
+.btn-principal:hover i {
+    transform: translateX(5px);
 }
 
-.contenedor-inicio-principal {
-  flex: 1 1 45rem;
+/* ==================================== */
+/* 2. STATS IMPACTO (Contadores) */
+/* ==================================== */
+
+.stats-impacto {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 3rem 7%;
+    background: var(--color); /* Fondo en Rojo Institucional */
+    color: var(--white);
+    gap: 2rem;
+    text-align: center;
 }
 
-.contenedor-inicio-principal h2 {
-  color: var(--color);
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-  text-transform: none;
-
+.stat-card {
+    flex: 1 1 200px;
+    padding: 1rem;
 }
 
-.contenedor-inicio-principal h1 {
-  font-size: 3.5rem;
-  font-weight: 700;
-  line-height: 1.3;
-  color: var(--text-color);
-  margin-bottom: 2rem;
-  text-transform: none;
+.stat-card i {
+    font-size: 3.5rem;
+    color: var(--secondary-color); /* Iconos en Dorado */
+    margin-bottom: 1rem;
 }
 
-.contenedor-inicio-principal p {
-  font-size: 1.6rem;
-  color: #444;
-  line-height: 2.8rem;
-  text-align: justify;
-}
-.contenedor-inicio-principal span{
-    color: var(--secondary-color);
-}
-.contenedor-derecho img {
-  width: 100%;
-  max-width: 600px;
-  text-align: end;
-  margin-left: 12rem;
+.stat-card h3 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
 }
 
-.inicio-abajo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  opacity: 0.08;
-  width: 100%;
-  height: 90%;
-  z-index: 0;
+.stat-card p {
+    font-size: 1.5rem;
+    font-weight: 300;
 }
 
-.inicio-abajo img {
-  width: 60%;
-  height: 80%;
-}
-/*
+/* ==================================== */
+/* 3. SECCIÓN PRESENTACIÓN (Carrusel/Texto) - Ajustes */
+/* ==================================== */
 
-.preview-cursos {
-  padding: 6rem 7%;
-  background: var(--white);
-}
-
-.cursos-encabezado h1 {
-  font-size: 3rem;
-  color: var(--color);
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.cursos-encabezado span {
-  color: var(--secondary-color);
-}
-
-.menu-principal-cursos {
-  display: flex;
-  justify-content: center;
-}
-
-.cursos-imagenes img {
-  width: 90%;
-  max-width: 900px;
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
-}
-*/
 .presentacion {
-  padding: 5rem 7%;
-  background: var(--white);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.presentacion-contenido {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  max-width: 1200px;
-  gap: 3rem;
-  width: 100%;
+    padding: 6rem 7%;
+    background: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .presentacion-carrusel {
-  flex: 1 1 45%;
-  position: relative;
+    /* CLAVE: Asignar un espacio flexible para el carrusel */
+    flex: 1 1 45%; 
+    position: relative;
 }
 
-.carousel-container {
-  position: relative;
-  width: 100%;
+.que-es {
+  background: linear-gradient(180deg, #fff 0%, #f8f8f8 100%);
+  padding: 7rem 7%;
+  text-align: center;
   overflow: hidden;
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
 }
 
-.carousel-slide {
-  display: flex;
-  transition: transform 0.4s ease-in-out;
+.que-es h2 {
+  font-size: 3rem;
+  color: var(--color);
+  margin-bottom: 4rem;
+  position: relative;
 }
 
-.carousel-slide img {
-  width: 100%;
-  min-width: 100%;
-  height: 320px;
-  object-fit: cover;
+.que-es h2::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 3px;
+  background: var(--secondary-color);
+  margin: 1rem auto 0 auto;
+  border-radius: 2px;
+}
+
+.que-es-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  animation: fadeInGrid 1.2s ease forwards;
+}
+
+.que-es-item {
+  background: var(--white);
+  padding: 3rem 2rem;
   border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.que-es-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.que-es-item i {
+  font-size: 3.5rem;
+  color: var(--secondary-color);
+  margin-bottom: 1.5rem;
+}
+
+.que-es-item h3 {
+  color: var(--color);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.que-es-item p {
+  font-size: 1.5rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+
+@keyframes fadeInGrid {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .carousel-btn {
@@ -152,133 +221,209 @@
   cursor: pointer;
   border-radius: 0.5rem;
   z-index: 5;
+  transition: all 0.3s ease;
 }
 
-.carousel-btn.prev {
-  left: 0.8rem;
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
 }
 
-.carousel-btn.next {
-  right: 0.8rem;
+.carousel-btn.prev { left: 1rem; }
+.carousel-btn.next { right: 1rem; }
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  overflow: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
 
-.presentacion-texto {
-  flex: 1 1 50%;
+.carousel-slide {
+  display: flex;
+  transition: transform 0.6s ease-in-out;
 }
 
-.presentacion-texto h2 {
-  font-size: 2.5rem;
-  color: var(--color);
+.carousel-slide img {
+  width: 100%;
+  height: 420px;
+  flex-shrink: 0;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 1rem;
+}
+
+/* ==================================== */
+/* 4. MISIÓN, VISIÓN, OBJETIVOS (Cards) */
+/* ==================================== */
+
+.mis-vis-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  padding: 7rem 7%;
+  background: var(--light-bg);
+  text-align: center;
+}
+
+.card-item {
+  position: relative;
+  background: var(--white);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 4rem 2rem 2rem 2rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+.card-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  z-index: 0;
+  border-radius: 1rem;
+}
+
+.card-item.mision::before {
+  background-image: url("../img/fondo_mision.png");
+}
+
+.card-item.vision::before {
+  background-image: url("/ProyectoSGV/public/img/fondo_mision.png");
+}
+
+.card-item.valores::before {
+  background-image: url("http://localhost/ProyectoSGV/public/img/fondo_mision.png");
+}
+
+.card-item:hover::before {
+  opacity: 0.25;
+}
+
+
+.card-item i,
+.card-item h3,
+.card-item p {
+  position: relative;
+  z-index: 1;
+}
+
+.card-item i {
+  font-size: 3.5rem;
+  color: var(--secondary-color);
   margin-bottom: 1.5rem;
 }
 
-.presentacion-texto p {
-  font-size: 1.6rem;
-  line-height: 2.6rem;
-  color: #444;
-  margin-bottom: 1.2rem;
-  text-align: justify;
-}
-.mis-vis {
-  display: flex;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  padding: 4rem 7%;
-  background: var(--light-bg);
-}
-
-.mision, .vision {
-  flex: 1 1 300px;
-  margin: 1rem;
-  background: var(--white);
-  padding: 2rem;
-  border-radius: 0.8rem;
-  box-shadow: var(--shadow);
-}
-
-.mision h3, .vision h3 {
+.card-item h3 {
   font-size: 2rem;
   color: var(--color);
   margin-bottom: 1rem;
+  font-weight: 700;
 }
 
-.mision p, .vision p {
+.card-item p {
   font-size: 1.5rem;
-  line-height: 2.4rem;
-  color: #555;
-}
-
-.objetivos {
-  padding: 4rem 7%;
-  background: var(--white);
   color: #333;
+  line-height: 1.6;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s ease;
+  transform: translateY(20px);
 }
 
-.objetivos h2 {
-  font-size: 2.5rem;
-  color: var(--color);
-  text-align: center;
-  margin-bottom: 2rem;
+
+.card-item:hover p {
+  max-height: 300px;
+  opacity: 1;
+  margin-top: 1.5rem;
+  transform: translateY(0);
 }
 
-.objetivos ul {
-  list-style: disc inside;
-  max-width: 700px;
-  margin: 0 auto;
-  font-size: 1.6rem;
-  line-height: 2.4rem;
+.card-item p {
+  transform: translateY(20px);
 }
 
-.impacto {
-  padding: 4rem 7%;
-  background: rgb(244, 244, 244);
-  text-align: center;
+.card-item:hover p {
+  transform: translateY(0);
 }
 
+/* Secciones antiguas objetivos/impacto se ajustan para el nuevo diseño */
 .impacto h2 {
-  font-size: 2.5rem;
-  color: var(--color);
-  margin-bottom: 1.5rem;
+    font-size: 2.5rem;
+    color: var(--color);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    padding-top: 3rem;
 }
 
 .impacto p {
-  font-size: 1.6rem;
-  line-height: 2.6rem;
-  max-width: 800px;
-  margin: 0 auto;
-  color: #444;
+    font-size: 1.6rem;
+    line-height: 2.6rem;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #444;
+    padding-bottom: 3rem;
 }
 
-.preview-cursos {
-  padding: 4rem 7%;
-}
+/* ==================================== */
+/* 5. MEDIA QUERIES (Responsive) */
+/* ==================================== */
 
+@media (max-width: 991px) {
+    .hero-inicio {
+        padding: 10rem 4% 5rem 4%;
+        flex-direction: column; /* Apila el contenido en tablet/móvil */
+        text-align: center;
+    }
+    .hero-contenido {
+        max-width: 100%;
+    }
+    .hero-imagen {
+        order: -1; /* Mueve la imagen arriba del texto en móvil */
+    }
+    .hero-imagen img {
+        max-width: 80%;
+    }
+    .stats-impacto {
+        flex-direction: column;
+        padding: 3rem 4%;
+    }
+    .stat-card {
+        padding: 1.5rem 0;
+    }
+    .mis-vis-cards {
+        padding: 4rem 4%;
+    }
+    .carousel-slide img {
+        height: 300px; /* Reducción de altura para móvil */
+    }
+}
 
 @media (max-width: 768px) {
-  .inicio {
-    flex-direction: column;
-    text-align: center;
-    padding-top: 14rem;
-  }
-
-  .contenedor-derecho img {
-    margin-top: 3rem;
-  }
-
-   .presentacion-contenido {
-    flex-direction: column;
-  }
-
-  .presentacion-carrusel,
-  .presentacion-texto {
-    flex: 1 1 100%;
-  }
-
-  .carousel-slide img {
-    height: 250px;
-  }
-
-  .presentacion-texto h2 {
-    text-align: center;
-  }
+    html {
+        font-size: 55%;
+    }
+    .hero-inicio {
+        padding-top: 14rem;
+    }
+    .presentacion-contenido {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    .carousel-slide img {
+        height: 250px;
+    }
+    .presentacion-texto h2 {
+        text-align: center;
+    }
 }

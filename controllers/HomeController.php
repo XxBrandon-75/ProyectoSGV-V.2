@@ -2,6 +2,10 @@
 class HomeController
 {
     private $user_role;
+    
+    private $base_script_path = '/ProyectoSGV/public/scripts/'; 
+    
+    private $global_menu_script = '/ProyectoSGV/public/scripts/g.script.js';
 
     public function __construct()
     {
@@ -14,7 +18,10 @@ class HomeController
 
         $styles = ['/ProyectoSGV/public/css/i.style.css'];
 
-        $scripts = ['/ProyectoSGV/public/scripts/i.script.js']; 
+        $scripts = [
+                $this->global_menu_script, 
+                $this->base_script_path . 'i.script.js'
+            ]; 
 
         require_once "views/layout/header.php";
 
@@ -33,7 +40,10 @@ class HomeController
 
         $styles = ['/ProyectoSGV/public/css/e.style.css'];
 
-        $scripts = ['/ProyectoSGV/public/scripts/e.script.js']; 
+        $scripts = [
+            $this->global_menu_script, 
+            $this->base_script_path . 'e.script.js'
+        ];
         
         require_once "views/layout/header.php";
 
@@ -52,7 +62,10 @@ class HomeController
 
         $styles = ['/ProyectoSGV/public/css/t.style.css']; 
 
-        $scripts = ['/ProyectoSGV/public/scripts/t.script.js']; 
+        $scripts = [
+                $this->global_menu_script, 
+                $this->base_script_path . 't.script.js'
+        ];
 
         require_once "views/layout/header.php";
 
@@ -71,8 +84,10 @@ class HomeController
 
         $styles = ['/ProyectoSGV/public/css/d.style.css']; 
 
-        $scripts = ['/ProyectoSGV/public/scripts/d.script.js'];
-
+        $scripts = [
+                $this->global_menu_script, 
+                $this->base_script_path . 'd.script.js'
+        ];
         require_once "views/layout/header.php";
 
         require_once "views/home/documentacion.php";
@@ -85,8 +100,10 @@ class HomeController
 
         $styles = ['/ProyectoSGV/public/css/n.style.css'];
 
-        $scripts = ['/ProyectoSGV/public/scripts/n.script.js'];
-
+         $scripts = [
+            $this->global_menu_script, 
+            $this->base_script_path . 'n.script.js'
+        ];
         require_once "views/layout/header.php";
 
         require_once "views/home/notificaciones.php";
@@ -96,11 +113,14 @@ class HomeController
 
         public function perfil()
     {
-        $titulo_pagina = "Perfil | Red de Voluntarios";
+        $titulo_pagina = "Especialidades | Red de Voluntarios";
 
-        $styles = ['/ProyectoSGV/public/css/p.style.css']; 
+        $styles = ['/ProyectoSGV/public/css/e.style.css']; 
 
-        $scripts = ['/ProyectoSGV/public/scripts/p.script.js']; 
+        $scripts = [
+            $this->global_menu_script, 
+            $this->base_script_path . 'p.script.js'
+        ];
 
         require_once "views/layout/header.php";
 

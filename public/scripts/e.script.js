@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const lista = document.getElementById("lista-especialidades");
   const formTitulo = document.getElementById("form-titulo");
   const indexEditar = document.getElementById("index-editar");
+  const inputImagen = document.getElementById("imagen");
+  let imagenTemp = "";
 
   const listaRequerimientos = document.getElementById("lista-requerimientos");
   const nuevoLabel = document.getElementById("nuevo-label");
@@ -18,6 +20,112 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let especialidades = JSON.parse(localStorage.getItem("especialidades")) || [];
   let requerimientosTemp = [];
+
+  function renderRequerimientosTemp() {
+    listaRequerimientos.innerHTML = "";
+    requerimientosTemp.forEach((req, index) => {
+        agregarRequerimientoAlDOM(req, index);
+    });
+  }
+
+  function agregarRequerimientoAlDOM(req, index) {
+    const div = document.createElement("div");
+    div.classList.add("requerimiento-item");
+    
+    // 1. Variable corregida y usada como contenedor de visualización
+    const spanContainer = document.createElement("span"); 
+    spanContainer.classList.add("requerimiento-display");
+    spanContainer.textContent = `${req.label} (${req.tipo})`;
+    
+    // Botón de eliminar
+    const btnEliminarReq = document.createElement("button");
+    btnEliminarReq.textContent = "x";
+    btnEliminarReq.type = "button";
+    btnEliminarReq.classList.add("btn-eliminar-req");
+    
+    // Evento para eliminar
+    btnEliminarReq.addEventListener("click", () => {
+      requerimientosTemp.splice(index, 1);
+      renderRequerimientosTemp(); 
+    });
+
+    div.append(spanContainer, btnEliminarReq);
+    listaRequerimientos.appendChild(div);
+
+    spanContainer.addEventListener("click", () => {
+        // Crear elementos de edición (Input para Label y Select para Tipo)
+        const inputLabel = document.createElement('input');
+        inputLabel.type = 'text';
+        inputLabel.value = req.label;
+        inputLabel.classList.add('req-input-edit');
+
+        const selectTipo = document.createElement('select');
+        selectTipo.classList.add('req-select-edit');
+        const tipos = [{val: 'text', text: 'Texto'}, {val: 'number', text: 'Número'}, {val: 'file', text: 'Archivo'}];
+        tipos.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = t.val;
+            opt.textContent = t.text;
+            if (t.val === req.tipo) opt.selected = true;
+            selectTipo.appendChild(opt);
+        });
+
+        div.replaceChild(inputLabel, spanContainer); // Reemplaza el span por el input
+        div.insertBefore(selectTipo, inputLabel.nextSibling); // Inserta el select después del input
+
+        btnEliminarReq.style.display = 'none';
+
+const handleSave = () => {
+            // Agregamos un pequeño retraso para permitir que el foco cambie 
+            // del input al select, o viceversa, sin que se re-renderice.
+            setTimeout(() => {
+                // Comprobamos si el foco NO está en ninguno de los dos campos de edición
+                if (document.activeElement !== inputLabel && document.activeElement !== selectTipo) {
+                    const newLabel = inputLabel.value.trim();
+                    const newTipo = selectTipo.value;
+
+                    // Actualizar el array temporal
+                    requerimientosTemp[index].label = newLabel;
+                    requerimientosTemp[index].tipo = newTipo;
+                    
+                    // Re-renderizar
+                    renderRequerimientosTemp();
+                }
+            }, 10); // 10ms es suficiente para que el navegador resuelva el cambio de foco
+        };
+
+        // Removemos el listener 'mousedown' problemático
+        
+        // El guardado ocurre al perder el foco en inputLabel
+        inputLabel.addEventListener('blur', handleSave);
+        
+        // El guardado ocurre al perder el foco en selectTipo
+        selectTipo.addEventListener('blur', handleSave); 
+        
+        // Opcional: Permitir guardar con Enter en el input de etiqueta
+        inputLabel.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                // Guardar inmediatamente sin esperar el blur
+                const newLabel = inputLabel.value.trim();
+                const newTipo = selectTipo.value;
+                requerimientosTemp[index].label = newLabel;
+                requerimientosTemp[index].tipo = newTipo;
+                renderRequerimientosTemp();
+            }
+        });
+
+        // Enfocar el input de la etiqueta al inicio de la edición
+        inputLabel.focus();
+    });
+  }
+
+  function renderRequerimientosTemp() {
+    listaRequerimientos.innerHTML = "";
+    requerimientosTemp.forEach((req, index) => {
+      agregarRequerimientoAlDOM(req, index);
+    });
+  }
 
   if(btnAgregar){
     btnAgregar.addEventListener("click", () => {
@@ -45,9 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const req = { label, tipo };
       requerimientosTemp.push(req);
 
-      const div = document.createElement("div");
-      div.textContent = `${label} (${tipo})`;
-      listaRequerimientos.appendChild(div);
+      renderRequerimientosTemp();
 
       nuevoLabel.value = "";
     });
@@ -62,7 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
         descripcion: form.descripcion.value,
         apertura: form.fecha_apertura.value,
         cierre: form.fecha_cierre.value,
-        requerimientos: requerimientosTemp
+        requerimientos: requerimientosTemp,
+        imagen: imagenTemp || (especialidades[indexEditar.value]?.imagen ?? "")
       };
 
       const index = indexEditar.value;
@@ -75,6 +182,36 @@ document.addEventListener("DOMContentLoaded", () => {
       form.reset();
     });
   }
+
+  if (inputImagen) {
+  inputImagen.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        imagenTemp = reader.result; // Guarda la imagen en base64 temporalmente
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+// abrir / cerrar modal con funciones (mejor para mantener todo consistente)
+function abrirModal() {
+  modal.style.display = "flex";
+}
+
+function cerrarModalFn() {
+  modal.style.display = "none";
+}
+
+if (cerrarModal) {
+  cerrarModal.addEventListener("click", (e) => {
+    e.preventDefault(); // evita que se envíe el formulario
+    cerrarModalFn();
+  });
+}
+
   
   function renderEspecialidades() {
     lista.innerHTML = "";
@@ -95,16 +232,26 @@ document.addEventListener("DOMContentLoaded", () => {
           <button class="btn-eliminar" data-i="${i}"><i class = "fa-solid fa-trash"></i> Eliminar</button>
         `;
       }
+      const imgSrc = esp.imagen && esp.imagen !== "" 
+      ? esp.imagen 
+      : "https://www.fundacionaleatica.org/wp-content/uploads/2023/11/405057247_297858453219975_5321687550568629282_n.jpg";
       card.innerHTML = `
+      <div class="card-imagen">
+        <img src="${imgSrc}" alt="${esp.nombre}">
+      </div>
+      <div class="card-info">
         <h3><i class="fa-solid fa-hands-holding-child"></i>${esp.nombre}</h3>
         <p><strong>Descripción:</strong> ${esp.descripcion}</p>
         <p><strong>Apertura:</strong> ${esp.apertura}</p>
         <p><strong>Cierre:</strong> ${esp.cierre}</p>
         <div class="acciones-card">
           ${adminButtons}
-          <button class="btn-inscribirse" data-i="${i}"><i class="fa-solid fa-user-plus"></i> Inscribirse</button>
+          <button class="btn-inscribirse" data-i="${i}">
+            <i class="fa-solid fa-user-plus"></i> Inscribirse
+          </button>
         </div>
-      `;
+      </div>
+    `;
       lista.appendChild(card);
     });
     document.querySelectorAll(".btn-inscribirse").forEach(b => b.onclick = e => inscribirse(e));
@@ -128,13 +275,10 @@ document.addEventListener("DOMContentLoaded", () => {
     form.fecha_cierre.value = esp.cierre;
 
     requerimientosTemp = [...esp.requerimientos];
-    listaRequerimientos.innerHTML = "";
-    esp.requerimientos.forEach(r => {
-      const div = document.createElement("div");
-      div.textContent = `${r.label} (${r.tipo})`;
-      listaRequerimientos.appendChild(div);
-    });
+    
+    renderRequerimientosTemp();
 
+    imagenTemp = esp.imagen || "";
     panel.classList.add("active");
   }
 
@@ -147,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  
   function inscribirse(e) {
     const i = e.target.closest("button").dataset.i;
     const esp = especialidades[i];
@@ -170,11 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btnEnviar.textContent = "Enviar inscripción";
     formInscripcion.appendChild(btnEnviar);
 
-    modal.style.display = "flex";
+    abrirModal();
   }
-
-  cerrarModal.onclick = () => (modal.style.display = "none");
-  modal.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
-
   renderEspecialidades();
 });
