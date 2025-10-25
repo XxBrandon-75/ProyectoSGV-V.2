@@ -40,18 +40,7 @@ class Voluntario {
     }
     public function voluntariosSinAprobar() {
     try {
-        $sql = "SELECT 
-                    v.VoluntarioID, 
-                    v.Nombres, 
-                    v.ApellidoPaterno, 
-                    v.Email, 
-                    ev.Nombre AS EstatusNombre
-                FROM 
-                    dbo.Voluntarios AS v
-                INNER JOIN 
-                    dbo.EstatusVoluntario AS ev ON v.EstatusID = ev.EstatusID
-                WHERE 
-                    ev.Nombre = 'Pendiente de Aprobación'";
+        $sql = "exec voluntariosSinAprobar";
         
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
@@ -147,6 +136,140 @@ class Voluntario {
             return ['error' => $e->getMessage()];
         }
     }
+    public function obtenerDatosCompletos($voluntarioID)
+    {
+        $query = ""; // Inicializar para evitar errores
+        try {
+            // Debug: Verificar qué ID estamos recibiendo
+            error_log("obtenerDatosCompletos - VoluntarioID recibido: " . $voluntarioID);
+
+            $query = "exec obtenerDatosCompleto @voluntarioid = :voluntarioID";
+
+            $stmt = $this->pdo->prepare($query);
+
+            if ($stmt === false) {
+                $errorInfo = $this->pdo->errorInfo();
+                error_log("Error preparando query: " . print_r($errorInfo, true));
+                return false;
+            }
+
+            $stmt->bindParam(':voluntarioID', $voluntarioID, PDO::PARAM_INT);
+            $executeResult = $stmt->execute();
+
+            if ($executeResult === false) {
+                $errorInfo = $stmt->errorInfo();
+                error_log("Error ejecutando query: " . print_r($errorInfo, true));
+                return false;
+            }
+
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Debug: Ver qué devolvió la consulta
+            if ($resultado) {
+                error_log("obtenerDatosCompletos - Datos encontrados para VoluntarioID: " . $voluntarioID);
+            } else {
+                error_log("obtenerDatosCompletos - NO se encontraron datos para VoluntarioID: " . $voluntarioID);
+            }
+
+            return $resultado;
+        } catch (PDOException $e) {
+            error_log("EXCEPCION en obtenerDatosCompletos: " . $e->getMessage());
+            error_log("Codigo error: " . $e->getCode());
+            error_log("Query ejecutado: " . $query);
+            error_log("VoluntarioID: " . $voluntarioID);
+            return false;
+        }
+    }
+
+    /**
+     * Obtener voluntarios por delegación (para coordinadores de delegación)
+     */
+    public function obtenerVoluntariosPorDelegacion($delegacionID)
+    {
+        try {
+            $query = "exec ObtenerVoluntarioPorDelegacion @delegacionid = :delegacionID";
+
+            $stmt = $this->pdo->prepare($query);
+            $stmt->bindParam(':delegacionID', $delegacionID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en obtenerVoluntariosPorDelegacion: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtener todos los coordinadores (para administradores)
+     * Los Superadministradores son invisibles para todos excepto otros Superadministradores
+     * Los Administradores son invisibles excepto para Superadministradores
+     */
+    public function obtenerCoordinadores($rolUsuario = 'Administrador')
+    {
+        try {
+            $query = "exec obtenerCoordinadores ";
+
+            // Si el usuario es Superadministrador, puede ver Administradores
+            // Si el usuario es Administrador, no puede ver Administradores ni Superadministradores
+            if ($rolUsuario === 'Superadministrador') {
+                // Superadministrador puede ver todo excepto otros Superadministradores
+                $query .= "@Rolusuario='diferent'";
+            }
+            // Si no es Superadministrador, no añadimos nada más (solo coordinadores)
+
+            $query .= " ORDER BY v.ApellidoPaterno, v.ApellidoMaterno, v.Nombres";
+
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en obtenerCoordinadores: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Actualizar datos editables del voluntario
+     * Solo permite editar campos específicos según permisos
+     */
+    public function actualizarDatosEditables($voluntarioID, $datos, $camposPermitidos)
+    {
+        try {
+            // Construir query dinámicamente solo con campos permitidos
+            $setClauses = [];
+            $params = [':voluntarioID' => $voluntarioID];
+
+            foreach ($camposPermitidos as $campo) {
+                if (isset($datos[$campo])) {
+                    $setClauses[] = "$campo = :$campo";
+                    $params[":$campo"] = $datos[$campo];
+                }
+            }
+
+            if (empty($setClauses)) {
+                return ['success' => false, 'message' => 'No hay campos para actualizar'];
+            }
+
+            $query = "UPDATE Voluntarios SET " . implode(', ', $setClauses) . " WHERE VoluntarioID = :voluntarioID";
+
+            $stmt = $this->pdo->prepare($query);
+            $result = $stmt->execute($params);
+
+            return [
+                'success' => $result,
+                'message' => $result ? 'Datos actualizados correctamente' : 'Error al actualizar datos'
+            ];
+        } catch (PDOException $e) {
+            error_log("Error en actualizarDatosEditables: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error en la base de datos: ' . $e->getMessage()
+            ];
+        }
+    }
+
 }
 ?>
 
