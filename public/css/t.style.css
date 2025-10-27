@@ -145,13 +145,63 @@
   cursor: pointer;
 }
 
-#lista-requerimientos div {
+#lista-requerimientos div.requerimiento-item {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
   background: white;
   border: 1px solid #ddd;
   padding: 0.6rem;
   border-radius: 0.4rem;
   margin-bottom: 0.5rem;
   font-size: 1.4rem;
+}
+
+/* Estilo para el texto de visualización */
+.requerimiento-display {
+  flex-grow: 1;
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  transition: background 0.2s;
+}
+
+.requerimiento-display:hover {
+  background: #f0f0f0;
+  border-radius: 0.2rem;
+}
+
+/* Estilo para los inputs de edición */
+.req-input-edit, .req-select-edit {
+  flex: 1;
+  padding: 0.2rem;
+  border: 1px solid var(--secondary-color);
+  border-radius: 0.3rem;
+  font-size: 1.3rem;
+  margin-bottom: 0;
+}
+
+.btn-eliminar-req {
+  background: #ccc;
+  color: #333;
+  font-weight: bold;
+  border: none;
+  padding: 0.2rem 0.5rem;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  line-height: 1;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.btn-eliminar-req:hover {
+  background: #b60000;
+  color: white;
 }
 
 .tramites { 
@@ -167,71 +217,209 @@
 }
 
 .lista-tramites { 
-  display: grid;
-  gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
+/* Nuevo diseño de tarjeta horizontal */
 .tramite-card { 
   background: var(--white);
-  padding: 1.5rem;
   border-radius: 0.8rem;
   box-shadow: var(--shadow);
   border-left: 5px solid var(--secondary-color);
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.tramite-card h3 {
+.tramite-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tramite-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  gap: 2rem;
+}
+
+.tramite-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tramite-info h3 {
   color: var(--color);
   font-size: 1.8rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
-.tramite-card p {
+.tramite-info p {
   font-size: 1.4rem;
   color: #555;
-  margin: 0.5rem 0;
+  margin: 0.3rem 0;
 }
 
-.tramite-card i {
+.tramite-info i {
   color: var(--secondary-color);
 }
 
-.sin-cursos, .sin-tramites { 
-  color: #777;
-  text-align: center;
-  font-size: 1.6rem;
-}
-
-.acciones-card {
+.tramite-actions {
   display: flex;
   gap: 1rem;
-  margin-top: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
-.btn-editar, .btn-eliminar, .btn-solicitar {
+.acciones-admin {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.btn-editar, .btn-eliminar {
   border: none;
   cursor: pointer;
-  padding: 0.6rem 1rem;
+  padding: 0.7rem 1.2rem;
   border-radius: 0.4rem;
   font-size: 1.3rem;
   color: white;
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  transition: opacity 0.3s ease;
 }
 
-.btn-editar { background: var(--color); }
-.btn-eliminar { background: #b60000; }
-.btn-solicitar { background: var(--tertiary-color); color: white; }
+.btn-editar { 
+  background: var(--color); 
+}
 
+.btn-editar:hover {
+  opacity: 0.85;
+}
+
+.btn-eliminar { 
+  background: #b60000; 
+}
+
+.btn-eliminar:hover {
+  opacity: 0.85;
+}
+
+.btn-solicitar {
+  border: none;
+  cursor: pointer;
+  padding: 0.7rem 1.5rem;
+  border-radius: 0.4rem;
+  font-size: 1.4rem;
+  color: white;
+  background: var(--tertiary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-solicitar:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.btn-solicitar.active {
+  background: #666;
+}
+
+/* Formulario de solicitud desplegable */
+.form-solicitud-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  background: #f9f9f9;
+}
+
+.form-solicitud-wrapper.active {
+  max-height: 1000px;
+  border-top: 2px solid var(--secondary-color);
+}
+
+.form-solicitud-content {
+  padding: 2rem;
+}
+
+.form-solicitud-content h3 {
+  color: var(--color);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-solicitud {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.form-solicitud label {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 0.3rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-solicitud input,
+.form-solicitud textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 0.4rem;
+  font-size: 1.4rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-solicitud input:focus,
+.form-solicitud textarea:focus {
+  outline: none;
+  border-color: var(--color);
+}
+
+.form-solicitud button[type="submit"] {
+  background: var(--color);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 0.4rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: opacity 0.3s ease;
+}
+
+.form-solicitud button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+.sin-cursos, .sin-tramites { 
+  color: #777;
+  text-align: center;
+  font-size: 1.6rem;
+  padding: 2rem;
+}
 
 .modal {
   display: none;
   position: fixed;
   z-index: 9999;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
+  left: 0; 
+  top: 0;
+  width: 100%; 
+  height: 100%;
   background: rgba(0,0,0,0.4);
   justify-content: center;
   align-items: center;
@@ -262,6 +450,26 @@ footer {
   z-index: 0;
 }
 
+@media (max-width: 1024px) {
+  .tramite-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tramite-actions {
+    justify-content: space-between;
+  }
+
+  .acciones-admin {
+    flex: 1;
+  }
+
+  .btn-solicitar {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 768px) {
   .admin-panel {
     display: none;
@@ -274,5 +482,18 @@ footer {
 
   .formulario-panel {
     width: 100%;
+  }
+
+  .tramite-actions {
+    flex-direction: column;
+  }
+
+  .acciones-admin {
+    width: 100%;
+  }
+
+  .btn-editar, .btn-eliminar, .btn-solicitar {
+    flex: 1;
+    justify-content: center;
   }
 }
