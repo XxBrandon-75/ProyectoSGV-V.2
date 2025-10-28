@@ -1,4 +1,3 @@
-<?php $base_url = '/ProyectoSGV/'; ?>
 <?php if (isset($ver_cont_gest) && $ver_cont_gest): ?>
 
 
@@ -46,28 +45,28 @@
       </div>
     </form>
   </div>
-  <?php endif; ?>
+<?php endif; ?>
 
-  <?php 
-  $especialidades_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margin-left: 0;"';
-  ?>
-  <section class="especialidades" <?php echo $especialidades_style; ?>>
-    <h1>Especialidades disponibles</h1>
-    <div id="lista-especialidades" class="lista-especialidades">
-      <p class="sin-cursos">No hay especialidades registradas.</p>
-    </div>
-  </section>
-
-  <div id="modal-inscripcion" class="modal">
-    <div class="modal-contenido">
-      <span class="cerrar-modal" id="cerrar-modal">&times;</span>
-      <h2 id="titulo-inscripcion"></h2>
-      <p id="descripcion-inscripcion"></p>
-      <p><strong>Inicio:</strong> <span id="inicio-inscripcion"></span></p>
-      <p><strong>Cierre:</strong> <span id="cierre-inscripcion"></span></p>
-      <form id="form-inscripcion" class="form-inscripcion"></form>
-    </div>
+<?php
+$especialidades_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margin-left: 0;"';
+?>
+<section class="especialidades" <?php echo $especialidades_style; ?>>
+  <h1>Especialidades disponibles</h1>
+  <div id="lista-especialidades" class="lista-especialidades">
+    <p class="sin-cursos">No hay especialidades registradas.</p>
   </div>
+</section>
+
+<div id="modal-inscripcion" class="modal">
+  <div class="modal-contenido">
+    <span class="cerrar-modal" id="cerrar-modal">&times;</span>
+    <h2 id="titulo-inscripcion"></h2>
+    <p id="descripcion-inscripcion"></p>
+    <p><strong>Inicio:</strong> <span id="inicio-inscripcion"></span></p>
+    <p><strong>Cierre:</strong> <span id="cierre-inscripcion"></span></p>
+    <form id="form-inscripcion" class="form-inscripcion"></form>
+  </div>
+</div>
 <script>
-    const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
+  const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
 </script>

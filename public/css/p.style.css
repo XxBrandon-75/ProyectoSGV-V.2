@@ -1,166 +1,651 @@
-.perfil-main {
+/* Estructura principal del perfil */
+main.contenido-pagina {
   display: flex;
-  padding-top: 8rem;
+  flex-direction: row !important;
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 20px;
+  padding-top: 10rem;
   min-height: calc(100vh - 100px);
-  background: var(--light-bg);
+  position: relative;
 }
 
 .perfil-aside {
-  width: 260px;
-  background: var(--color);
-  color: white;
-  padding: 2rem 1rem;
+  width: 250px;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: fit-content;
   position: fixed;
-  flex-shrink: 0;
-  top: 7rem;
-  bottom: 0;
+  top: 140px;
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+  z-index: 10;
 }
 
 .perfil-aside h3 {
-  font-size: 1.8rem;
-  border-bottom: 2px solid var(--secondary-color);
-  padding-bottom: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.7rem;
 }
 
 .perfil-menu {
   list-style: none;
+  padding: 0;
 }
 
 .perfil-menu li {
-  padding: 1rem 1.5rem;
+  padding: 12px 15px;
+  margin-bottom: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 0.5rem;
-  font-size: 1.5rem;
+  transition: background 0.2s ease;
+  color: #333;
+}
+
+.perfil-menu li:hover {
+  background: #f5f5f5;
+}
+
+.perfil-menu li.activo {
+  background: #e31e24;
+  color: white;
+}
+
+.perfil-menu li a {
+  color: #333;
+  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 0.8rem;
+  gap: 10px;
+  transition: none !important;
 }
 
-.perfil-menu li:hover,
-.perfil-menu li.activo {
-  background: rgba(255, 255, 255, 0.15);
+.perfil-menu li.activo a {
+  color: white;
+  transition: none !important;
 }
 
+.perfil-menu li i {
+  margin-right: 10px;
+  width: 20px;
+}
+
+/* Contenido principal */
 .perfil-contenido {
-  margin-left: 280px;
-  padding: 3rem;
   flex: 1;
-  background: var(--light-bg);
-  overflow-y: auto;
+  margin-left: 270px;
 }
 
-.perfil-formulario {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
+.seccion-contenido {
+  display: none;
+}
+
+.seccion-contenido.activa {
+  display: block;
+}
+
+/* Cards de información */
+.perfil-card {
   background: white;
-  padding: 3rem;
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.perfil-formulario label {
-  font-weight: bold;
-  color: var(--color);
-  margin-bottom: 0.3rem;
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
 }
 
-.perfil-formulario input {
-  width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  font-size: 1.5rem;
-  background: #f9f9f9;
-}
-
-.solicitudes-lista, .cargo-lista, .coordinadores-lista {
-  background: white;
-  padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: var(--shadow);
-}
-
-.solicitudes-lista li,
-.cargo-lista li,
-.coordinadores-lista li {
-  border-bottom: 1px solid #ddd;
-  padding: 1rem 0;
-  font-size: 1.5rem;
+.card-header h3 {
+  color: #333;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .btn-editar {
-  margin-top: 2rem;
-  background: var(--button-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #28a745;
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 0.5rem;
+  padding: 8px 16px;
+  border-radius: 5px;
   cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 500;
 }
 
+.btn-editar:hover {
+  background: #218838;
+  color: white;
+}
+
+.btn-editar i {
+  font-size: 1.4rem;
+}
+
+.btn-solicitar {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #ffc107;
+  color: #333;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-decoration: none;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.btn-solicitar:hover {
+  background: #e0a800;
+  color: #333;
+}
+
+.btn-solicitar i {
+  font-size: 1.4rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #666;
+  font-size: 1.4rem;
+}
+
+.info-item span {
+  color: #333;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 5px;
+  font-size: 1.5rem;
+}
+
+.badge-rol {
+  display: inline-block;
+  padding: 5px 12px !important;
+  background: #e31e24 !important;
+  color: white !important;
+  border-radius: 20px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+/* Badges para campos de catálogo */
+.badge-sexo {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.badge-sexo-m {
+  background: #d4edff;
+  color: #0066cc;
+}
+
+.badge-sexo-f {
+  background: #ffe4f0;
+  color: #cc0066;
+}
+
+.badge-estado-civil,
+.badge-grupo-sanguineo,
+.badge-area,
+.badge-delegacion {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f0f0;
+  color: #333;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border: 1px solid #ddd;
+}
+
+.badge-grupo-sanguineo {
+  background: #fff0f0;
+  color: #c41e1e;
+  border-color: #ffcccc;
+}
+
+.badge-area {
+  background: #f0f8ff;
+  color: #0066cc;
+  border-color: #cce5ff;
+}
+
+.badge-delegacion {
+  background: #f0fff0;
+  color: #006600;
+  border-color: #ccffcc;
+}
+
+/* Modal */
 .modal {
   display: none;
   position: fixed;
-  z-index: 2000;
-  top: 0;
+  z-index: 1000;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+}
+
+/* Mostrar modal usando clase en lugar de style inline */
+.modal.modal-activo {
+  display: flex;
 }
 
 .modal-content {
   background: white;
-  padding: 2rem;
-  border-radius: 0.8rem;
-  width: 400px;
-  box-shadow: var(--shadow);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .cerrar-modal {
   float: right;
-  font-size: 2rem;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
   cursor: pointer;
+}
+
+.cerrar-modal:hover {
+  color: #000;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.form-group label i {
+  color: #e31e24;
+  margin-right: 5px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  background: white;
+  transition: all 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #e31e24;
+  box-shadow: 0 0 0 3px rgba(227, 30, 36, 0.1);
+}
+
+.form-group.campo-bloqueado input,
+.form-group.campo-bloqueado textarea,
+.form-group.campo-bloqueado select {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.modal-botones {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.btn-cancelar,
+.btn-guardar {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1.4rem;
+}
+
+.btn-cancelar {
+  background: #6c757d;
+  color: white;
 }
 
 .btn-guardar {
-  background: var(--color);
+  background: #e31e24;
   color: white;
+}
+
+/* Tabla de voluntarios */
+.tabla-container {
+  overflow-x: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tabla-voluntarios {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.tabla-voluntarios th,
+.tabla-voluntarios td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.tabla-voluntarios th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Contenedor de acciones en tablas */
+.acciones-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-accion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
   border: none;
-  padding: 1rem;
-  width: 100%;
-  margin-top: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   cursor: pointer;
-}
-
-.input-busqueda {
+  font-size: 1.3rem;
+  font-weight: 500;
+  transition: all 0.3s;
+  text-decoration: none;
   width: 100%;
-  padding: 0.8rem 1rem;
-  margin-bottom: 1rem;
+  min-width: 100px;
+}
+
+.btn-accion i {
   font-size: 1.4rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
+  display: inline-flex;
+  align-items: center;
 }
 
-.coordinador-card {
-  background: #fff;
-  border-radius: 0.6rem;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-  box-shadow: var(--shadow);
+.btn-accion span {
+  font-size: 1.3rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
-.coordinador-card h3 {
-  color: var(--color);
-  margin-bottom: 0.6rem;
+.btn-ver {
+  background: #17a2b8;
+  color: white;
+}
+
+.btn-ver:hover {
+  background: #138496;
+}
+
+.acciones-container .btn-editar {
+  background: #28a745;
+  color: white;
+  margin-left: 0;
+  width: 100%;
+  min-width: 100px;
+}
+
+.acciones-container .btn-editar:hover {
+  background: #218838;
+}
+
+/* Badges */
+.badge-rol {
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  background: #6c757d;
+  color: white;
+  display: inline-block;
+}
+
+.badge-coordinador {
+  background: #fd7e14;
+}
+
+.badge-estatus {
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.estatus-activo {
+  background: #28a745;
+  color: white;
+}
+
+.estatus-inactivo {
+  background: #dc3545;
+  color: white;
+}
+
+.estatus-pendiente {
+  background: #ffc107;
+  color: #333;
+}
+
+/* Mensaje vacío */
+.mensaje-vacio {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mensaje-vacio i {
+  font-size: 4rem;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.mensaje-vacio p {
+  color: #666;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.btn-principal {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #e31e24;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.btn-principal:hover {
+  background: #c01418;
+}
+
+/* Descripción de sección */
+.seccion-descripcion {
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+/* Info de tabla */
+.tabla-info {
+  margin-top: 15px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  text-align: right;
+}
+
+.tabla-info p {
+  margin: 0;
+  color: #666;
+  font-size: 1.4rem;
+}
+
+.tabla-info strong {
+  color: #333;
+}
+
+/* Modal grande */
+.modal-grande {
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Loading spinner */
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.loading i {
+  font-size: 3rem;
+  color: #e31e24;
+  margin-bottom: 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Mensaje de error */
+.error-mensaje {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.error-mensaje i {
+  font-size: 3rem;
+  color: #dc3545;
+  margin-bottom: 15px;
+}
+
+.error-mensaje p {
+  color: #856404;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* Detalles del voluntario en modal */
+.detalles-voluntario {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.detalles-voluntario .perfil-card {
+  margin-bottom: 20px;
+}
+
+.detalles-voluntario .info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.detalles-voluntario .info-item.info-full {
+  grid-column: 1 / -1;
+}
+
+/* Links en el menú */
+.perfil-menu li a {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.perfil-menu li.activo a {
+  color: white;
 }
 
 footer {
   position: relative;
   z-index: 0;
+  display: none;
 }

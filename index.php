@@ -1,4 +1,8 @@
 <?php
+// Cargar configuración de seguridad (cabeceras HTTP, sesiones seguras, etc.)
+require_once 'config/security.php';
+
+require_once 'controllers/authController.php';
 
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'home';
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
@@ -38,4 +42,3 @@ if (!method_exists($controllerObj, $action)) {
 
 
 $controllerObj->$action();
-?>

@@ -1,12 +1,12 @@
 :root {
-  --color: #7f0000; 
+  --color: #7f0000;
   --secondary-color: #db8d07; /* dorado elegante */
   --tertiary-color: rgb(12, 45, 162); /*12,45,162*/
   --text-color: #222;
   --light-bg: #f5f6f8;
   --gray: #dcdcdc;
   --white: #ffffff;
-  --font-main: 'Segoe UI', 'Roboto', sans-serif;
+  --font-main: "Segoe UI", "Roboto", sans-serif;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --button-color: linear-gradient(90deg, rgb(56, 0, 0) 0%, rgb(0, 93, 22));
 }
@@ -33,7 +33,7 @@ body {
 }
 
 .contenido-pagina {
-  margin-top: 8rem; 
+  margin-top: 8rem;
   min-height: calc(100vh - 15rem);
   overflow: hidden;
   width: 100%;
@@ -81,7 +81,7 @@ header {
 }
 
 .barra-navegacion a {
-  color: var(--white);
+  color: #ffffff !important;
   margin: 0 1.5rem;
   font-size: 1.5rem;
   font-weight: 500;
@@ -89,7 +89,7 @@ header {
 }
 
 .barra-navegacion a::after {
-  content: '';
+  content: "";
   position: absolute;
   width: 0;
   height: 2px;
@@ -114,48 +114,47 @@ header {
   display: none;
 }
 
-
 .footer {
   background: var(--tertiary-color);
   color: var(--white);
   padding: 1.5rem 5%;
   margin-top: 0;
   position: relative;
-  z-index:10;
+  z-index: 10;
 }
 
-.inicio-footer{
+.inicio-footer {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 2rem;
 }
 
-.contenedor-inicio-footer{
+.contenedor-inicio-footer {
   flex-basis: 200px;
   flex-grow: 1;
 }
 
-.contenedor-inicio-footer h2{
+.contenedor-inicio-footer h2 {
   font-size: 1.8rem;
   margin-bottom: 0.3rem;
   border-left: 4px solid var(--secondary-color);
   padding-left: 1rem;
   line-height: 1.2;
 }
-.contenedor-inicio-footer h2 span{
+.contenedor-inicio-footer h2 span {
   display: block;
   margin-top: 0;
   color: var(--secondary-color);
   font-size: 1.6rem;
 }
-.contenedor-inicio-footer a{
+.contenedor-inicio-footer a {
   display: block;
   color: #eaeaea;
   margin-bottom: 0.2rem;
   font-size: 1.4rem;
 }
-.contenedor-inicio-footer a:hover{
+.contenedor-inicio-footer a:hover {
   color: var(--secondary-color);
 }
 
@@ -194,6 +193,7 @@ header {
     background: transparent;
     border-left: 4px solid transparent;
     width: 80%;
+    color: #ffffff !important;
   }
 
   .barra-navegacion a:hover {
@@ -211,7 +211,7 @@ header {
     margin-top: 3rem;
   }
 
-  .contenedor-inicio-footer{
+  .contenedor-inicio-footer {
     flex-basis: 100%;
   }
 }
