@@ -1,10 +1,23 @@
 <?php
 // /controllers/VoluntarioController.php
 
-// Incluimos el modelo que vamos a utilizar
 require_once __DIR__ . '/../models/voluntario.php';
 
-class VoluntarioController {
+class VoluntarioController
+{
+    /**
+     * Función auxiliar para convertir cadenas vacías en NULL
+     * @param mixed $value El valor a verificar
+     * @return mixed El valor original o NULL si está vacío
+     */
+    private function emptyToNull($value)
+    {
+        // Si el valor es null, vacío o solo espacios en blanco, devolver null
+        if ($value === null || $value === '' || (is_string($value) && trim($value) === '')) {
+            return null;
+        }
+        return $value;
+    }
 
     /**
      * Maneja la lógica de login.
@@ -12,7 +25,8 @@ class VoluntarioController {
      * @param string $password
      * @return array El resultado de la operación.
      */
-    public function login($email, $password) {
+    public function login($email, $password)
+    {
         if (empty($email) || empty($password)) {
             return ['success' => false, 'message' => 'Email y contraseña son requeridos.'];
         }
@@ -28,7 +42,9 @@ class VoluntarioController {
                     'user' => [
                         'id' => $userData['VoluntarioID'],
                         'nombre' => $userData['Nombres'],
-                        'rol' => $userData['RolNombre']
+                        'rol' => $userData['RolNombre'],
+                        'areaID' => $userData['AreaID'] ?? null,
+                        'delegacionID' => $userData['DelegacionID'] ?? null
                     ]
                 ];
             } else {
@@ -38,53 +54,32 @@ class VoluntarioController {
             return ['success' => false, 'message' => 'Correo electrónico o contraseña incorrectos.'];
         }
     }
-    public function pendienteAprobacion() {
-    // 1. Instanciamos el modelo
-        $voluntarioModel = new Voluntario();
-        
-        // 2. Obtenemos la LISTA de voluntarios pendientes
-        $voluntariosPendientes = $voluntarioModel->voluntariosSinAprobar();
 
-        // 3. Verificamos si la lista tiene datos o está vacía
-        if ($voluntariosPendientes) { // Si el array no está vacío
-            return [
-                'success' => true,
-                'message' => 'Se encontraron voluntarios pendientes de aprobación.',
-                'voluntarios' => $voluntariosPendientes // <-- Devolvemos la lista completa
-            ];
-        } else {
-            // Esto se ejecuta si no se encontró ningún voluntario pendiente
-            return [
-                'success' => false, 
-                'message' => 'No hay voluntarios pendientes de aprobación en este momento.'
-            ];
-        }
-    }
-
-    // public function AceptaVoluntario($postData){
-    //     $requiredFields = [
-    //         'VoluntarioID','AdminID'
-    //     ]
-    //     foreach($requiredFields as $field){
-    //         if(empty($postData[$field])){
-    //             return['success'=>false,'mesaje'=>"El campo '$field' es obligatorio"]
-    //         }
-    //     }
-    //     $datosEnviados=[
-    //         'VoluntarioID'=>$postData['VoluntarioID'],
-    //         'AdminID'=>$postData['AdminID']
-    //     ]
-    //     $voluntarioModel = new Voluntario();
-    //     $resultadoSP = $voluntarioModel->aprobarVoluntario($datosEnviados);
-    // }
-
-    public function register($postData) {
+    /**
+     * Maneja la lógica para registrar un nuevo voluntario.
+     * Recibe los datos del POST, los valida y llama al modelo.
+     * @param array $postData Los datos recibidos del formulario.
+     * @return array El resultado de la operación.
+     */
+    public function register($postData)
+    {
         // 1. Validación básica de campos requeridos
         $requiredFields = [
-            'nombres', 'apellidoPaterno', 'fechaNacimiento', 'email', 'password',
-            'calle', 'ciudadID', 'estadoID', 'areaID', 'delegacionID',
-            'contactoEmergenciaNombre', 'contactoEmergenciaParentesco', 'contactoEmergenciaTelefono',
-            'disponibilidadDia', 'disponibilidadTurno'
+            'nombres',
+            'apellidoPaterno',
+            'fechaNacimiento',
+            'email',
+            'password',
+            'calle',
+            'ciudadID',
+            'estadoID',
+            'areaID',
+            'delegacionID',
+            'contactoEmergenciaNombre',
+            'contactoEmergenciaParentesco',
+            'contactoEmergenciaTelefono',
+            'disponibilidadDia',
+            'disponibilidadTurno'
         ];
 
         foreach ($requiredFields as $field) {
@@ -100,37 +95,40 @@ class VoluntarioController {
         $datosVoluntario = [
             'nombres' => $postData['nombres'],
             'apellidoPaterno' => $postData['apellidoPaterno'],
-            'apellidoMaterno' => $postData['apellidoMaterno'] ?? null,
+            'apellidoMaterno' => $this->emptyToNull($postData['apellidoMaterno'] ?? null),
             'fechaNacimiento' => $postData['fechaNacimiento'],
             'email' => $postData['email'],
             'passwordHash' => $passwordHash,
-            'curp' => $postData['curp'] ?? null,
-            'sexo' => $postData['sexo'] ?? null,
-            'lugarNacimiento' => $postData['lugarNacimiento'] ?? null,
-            'nacionalidad' => $postData['nacionalidad'] ?? null,
-            'estadoCivilID' => $postData['estadoCivilID'] ?? null,
-            'grupoSanguineoID' => $postData['grupoSanguineoID'] ?? null,
-            'telefonoCelular' => $postData['telefonoCelular'] ?? null,
-            'telefonoParticular' => $postData['telefonoParticular'] ?? null,
-            'telefonoTrabajo' => $postData['telefonoTrabajo'] ?? null,
+            'curp' => $this->emptyToNull($postData['curp'] ?? null),
+            'sexo' => $this->emptyToNull($postData['sexo'] ?? null),
+            'lugarNacimiento' => $this->emptyToNull($postData['lugarNacimiento'] ?? null),
+            'nacionalidad' => $this->emptyToNull($postData['nacionalidad'] ?? null),
+            'estadoCivilID' => $this->emptyToNull($postData['estadoCivilID'] ?? null),
+            'grupoSanguineoID' => $this->emptyToNull($postData['grupoSanguineoID'] ?? null),
+            'telefonoCelular' => $this->emptyToNull($postData['telefonoCelular'] ?? null),
+            'telefonoParticular' => $this->emptyToNull($postData['telefonoParticular'] ?? null),
+            'telefonoTrabajo' => $this->emptyToNull($postData['telefonoTrabajo'] ?? null),
             'calle' => $postData['calle'],
-            'numeroExterior' => $postData['numeroExterior'] ?? null,
-            'colonia' => $postData['colonia'] ?? null,
-            'codigoPostal' => $postData['codigoPostal'] ?? null,
+            'numeroExterior' => $this->emptyToNull($postData['numeroExterior'] ?? null),
+            'colonia' => $this->emptyToNull($postData['colonia'] ?? null),
+            'codigoPostal' => $this->emptyToNull($postData['codigoPostal'] ?? null),
             'ciudadID' => $postData['ciudadID'],
             'estadoID' => $postData['estadoID'],
-            'gradoEstudios' => $postData['gradoEstudios'] ?? null,
-            'profesion' => $postData['profesion'] ?? null,
-            'ocupacionActual' => $postData['ocupacionActual'] ?? null,
-            'empresaLabora' => $postData['empresaLabora'] ?? null,
+            'gradoEstudios' => $this->emptyToNull($postData['gradoEstudios'] ?? null),
+            'profesion' => $this->emptyToNull($postData['profesion'] ?? null),
+            'ocupacionActual' => $this->emptyToNull($postData['ocupacionActual'] ?? null),
+            'empresaLabora' => $this->emptyToNull($postData['empresaLabora'] ?? null),
             'tieneLicenciaConducir' => $postData['tieneLicenciaConducir'] ?? 0,
-            'enfermedades' => $postData['enfermedades'] ?? null,
-            'alergias' => $postData['alergias'] ?? null,
+            'licenciaVencimiento' => $this->emptyToNull($postData['licenciaVencimiento'] ?? null),
+            'tienePasaporte' => $postData['tienePasaporte'] ?? 0,
+            'pasaporteVencimiento' => $this->emptyToNull($postData['pasaporteVencimiento'] ?? null),
+            'enfermedades' => $this->emptyToNull($postData['enfermedades'] ?? null),
+            'alergias' => $this->emptyToNull($postData['alergias'] ?? null),
             'areaID' => $postData['areaID'],
             'delegacionID' => $postData['delegacionID'],
-            'tutorNombre' => $postData['tutorNombre'] ?? null,
-            'tutorParentesco' => $postData['tutorParentesco'] ?? null,
-            'tutorTelefono' => $postData['tutorTelefono'] ?? null,
+            'tutorNombre' => $this->emptyToNull($postData['tutorNombre'] ?? null),
+            'tutorParentesco' => $this->emptyToNull($postData['tutorParentesco'] ?? null),
+            'tutorTelefono' => $this->emptyToNull($postData['tutorTelefono'] ?? null),
             'contactoEmergenciaNombre' => $postData['contactoEmergenciaNombre'],
             'contactoEmergenciaParentesco' => $postData['contactoEmergenciaParentesco'],
             'contactoEmergenciaTelefono' => $postData['contactoEmergenciaTelefono'],
@@ -146,15 +144,41 @@ class VoluntarioController {
         if (isset($resultadoSP['NuevoVoluntarioID'])) {
             return ['success' => true, 'message' => 'Registro exitoso. Tu solicitud está en proceso de validación.'];
         } else {
-            // Si el SP devuelve un error, lo capturamos y lo mostramos
-            return ['success' => false, 'message' => 'Error al registrar: ' . ($resultadoSP['error'] ?? 'Ocurrió un problema desconocido.')];
+            // Limpiar el mensaje de error del SQL Server
+            $errorMessage = $resultadoSP['error'] ?? 'Ocurrió un problema desconocido.';
+
+            // Extraer solo el mensaje después de "Error:" o "[SQL Server]"
+            if (preg_match('/\[SQL Server\](.+)$/', $errorMessage, $matches)) {
+                $errorMessage = trim($matches[1]);
+            } elseif (preg_match('/Error:\s*(.+)$/', $errorMessage, $matches)) {
+                $errorMessage = trim($matches[1]);
+            }
+
+            // NUEVO: Remover "Error:" si todavía está al inicio
+            $errorMessage = preg_replace('/^Error:\s*/i', '', $errorMessage);
+
+            return ['success' => false, 'message' => $errorMessage];
         }
     }
 
-    
-
-
-
+    /**
+     * Maneja la lógica para aprobar un voluntario.
+     * @param int $voluntarioIDaAprobar
+     * @param int $adminIDqueAprueba
+     * @return array El resultado de la operación.
+     */
+    public function aprobarVoluntario($voluntarioIDaAprobar, $adminIDqueAprueba)
+    {
+        $voluntarioModel = new Voluntario();
+        try {
+            $resultado = $voluntarioModel->aprobarVoluntario($voluntarioIDaAprobar, $adminIDqueAprueba);
+            if ($resultado) {
+                return ['success' => true, 'message' => 'Voluntario aprobado exitosamente.'];
+            } else {
+                return ['success' => false, 'message' => 'Error al aprobar el voluntario.'];
+            }
+        } catch (Exception $e) {
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
 }
-?>
-

@@ -1,0 +1,49 @@
+# Establecer login.php como página de inicio
+
+DirectoryIndex login.php
+
+# Deshabilitar la lista de directorios
+
+Options -Indexes
+
+# Denegar acceso a archivos de configuración
+
+<FilesMatch "\.(env|ini|log|sql)$">
+Require all denied
+</FilesMatch>
+
+# Proteger archivos .htaccess
+
+<FilesMatch "^\.ht">
+Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header always set X-Frame-Options "DENY"
+    
+    # Prevenir sniffing de tipo MIME
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Activar protección XSS del navegador
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Política de referrer
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Remover header que expone la versión de PHP
+    Header unset X-Powered-By
+</IfModule>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Prevenir acceso directo a carpetas sensibles
+    RewriteRule ^(config|helpers|models)/ - [F,L]
+    
+    # Prevenir inyección de scripts en URL
+    RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})
+    RewriteRule .* - [F,L]
+</IfModule>

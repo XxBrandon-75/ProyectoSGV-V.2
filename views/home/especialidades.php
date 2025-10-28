@@ -1,4 +1,3 @@
-<?php $base_url = '/ProyectoSGV/'; ?>
 <?php if (isset($ver_cont_gest) && $ver_cont_gest): ?>
 
 
@@ -53,7 +52,7 @@
       </div>
     </form>
   </div>
-  <?php endif; ?>
+<?php endif; ?>
 
   <?php 
   $especialidades_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margin-left: 0;"';
@@ -89,5 +88,5 @@
 </div>
 
 <script>
-    const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
+  const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
 </script>
