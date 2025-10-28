@@ -1,62 +1,26 @@
 <?php
-// $base_url se define en header.php
-$rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
-$esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
+// Las variables vienen del controlador:
+// - $esCoordinadorOMas
+// - $notificacionesPendientes  
+// - $totalPendientes
+// - $notificacionesGenerales
 
-// Datos de ejemplo de voluntarios pendientes de aprobación
-$notificacionesPendientes = [
-    [
-        'id' => 1,
-        'nombre' => 'María González López',
-        'delegacion' => 'Delegación Tuxtla Gutiérrez',
-        'area' => 'Educación',
-        'fecha_registro' => '2025-10-22 14:30:00',
-        'tiempo' => 'Hace 1 día'
-    ],
-    [
-        'id' => 2,
-        'nombre' => 'Carlos Hernández Pérez',
-        'delegacion' => 'Delegación San Cristóbal',
-        'area' => 'Salud',
-        'fecha_registro' => '2025-10-23 09:15:00',
-        'tiempo' => 'Hace 3 horas'
-    ],
-    [
-        'id' => 3,
-        'nombre' => 'Ana Patricia Ruiz',
-        'delegacion' => 'Delegación Comitán',
-        'area' => 'Cultura',
-        'fecha_registro' => '2025-10-23 11:45:00',
-        'tiempo' => 'Hace 45 minutos'
-    ],
-    [
-        'id' => 4,
-        'nombre' => 'José Luis Martínez',
-        'delegacion' => 'Delegación Tapachula',
-        'area' => 'Deportes',
-        'fecha_registro' => '2025-10-21 16:20:00',
-        'tiempo' => 'Hace 2 días'
-    ]
-];
-
-// Notificaciones generales para todos
-$notificacionesGenerales = [
-    [
-        'tipo' => 'info',
-        'titulo' => 'Actualización del sistema',
-        'mensaje' => 'Se han implementado mejoras en el sistema de gestión de voluntarios.',
-        'tiempo' => 'Hace 2 horas',
-        'icono' => 'fa-circle-info'
-    ],
-    [
-        'tipo' => 'evento',
-        'titulo' => 'Próxima reunión de coordinadores',
-        'mensaje' => 'La reunión mensual de coordinadores será el próximo viernes a las 10:00 AM.',
-        'tiempo' => 'Hace 5 horas',
-        'icono' => 'fa-calendar'
-    ]
-];
+// Verificar que las variables existen (seguridad adicional)
+if (!isset($esCoordinadorOMas)) {
+    $esCoordinadorOMas = false;
+}
+if (!isset($notificacionesPendientes)) {
+    $notificacionesPendientes = [];
+}
+if (!isset($totalPendientes)) {
+    $totalPendientes = 0;
+}
+if (!isset($notificacionesGenerales)) {
+    $notificacionesGenerales = [];
+}
 ?>
+
+<!-- El CSS ya se carga desde el header.php con n.style.css -->
 
 <section class="notificaciones-container" id="notificaciones-container">
     <div class="notificaciones-header">
@@ -68,7 +32,9 @@ $notificacionesGenerales = [
             <?php if ($esCoordinadorOMas): ?>
                 <button class="filtro-btn" data-filtro="pendientes">
                     <i class="fa-solid fa-user-clock"></i> Pendientes
-                    <span class="badge-contador"><?= count($notificacionesPendientes) ?></span>
+                    <?php if ($totalPendientes > 0): ?>
+                        <span class="badge-contador"><?= $totalPendientes ?></span>
+                    <?php endif; ?>
                 </button>
             <?php endif; ?>
             <button class="filtro-btn" data-filtro="leidas">
@@ -79,17 +45,17 @@ $notificacionesGenerales = [
 
     <div class="notificaciones-contenido">
 
-        <?php if ($esCoordinadorOMas && count($notificacionesPendientes) > 0): ?>
+        <?php if ($esCoordinadorOMas && $totalPendientes > 0): ?>
             <!-- Sección de Aprobaciones Pendientes -->
             <div class="notificaciones-seccion pendientes-seccion">
                 <h3 class="seccion-titulo">
                     <i class="fa-solid fa-user-plus"></i> Voluntarios Pendientes de Aprobación
-                    <span class="badge-pendientes"><?= count($notificacionesPendientes) ?></span>
+                    <span class="badge-pendientes"><?= $totalPendientes ?></span>
                 </h3>
 
                 <div class="notificaciones-lista">
                     <?php foreach ($notificacionesPendientes as $notif): ?>
-                        <div class="notificacion-card pendiente" data-id="<?= $notif['id'] ?>">
+                        <div class="notificacion-card pendiente" data-id="<?= htmlspecialchars($notif['id']) ?>">
                             <div class="notificacion-icono pendiente-icono">
                                 <i class="fa-solid fa-user-clock"></i>
                             </div>
@@ -97,7 +63,7 @@ $notificacionesGenerales = [
                                 <div class="notificacion-header">
                                     <h4><?= htmlspecialchars($notif['nombre']) ?></h4>
                                     <span class="notificacion-tiempo">
-                                        <i class="fa-regular fa-clock"></i> <?= $notif['tiempo'] ?>
+                                        <i class="fa-regular fa-clock"></i> Pendiente
                                     </span>
                                 </div>
                                 <p class="notificacion-mensaje">
@@ -105,13 +71,21 @@ $notificacionesGenerales = [
                                 </p>
                                 <div class="notificacion-detalles">
                                     <span class="detalle-item">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        <?= htmlspecialchars($notif['email']) ?>
+                                    </span>
+                                    <?php if (isset($notif['delegacion'])): ?>
+                                    <span class="detalle-item">
                                         <i class="fa-solid fa-map-marker-alt"></i>
                                         <?= htmlspecialchars($notif['delegacion']) ?>
                                     </span>
+                                    <?php endif; ?>
+                                    <?php if (isset($notif['area'])): ?>
                                     <span class="detalle-item">
                                         <i class="fa-solid fa-briefcase"></i>
                                         <?= htmlspecialchars($notif['area']) ?>
                                     </span>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="notificacion-acciones">
                                     <button class="btn-accion btn-aprobar" onclick="aprobarVoluntario(<?= $notif['id'] ?>)">
@@ -129,9 +103,22 @@ $notificacionesGenerales = [
                     <?php endforeach; ?>
                 </div>
             </div>
+        <?php elseif ($esCoordinadorOMas): ?>
+            <!-- Mensaje cuando no hay pendientes -->
+            <div class="notificaciones-seccion pendientes-seccion">
+                <h3 class="seccion-titulo">
+                    <i class="fa-solid fa-check-circle"></i> 
+                    No hay voluntarios pendientes de aprobación
+                </h3>
+                <div class="mensaje-vacio">
+                    <i class="fa-solid fa-user-check"></i>
+                    <p>Todos los voluntarios han sido revisados.</p>
+                </div>
+            </div>
         <?php endif; ?>
 
         <!-- Sección de Notificaciones Generales -->
+        <?php if (!empty($notificacionesGenerales)): ?>
         <div class="notificaciones-seccion generales-seccion">
             <h3 class="seccion-titulo">
                 <i class="fa-solid fa-inbox"></i> Notificaciones Recientes
@@ -139,15 +126,15 @@ $notificacionesGenerales = [
 
             <div class="notificaciones-lista">
                 <?php foreach ($notificacionesGenerales as $notif): ?>
-                    <div class="notificacion-card <?= $notif['tipo'] ?>">
-                        <div class="notificacion-icono <?= $notif['tipo'] ?>-icono">
-                            <i class="fa-solid <?= $notif['icono'] ?>"></i>
+                    <div class="notificacion-card <?= htmlspecialchars($notif['tipo']) ?>">
+                        <div class="notificacion-icono <?= htmlspecialchars($notif['tipo']) ?>-icono">
+                            <i class="fa-solid <?= htmlspecialchars($notif['icono']) ?>"></i>
                         </div>
                         <div class="notificacion-contenido">
                             <div class="notificacion-header">
                                 <h4><?= htmlspecialchars($notif['titulo']) ?></h4>
                                 <span class="notificacion-tiempo">
-                                    <i class="fa-regular fa-clock"></i> <?= $notif['tiempo'] ?>
+                                    <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($notif['tiempo']) ?>
                                 </span>
                             </div>
                             <p class="notificacion-mensaje">
@@ -170,6 +157,7 @@ $notificacionesGenerales = [
                 </div>
             </div>
         </div>
+        <?php endif; ?>
 
     </div>
 </section>

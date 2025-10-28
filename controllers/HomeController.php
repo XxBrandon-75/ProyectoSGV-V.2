@@ -112,20 +112,6 @@ class HomeController
 
         require_once "views/layout/footer.php";
     }
-    public function notificaciones()
-    {
-        $titulo_pagina = "Notificaciones | Red de Voluntarios";
-
-        $styles = [$this->base_url . 'public/css/n.style.css'];
-
-        $scripts = [$this->base_url . 'public/scripts/n.script.js'];
-
-        require_once "views/layout/header.php";
-
-        require_once "views/home/notificaciones.php";
-
-        require_once "views/layout/footer.php";
-    }
 
     public function perfil()
     {
@@ -266,6 +252,24 @@ class HomeController
         require_once "views/home/coordinadores.php";
 
         require_once "views/layout/footer.php";
+    }
+
+    public function notificaciones()
+    {
+        $notificacionesFile = __DIR__ . '/NotificacionesController.php';
+        if (file_exists($notificacionesFile)) {
+            require_once $notificacionesFile;
+
+            if (class_exists('NotificacionesController')) {
+                $ctrl = new NotificacionesController();
+                if (method_exists($ctrl, 'index')) {
+                    $ctrl->index();
+                    return;
+                }
+            }
+        }
+        header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+        exit();
     }
 
     public function misSolicitudes()

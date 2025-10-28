@@ -83,7 +83,6 @@
   </div>
 </section>
 
-<<<<<<< HEAD
 <!-- MISIÓN / VISIÓN / OBJETIVOS -->
 <section class="mis-vis-cards">
   <div class="card-item">
@@ -108,40 +107,5 @@
   <h2>Áreas de Impacto</h2>
   <p>
     Nuestro trabajo se dirige a comunidades vulnerables, zonas rurales, grupos con escasos recursos, adultos mayores, personas en situación de riesgo y organizaciones sociales que requieren acompañamiento.
-=======
-
-<!-- Misión y Visión -->
-<section class="mis-vis">
-  <div class="mision">
-    <h3>Misión</h3>
-    <p>
-      Promover la cultura del voluntariado y fortalecer proyectos comunitarios que generen bienestar social, mediante capacitación, coordinación y apoyo técnico.
-    </p>
-  </div>
-  <div class="vision">
-    <h3>Visión</h3>
-    <p>
-      Ser una red referente nacional de voluntariado, reconocida por su impacto sostenible, transparencia y capacidad de movilización ciudadana.
-    </p>
-  </div>
-</section>
-
-<!-- Objetivos -->
-<section class="objetivos">
-  <h2>Objetivos</h2>
-  <ul>
-    <li>Capacitar a voluntarios con habilidades y valores éticos.</li>
-    <li>Fomentar alianzas entre organizaciones y comunidades.</li>
-    <li>Brindar apoyo en proyectos sociales con enfoque integral.</li>
-    <li>Incrementar la participación ciudadana en acciones comunitarias.</li>
-  </ul>
-</section>
-
-<!-- A quién ayuda / Impacto -->
-<section class="impacto">
-  <h2>¿A quién ayudamos?</h2>
-  <p>
-    Nuestro trabajo se dirige a comunidades vulnerables, zonas rurales, grupos con escasos recursos, adultos mayores, personas en situación de riesgo y organizaciones sociales que requieren acompañamiento para potenciar su impacto.
->>>>>>> ce10815a1eb7d3769253e739b7b8647d3697569d
   </p>
 </section>
