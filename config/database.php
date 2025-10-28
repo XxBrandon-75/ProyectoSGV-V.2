@@ -3,8 +3,8 @@
 // Incluimos el archivo de configuración una sola vez
 
 
-class Database
-{
+
+class Database {
     private static $instance = null;
     private $conn;
 

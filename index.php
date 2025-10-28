@@ -7,10 +7,6 @@ require_once 'controllers/authController.php';
 $controller = isset($_GET['controller']) ? $_GET['controller'] : 'home';
 $action = isset($_GET['action']) ? $_GET['action'] : 'index';
 
-if (!($controller === 'auth' && $action === 'logout')) {
-    requireAuth(); // No quitar, sirve para q no se pueda acceder a ningun lado mas sin antes haber iniciado sesion
-}
-
 
 $controllerName = ucfirst($controller) . 'Controller';
 
