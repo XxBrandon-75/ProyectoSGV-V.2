@@ -1,5 +1,6 @@
 <?php
 // Cargar configuración de seguridad (cabeceras HTTP, sesiones seguras, etc.)
+//ola
 require_once 'config/security.php';
 
 require_once 'controllers/authController.php';
