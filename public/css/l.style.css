@@ -1,0 +1,440 @@
+/* Cruz Roja - Login Styles - Updated with Grid Layout */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+/* Color Variables */
+:root {
+  --color-background: #ebedee;
+  --color-white: #ffffff;
+  --color-black: #141414;
+  --color-gray-light: #dfdfdf;
+  --color-shadow: rgba(0, 0, 0, 0.1);
+  --color-hover-options: #f7f7f7;
+}
+
+/* Global Styles */
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", serif;
+  margin: 0;
+  padding: 0;
+}
+body {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+}
+a {
+  text-decoration: none;
+}
+img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
+}
+.left {
+  width: 40%;
+  height: 100%;
+}
+.left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  transition: opacity 0.6s ease-in-out;
+  opacity: 1;
+  display: block;
+}
+
+.left img.fade-out {
+  opacity: 0;
+}
+.left img.fade-in {
+  opacity: 1;
+}
+.right {
+  border: 4px solid white;
+  width: 60%;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.right .top {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem 1rem 1.8rem;
+  position: sticky;
+  top: 0;
+  background-color: var(--color-white);
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.right .brand {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  gap: 0.3rem;
+}
+.right .top img {
+  width: 2rem;
+}
+.right .top a {
+  color: var(--color-black);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+.forms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  width: 100%;
+  padding: 2rem 0;
+}
+.forms .welcome-message {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  width: 100%;
+}
+.forms .login-description {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.login {
+  width: 100%;
+  max-width: 45rem;
+  margin: 0 auto;
+}
+
+form,
+form .input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  width: 100%;
+  max-width: 45rem;
+  padding: 0 2rem;
+  margin: 0 auto;
+}
+form .input-container input {
+  border-radius: 0.4rem;
+  font-size: 1rem;
+  font-weight: 500;
+  height: 3.2rem;
+  outline: none;
+  padding: 0.5rem 1rem;
+}
+form .options-container {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  justify-content: space-between;
+  margin: 0.5rem 0 2.5rem;
+}
+form .options-container .checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+form .options-container input {
+  cursor: pointer;
+}
+form .options-container label,
+form .options-container a {
+  color: var(--color-black);
+  font-weight: 600;
+}
+
+form button {
+  background-color: var(--color-black);
+  border-radius: 0.4rem;
+  color: var(--color-white);
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  height: 3.2rem;
+}
+
+.register {
+  display: none;
+  width: 100%;
+  max-width: 50rem;
+  margin: 0 auto;
+}
+
+.right.active .login {
+  display: none;
+}
+.right.active .register {
+  display: block;
+}
+
+label:has(+ input[required]),
+label:has(+ select[required]),
+label:has(+ textarea[required]) {
+  position: relative;
+}
+
+label:has(+ input[required])::after,
+label:has(+ select[required])::after,
+label:has(+ textarea[required])::after {
+  content: " *";
+  color: red;
+}
+
+details {
+  border: 2px solid var(--color-gray-light);
+  border-radius: 0.6rem;
+  padding: 1.2rem;
+  margin-bottom: 1.2rem;
+  background-color: var(--color-white);
+  transition: all 0.3s ease;
+}
+
+details[open] {
+  border-color: var(--color-black);
+  box-shadow: 0 4px 12px var(--color-shadow);
+}
+
+details summary {
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-black);
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  user-select: none;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+details summary::after {
+  content: "▼";
+  font-size: 0.95rem;
+  transition: transform 0.3s ease;
+}
+
+details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+details summary:hover {
+  color: #555;
+}
+
+details > div {
+  margin-top: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+details label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-black);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+details input[type="text"],
+details input[type="email"],
+details input[type="password"],
+details input[type="date"],
+details input[type="tel"],
+details input[type="number"],
+details select,
+details textarea {
+  border: 2px solid var(--color-gray-light);
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  height: 3rem;
+  outline: none;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+details textarea {
+  height: auto;
+  resize: vertical;
+  font-family: "Poppins", serif;
+  min-height: 5rem;
+  padding: 0.8rem 1rem;
+}
+
+details input:focus,
+details select:focus,
+details textarea:focus {
+  border-color: var(--color-black);
+}
+
+/* Sistema de pasos progresivos */
+.continue-btn {
+  background: #141414;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.continue-btn:hover {
+  background: #141414;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.step-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  animation: slideInRight 0.3s ease-out;
+  font-family: "Poppins", sans-serif;
+  max-width: 350px;
+}
+
+.step-notification.error {
+  background: #e74c3c;
+}
+
+/* Animaciones */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .left {
+    display: none;
+  }
+  .right {
+    width: 100%;
+  }
+
+  form,
+  form .input-container {
+    max-width: 100%;
+    padding: 0 0.5rem;
+  }
+}
+
+.error-msg {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: block;
+  margin-top: 0.3rem;
+  min-height: 1.2rem;
+}
+
+details input.invalid,
+details select.invalid,
+details textarea.invalid {
+  border-color: #e74c3c !important;
+  background-color: #ffe6e6 !important;
+}
+
+.dias-disponibles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.checkbox-dia {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem;
+  border: 2px solid var(--color-gray-light);
+  border-radius: 0.4rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--color-white);
+  user-select: none;
+}
+
+.checkbox-dia:hover {
+  border-color: #999;
+  background-color: #f9f9f9;
+}
+
+.checkbox-dia input[type="checkbox"] {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  margin: 0;
+}
+
+.checkbox-dia input[type="checkbox"]:checked + span {
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.checkbox-dia:has(input:checked) {
+  border-color: var(--color-black);
+  background-color: #f0f0f0;
+}
+
+.checkbox-dia span {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.dias-counter {
+  display: block;
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.dias-counter strong {
+  color: var(--color-black);
+  font-size: 1rem;
+}

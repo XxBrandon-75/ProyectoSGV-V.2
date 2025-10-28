@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login_SGV</title>
+    <link rel="stylesheet" href="public/css/l.style.css?v=<?php echo time(); ?>" />
+</head>
+
+<body>
+    <div class="left">
+        <img src="public/img/principal.jpg" alt="banner" />
+    </div>
+    <div class="right<?php echo $showRegisterForm ? ' active' : ''; ?>" id="right">
+        <div class="top">
+            <div class="brand">
+                <img src="public/icons/logo_cruz.png" alt="logo" />
+                <span>Red de voluntarios</span>
+            </div>
+            <a id="register-btn" href="#"><?php echo $showRegisterForm ? 'Acceso con cuenta' : 'Unete al equipo'; ?></a>
+        </div>
+        <div class="forms">
+            <div class="login">
+                <img src="public/img/cruz_roja_logo.png" alt="">
+                <h1 class="welcome-message">Bienvenido de nuevo a esta comunidad</h1>
+                <p class="login-description">Ingresa con tus datos de voluntario</p>
+                <?php if ($loginError): ?>
+                    <div class="error-message" style="color: red; margin: 10px 0; padding: 10px; background: #ffe6e6; border-radius: 5px;">
+                        <?php echo htmlspecialchars($loginError); ?>
+                    </div>
+                <?php endif; ?>
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="login">
+                    <div class="input-container">
+                        <input type="email" name="email" id="email-login" placeholder="Correo electrónico" required />
+                        <input type="password" name="password" id="password-login" placeholder="Contraseña" required />
+                    </div>
+                    <div class="options-container">
+                        <div class="checkbox">
+                            <input id="checkbox" type="checkbox" />
+                            <label for="checkbox">Mantener mi inicio de sesión</label>
+                        </div>
+                        <a href="#">Olvidé mi contraseña</a>
+                    </div>
+                    <button type="submit">Ingresar al sitio</button>
+                </form>
+            </div>
+            <div class="register">
+                <h1 class="welcome-message">Bienvenido</h1>
+                <p class="login-description">Sé parte del equipo</p>
+                <?php if ($registerError): ?>
+                    <div class="error-message" style="color: red; margin: 10px 0; padding: 10px; background: #ffe6e6; border-radius: 5px;">
+                        <?php echo htmlspecialchars($registerError); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($registerSuccess): ?>
+                    <div class="success-message" style="color: green; margin: 10px 0; padding: 10px; background: #e6ffe6; border-radius: 5px;">
+                        <?php echo htmlspecialchars($registerSuccess); ?>
+                    </div>
+                <?php endif; ?>
+                <form method="POST" action="">
+                    <input type="hidden" name="action" value="register">
+                    <div class="input-container">
+                        <details>
+                            <summary>Datos del Aspirante</summary>
+                            <div>
+                                <label for="nombre">Nombre(s)</label>
+                                <input
+                                    type="text"
+                                    id="nombre"
+                                    name="nombres"
+                                    placeholder="Ingresa tu(s) nombre(s)"
+                                    value="<?php echo htmlspecialchars($formData['nombres'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="apellido_paterno">Apellido Paterno</label>
+                                <input
+                                    type="text"
+                                    id="apellido_paterno"
+                                    name="apellidoPaterno"
+                                    placeholder="Ingresa tu apellido paterno"
+                                    value="<?php echo htmlspecialchars($formData['apellidoPaterno'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="apellido_materno">Apellido Materno</label>
+                                <input
+                                    type="text"
+                                    id="apellido_materno"
+                                    name="apellidoMaterno"
+                                    placeholder="Ingresa tu apellido materno"
+                                    value="<?php echo htmlspecialchars($formData['apellidoMaterno'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="fecha_nacimiento">Fecha de Nacimiento</label>
+                                <input type="date" id="fecha_nacimiento" name="fechaNacimiento" value="<?php echo htmlspecialchars($formData['fechaNacimiento'] ?? ''); ?>" required />
+                            </div>
+                            <div>
+                                <label for="email-registro">Correo Electrónico</label>
+                                <input
+                                    type="email"
+                                    id="email-registro"
+                                    name="email"
+                                    placeholder="ejemplo@correo.com"
+                                    value="<?php echo htmlspecialchars($formData['email'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="password-registro">Contraseña</label>
+                                <input
+                                    type="password"
+                                    id="password-registro"
+                                    name="password"
+                                    placeholder="Mínimo 8 caracteres"
+                                    minlength="8"
+                                    required />
+                                <small class="error-msg" id="password-error"></small>
+                            </div>
+                            <div>
+                                <label for="password-confirm">Confirmar Contraseña</label>
+                                <input
+                                    type="password"
+                                    id="password-confirm"
+                                    name="password_confirm"
+                                    placeholder="Confirma tu contraseña"
+                                    minlength="8"
+                                    required />
+                                <small class="error-msg" id="password-confirm-error"></small>
+                            </div>
+                            <div>
+                                <label for="curp">CURP</label>
+                                <input
+                                    type="text"
+                                    id="curp"
+                                    name="curp"
+                                    placeholder="Ingresa tu CURP"
+                                    minlength="18"
+                                    maxlength="18"
+                                    value="<?php echo htmlspecialchars($formData['curp'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="genero">Género</label>
+                                <select id="genero" name="sexo" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="M" <?php echo (isset($formData['sexo']) && $formData['sexo'] === 'M') ? 'selected' : ''; ?>>Masculino</option>
+                                    <option value="F" <?php echo (isset($formData['sexo']) && $formData['sexo'] === 'F') ? 'selected' : ''; ?>>Femenino</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="lugar_nacimiento">Lugar de Nacimiento</label>
+                                <select id="lugar_nacimiento" name="lugarNacimientoID" required>
+                                    <option value="">- Seleccione -</option>
+                                    <?php foreach ($catCiudades as $ciudad): ?>
+                                        <option value="<?php echo htmlspecialchars($ciudad['CiudadID']); ?>"
+                                            <?php echo (isset($formData['lugarNacimientoID']) && $formData['lugarNacimientoID'] == $ciudad['CiudadID']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($ciudad['Nombre']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="nacionalidad">Nacionalidad</label>
+                                <select id="nacionalidad" name="nacionalidad" required>
+                                    <option value="">- Seleccione -</option>
+                                    <option value="mexicana" <?php echo (isset($formData['nacionalidad']) && $formData['nacionalidad'] === 'mexicana') ? 'selected' : ''; ?>>Mexicana</option>
+                                </select>
+                                <div>
+                                    <label for="estado_civil">Estado Civil</label>
+                                    <select name="estadoCivilID" id="estado_civil" required>
+                                        <option value="">-Seleccione-</option>
+                                        <?php foreach ($catEstadoCivil as $estado): ?>
+                                            <option value="<?php echo htmlspecialchars($estado['EstadoCivilID']); ?>"
+                                                <?php echo (isset($formData['estadoCivilID']) && $formData['estadoCivilID'] == $estado['EstadoCivilID']) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($estado['Nombre']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="grupo_sanguineo">Grupo Sanguíneo</label>
+                                <select id="grupo_sanguineo" name="grupoSanguineoID" required>
+                                    <option value="">- Seleccione -</option>
+                                    <?php foreach ($gruposSanguineos as $grupo): ?>
+                                        <option value="<?php echo htmlspecialchars($grupo['GrupoSanguineoID']); ?>"
+                                            <?php echo (isset($formData['grupoSanguineoID']) && $formData['grupoSanguineoID'] == $grupo['GrupoSanguineoID']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($grupo['Nombre']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Datos de Contacto y Dirección</summary>
+                            <div>
+                                <label for="telefono_movil">Teléfono Móvil</label>
+                                <input
+                                    type="tel"
+                                    id="telefono_movil"
+                                    name="telefonoCelular"
+                                    placeholder="10 dígitos"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['telefonoCelular'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="telefono_particular">Teléfono Particular (Opcional)</label>
+                                <input
+                                    type="tel"
+                                    id="telefono_particular"
+                                    name="telefonoParticular"
+                                    placeholder="Opcional"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['telefonoParticular'] ?? ''); ?>" />
+                            </div>
+                            <div>
+                                <label for="telefono_trabajo">Teléfono de Trabajo (Opcional)</label>
+                                <input
+                                    type="tel"
+                                    id="telefono_trabajo"
+                                    name="telefonoTrabajo"
+                                    placeholder="Opcional"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['telefonoTrabajo'] ?? ''); ?>" />
+                            </div>
+                            <div>
+                                <label for="calle">Calle</label>
+                                <input
+                                    type="text"
+                                    id="calle"
+                                    name="calle"
+                                    placeholder="Nombre de la calle"
+                                    value="<?php echo htmlspecialchars($formData['calle'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="numero_exterior">Número Exterior</label>
+                                <input
+                                    type="text"
+                                    id="numero_exterior"
+                                    name="numeroExterior"
+                                    placeholder="Ej: 123"
+                                    value="<?php echo htmlspecialchars($formData['numeroExterior'] ?? ''); ?>" />
+                            </div>
+                            <div>
+                                <label for="colonia">Colonia</label>
+                                <input
+                                    type="text"
+                                    id="colonia"
+                                    name="colonia"
+                                    placeholder="Nombre de la colonia"
+                                    value="<?php echo htmlspecialchars($formData['colonia'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="codigo_postal">Código Postal</label>
+                                <input
+                                    type="text"
+                                    id="codigo_postal"
+                                    name="codigoPostal"
+                                    placeholder="Por ej: 29000"
+                                    pattern="[0-9]{5}"
+                                    maxlength="5"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['codigoPostal'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="estado">Estado</label>
+                                <select id="estado" name="estadoID" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="1" <?php echo (isset($formData['estadoID']) && $formData['estadoID'] === '1') ? 'selected' : ''; ?>>Chiapas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="ciudad">Ciudad</label>
+                                <select id="ciudad" name="ciudadID" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="1" <?php echo (isset($formData['ciudadID']) && $formData['ciudadID'] === '1') ? 'selected' : ''; ?>>Tuxtla Gutiérrez</option>
+                                </select>
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Datos Profesionales y Médicos</summary>
+                            <div>
+                                <label for="grado_estudios">Grado de Estudios</label>
+                                <select id="grado_estudios" name="gradoEstudios" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="primaria" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'primaria') ? 'selected' : ''; ?>>Primaria</option>
+                                    <option value="secundaria" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'secundaria') ? 'selected' : ''; ?>>Secundaria</option>
+                                    <option value="preparatoria" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'preparatoria') ? 'selected' : ''; ?>>Preparatoria</option>
+                                    <option value="licenciatura" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'licenciatura') ? 'selected' : ''; ?>>Licenciatura</option>
+                                    <option value="maestría" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'maestría') ? 'selected' : ''; ?>>Maestría</option>
+                                    <option value="doctorado" <?php echo (isset($formData['gradoEstudios']) && $formData['gradoEstudios'] === 'doctorado') ? 'selected' : ''; ?>>Doctorado</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="profesion">Profesión</label>
+                                <select id="profesion" name="profesion" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="estudiante" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'estudiante') ? 'selected' : ''; ?>>Estudiante</option>
+                                    <option value="medico" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'medico') ? 'selected' : ''; ?>>Médico</option>
+                                    <option value="enfermero" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'enfermero') ? 'selected' : ''; ?>>Enfermero</option>
+                                    <option value="ingeniero" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'ingeniero') ? 'selected' : ''; ?>>Ingeniero</option>
+                                    <option value="abogado" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'abogado') ? 'selected' : ''; ?>>Abogado</option>
+                                    <option value="contador" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'contador') ? 'selected' : ''; ?>>Contador</option>
+                                    <option value="docente" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'docente') ? 'selected' : ''; ?>>Docente</option>
+                                    <option value="otra" <?php echo (isset($formData['profesion']) && $formData['profesion'] === 'otra') ? 'selected' : ''; ?>>Otra</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="ocupacion_actual">Ocupación Actual</label>
+                                <input
+                                    type="text"
+                                    id="ocupacion_actual"
+                                    name="ocupacionActual"
+                                    placeholder="Ej: Estudiante de medicina"
+                                    value="<?php echo htmlspecialchars($formData['ocupacionActual'] ?? ''); ?>"
+                                    required />
+
+                            </div>
+                            <div>
+                                <label for="empresa_labora">Empresa donde labora</label>
+                                <input
+                                    type="text"
+                                    id="empresa_labora"
+                                    name="empresaLabora"
+                                    placeholder="Nombre de la empresa (opcional)"
+                                    value="<?php echo htmlspecialchars($formData['empresaLabora'] ?? ''); ?>" />
+                            </div>
+                            <div>
+                                <label for="licencia_conducir">¿Tienes licencia de conducir?</label>
+                                <select id="licencia_conducir" name="tieneLicenciaConducir" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="0" <?php echo (isset($formData['tieneLicenciaConducir']) && $formData['tieneLicenciaConducir'] === '0') ? 'selected' : ''; ?>>No</option>
+                                    <option value="1" <?php echo (isset($formData['tieneLicenciaConducir']) && $formData['tieneLicenciaConducir'] === '1') ? 'selected' : ''; ?>>Sí</option>
+                                </select>
+                            </div>
+                            <div id="licencia_vencimiento_div" style="display: none;">
+                                <label for="licencia_vencimiento">Fecha de Vencimiento de Licencia</label>
+                                <input
+                                    type="date"
+                                    id="licencia_vencimiento"
+                                    name="licenciaVencimiento"
+                                    placeholder="Fecha de vencimiento" />
+                            </div>
+                            <div>
+                                <label for="tiene_pasaporte">¿Tienes pasaporte?</label>
+                                <select id="tiene_pasaporte" name="tienePasaporte" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="0" <?php echo (isset($formData['tienePasaporte']) && $formData['tienePasaporte'] === '0') ? 'selected' : ''; ?>>No</option>
+                                    <option value="1" <?php echo (isset($formData['tienePasaporte']) && $formData['tienePasaporte'] === '1') ? 'selected' : ''; ?>>Sí</option>
+                                </select>
+                            </div>
+                            <div id="pasaporte_vencimiento_div" style="display: none;">
+                                <label for="pasaporte_vencimiento">Fecha de Vencimiento de Pasaporte</label>
+                                <input
+                                    type="date"
+                                    id="pasaporte_vencimiento"
+                                    name="pasaporteVencimiento"
+                                    placeholder="Fecha de vencimiento" />
+                            </div>
+                            <div>
+                                <label for="enfermedades">Enfermedades (Opcional)</label>
+                                <textarea
+                                    id="enfermedades"
+                                    name="enfermedades"
+                                    placeholder="Especifica si padeces alguna enfermedad"
+                                    rows="3"><?php echo htmlspecialchars($formData['enfermedades'] ?? ''); ?></textarea>
+                            </div>
+                            <div>
+                                <label for="alergias">Alergias (Opcional)</label>
+                                <textarea
+                                    id="alergias"
+                                    name="alergias"
+                                    placeholder="Especifica si tienes alguna alergia"
+                                    rows="3"><?php echo htmlspecialchars($formData['alergias'] ?? ''); ?></textarea>
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Asignación de Área y Delegación</summary>
+                            <div>
+                                <label for="area">Área de Interés</label>
+                                <select id="area" name="areaID" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="1" <?php echo (isset($formData['areaID']) && $formData['areaID'] === '1') ? 'selected' : ''; ?>>Capacitación</option>
+                                    <option value="2" <?php echo (isset($formData['areaID']) && $formData['areaID'] === '2') ? 'selected' : ''; ?>>Juventud</option>
+                                    <option value="3" <?php echo (isset($formData['areaID']) && $formData['areaID'] === '3') ? 'selected' : ''; ?>>Socorros</option>
+                                    <option value="4" <?php echo (isset($formData['areaID']) && $formData['areaID'] === '4') ? 'selected' : ''; ?>>Voluntariados</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="delegacion">Delegación</label>
+                                <select id="delegacion" name="delegacionID" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="1" <?php echo (isset($formData['delegacionID']) && $formData['delegacionID'] === '1') ? 'selected' : ''; ?>>Tuxtla Gutiérrez</option>
+                                </select>
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Datos del Tutor</summary>
+                            <div>
+                                <label for="tutor_nombre">Nombre Completo del Tutor</label>
+                                <input
+                                    type="text"
+                                    id="tutor_nombre"
+                                    name="tutorNombre"
+                                    placeholder="Nombre del Tutor"
+                                    value="<?php echo htmlspecialchars($formData['tutorNombre'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="tutor_parentesco">Parentesco del Tutor</label>
+                                <select id="tutor_parentesco" name="tutorParentesco" required>
+                                    <option value="">-Seleccione-</option>
+
+                                    <optgroup label="Familia directa">
+                                        <option value="padre" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'padre') ? 'selected' : ''; ?>>Padre</option>
+                                        <option value="madre" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'madre') ? 'selected' : ''; ?>>Madre</option>
+                                        <option value="hijo" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'hijo') ? 'selected' : ''; ?>>Hijo</option>
+                                        <option value="hija" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'hija') ? 'selected' : ''; ?>>Hija</option>
+                                        <option value="hermano" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'hermano') ? 'selected' : ''; ?>>Hermano</option>
+                                        <option value="hermana" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'hermana') ? 'selected' : ''; ?>>Hermana</option>
+                                    </optgroup>
+
+                                    <optgroup label="Familia extendida">
+                                        <option value="abuelo" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'abuelo') ? 'selected' : ''; ?>>Abuelo</option>
+                                        <option value="abuela" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'abuela') ? 'selected' : ''; ?>>Abuela</option>
+                                        <option value="tio" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'tio') ? 'selected' : ''; ?>>Tío</option>
+                                        <option value="tia" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'tia') ? 'selected' : ''; ?>>Tía</option>
+                                        <option value="primo" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'primo') ? 'selected' : ''; ?>>Primo</option>
+                                        <option value="prima" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'prima') ? 'selected' : ''; ?>>Prima</option>
+                                    </optgroup>
+
+                                    <optgroup label="Otros">
+                                        <option value="conyuge" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'conyuge') ? 'selected' : ''; ?>>Cónyuge</option>
+                                        <option value="pareja" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'pareja') ? 'selected' : ''; ?>>Pareja</option>
+                                        <option value="amigo" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'amigo') ? 'selected' : ''; ?>>Amigo/a</option>
+                                        <option value="vecino" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'vecino') ? 'selected' : ''; ?>>Vecino/a</option>
+                                        <option value="tutor_legal" <?php echo (isset($formData['tutorParentesco']) && $formData['tutorParentesco'] === 'tutor_legal') ? 'selected' : ''; ?>>Tutor/a legal</option>
+                                        <!-- <option value="otro">Otro/a</option> -->
+                                    </optgroup>
+
+                                </select>
+                            </div>
+                            <div>
+                                <label for="tutor_telefono">Teléfono del Tutor</label>
+                                <input
+                                    type="tel"
+                                    id="tutor_telefono"
+                                    name="tutorTelefono"
+                                    placeholder="10 dígitos"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['tutorTelefono'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Contacto de Emergencia</summary>
+                            <div>
+                                <label for="contacto_emergencia_nombre">Nombre Completo</label>
+                                <input
+                                    type="text"
+                                    id="contacto_emergencia_nombre"
+                                    name="contactoEmergenciaNombre"
+                                    placeholder="Nombre de contacto de emergencia"
+                                    value="<?php echo htmlspecialchars($formData['contactoEmergenciaNombre'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <div>
+                                <label for="contactoEmergenciaParentesco">Parentesco del contacto de emergencia</label>
+                                <select id="contactoEmergenciaParentesco" name="contactoEmergenciaParentesco" required>
+                                    <option value="">-Seleccione-</option>
+
+                                    <optgroup label="Familia directa">
+                                        <option value="padre" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'padre') ? 'selected' : ''; ?>>Padre</option>
+                                        <option value="madre" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'madre') ? 'selected' : ''; ?>>Madre</option>
+                                        <option value="hijo" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'hijo') ? 'selected' : ''; ?>>Hijo</option>
+                                        <option value="hija" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'hija') ? 'selected' : ''; ?>>Hija</option>
+                                        <option value="hermano" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'hermano') ? 'selected' : ''; ?>>Hermano</option>
+                                        <option value="hermana" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'hermana') ? 'selected' : ''; ?>>Hermana</option>
+                                    </optgroup>
+
+                                    <optgroup label="Familia extendida">
+                                        <option value="abuelo" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'abuelo') ? 'selected' : ''; ?>>Abuelo</option>
+                                        <option value="abuela" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'abuela') ? 'selected' : ''; ?>>Abuela</option>
+                                        <option value="tio" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'tio') ? 'selected' : ''; ?>>Tío</option>
+                                        <option value="tia" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'tia') ? 'selected' : ''; ?>>Tía</option>
+                                        <option value="primo" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'primo') ? 'selected' : ''; ?>>Primo</option>
+                                        <option value="prima" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'prima') ? 'selected' : ''; ?>>Prima</option>
+                                    </optgroup>
+
+                                    <optgroup label="Otros">
+                                        <option value="conyuge" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'conyuge') ? 'selected' : ''; ?>>Cónyuge</option>
+                                        <option value="pareja" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'pareja') ? 'selected' : ''; ?>>Pareja</option>
+                                        <option value="amigo" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'amigo') ? 'selected' : ''; ?>>Amigo/a</option>
+                                        <option value="vecino" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'vecino') ? 'selected' : ''; ?>>Vecino/a</option>
+                                        <option value="tutor_legal" <?php echo (isset($formData['contactoEmergenciaParentesco']) && $formData['contactoEmergenciaParentesco'] === 'tutor_legal') ? 'selected' : ''; ?>>Tutor/a legal</option>
+                                        <!-- <option value="otro">Otro/a</option> -->
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="contacto_emergencia_telefono">Teléfono</label>
+                                <input
+                                    type="tel"
+                                    id="contacto_emergencia_telefono"
+                                    name="contactoEmergenciaTelefono"
+                                    placeholder="10 dígitos"
+                                    pattern="[0-9]{10}"
+                                    maxlength="10"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                                    value="<?php echo htmlspecialchars($formData['contactoEmergenciaTelefono'] ?? ''); ?>"
+                                    required />
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+
+                        <details>
+                            <summary>Disponibilidad</summary>
+                            <div>
+                                <label>Días de la Semana Disponibles</label>
+                                <div class="dias-disponibles">
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Lunes">
+                                        <span>Lunes</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Martes">
+                                        <span>Martes</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Miércoles">
+                                        <span>Miércoles</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Jueves">
+                                        <span>Jueves</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Viernes">
+                                        <span>Viernes</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Sábado">
+                                        <span>Sábado</span>
+                                    </label>
+                                    <label class="checkbox-dia">
+                                        <input type="checkbox" name="dias[]" value="Domingo">
+                                        <span>Domingo</span>
+                                    </label>
+                                </div>
+                                <input type="hidden" id="disponibilidad_dia" name="disponibilidadDia" value="0" required>
+                                <small class="dias-counter">Días seleccionados: <strong>0</strong></small>
+                            </div>
+                            <div>
+                                <label for="disponibilidad_turno">Turno</label>
+                                <select id="disponibilidad_turno" name="disponibilidadTurno" required>
+                                    <option value="">-Seleccione-</option>
+                                    <option value="Matutino" <?php echo (isset($formData['disponibilidadTurno']) && $formData['disponibilidadTurno'] === 'Matutino') ? 'selected' : ''; ?>>Matutino</option>
+                                    <option value="Vespertino" <?php echo (isset($formData['disponibilidadTurno']) && $formData['disponibilidadTurno'] === 'Vespertino') ? 'selected' : ''; ?>>Vespertino</option>
+                                    <option value="Discontinuo" <?php echo (isset($formData['disponibilidadTurno']) && $formData['disponibilidadTurno'] === 'Discontinuo') ? 'selected' : ''; ?>>Discontinuo</option>
+                                </select>
+                            </div>
+                            <button type="button" class="continue-btn">Continuar</button>
+                        </details>
+                    </div>
+                    <button type="submit" name="registrar">Crear cuenta</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="public/scripts/l.script.js"></script>
+
+</body>
+
+</html>
