@@ -20,7 +20,7 @@ class Voluntario
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->execute();
-            $datos = $stmt->fetch(PDO::FETCH_ASSOC);git
+            $datos = $stmt->fetch(PDO::FETCH_ASSOC);
 
             // Si el SP no devuelve AreaID y DelegacionID, obtenerlos manualmente
             if ($datos && (!isset($datos['AreaID']) || !isset($datos['DelegacionID']))) {
