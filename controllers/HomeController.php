@@ -211,7 +211,7 @@ class HomeController
         $puedeVerVoluntarios = $this->tienePermiso(2);
         $puedeEditarOtros = $this->tienePermiso(3);
 
-        $titulo_pagina = "Voluntarios a mi Cargo | Red de Voluntarios";
+        $titulo_pagina = "Voluntarios Personal | Red de Voluntarios";
 
         $styles = [$this->base_url . 'public/css/p.style.css'];
 
