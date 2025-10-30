@@ -1,9 +1,4 @@
 <?php
-// Las variables vienen del controlador:
-// - $esCoordinadorOMas
-// - $notificacionesPendientes  
-// - $totalPendientes
-// - $notificacionesGenerales
 
 // Verificar que las variables existen (seguridad adicional)
 if (!isset($esCoordinadorOMas)) {
@@ -75,16 +70,16 @@ if (!isset($notificacionesGenerales)) {
                                         <?= htmlspecialchars($notif['email']) ?>
                                     </span>
                                     <?php if (isset($notif['delegacion'])): ?>
-                                    <span class="detalle-item">
-                                        <i class="fa-solid fa-map-marker-alt"></i>
-                                        <?= htmlspecialchars($notif['delegacion']) ?>
-                                    </span>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-map-marker-alt"></i>
+                                            <?= htmlspecialchars($notif['delegacion']) ?>
+                                        </span>
                                     <?php endif; ?>
                                     <?php if (isset($notif['area'])): ?>
-                                    <span class="detalle-item">
-                                        <i class="fa-solid fa-briefcase"></i>
-                                        <?= htmlspecialchars($notif['area']) ?>
-                                    </span>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                            <?= htmlspecialchars($notif['area']) ?>
+                                        </span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="notificacion-acciones">
@@ -107,7 +102,7 @@ if (!isset($notificacionesGenerales)) {
             <!-- Mensaje cuando no hay pendientes -->
             <div class="notificaciones-seccion pendientes-seccion">
                 <h3 class="seccion-titulo">
-                    <i class="fa-solid fa-check-circle"></i> 
+                    <i class="fa-solid fa-check-circle"></i>
                     No hay voluntarios pendientes de aprobación
                 </h3>
                 <div class="mensaje-vacio">
@@ -119,44 +114,44 @@ if (!isset($notificacionesGenerales)) {
 
         <!-- Sección de Notificaciones Generales -->
         <?php if (!empty($notificacionesGenerales)): ?>
-        <div class="notificaciones-seccion generales-seccion">
-            <h3 class="seccion-titulo">
-                <i class="fa-solid fa-inbox"></i> Notificaciones Recientes
-            </h3>
+            <div class="notificaciones-seccion generales-seccion">
+                <h3 class="seccion-titulo">
+                    <i class="fa-solid fa-inbox"></i> Notificaciones Recientes
+                </h3>
 
-            <div class="notificaciones-lista">
-                <?php foreach ($notificacionesGenerales as $notif): ?>
-                    <div class="notificacion-card <?= htmlspecialchars($notif['tipo']) ?>">
-                        <div class="notificacion-icono <?= htmlspecialchars($notif['tipo']) ?>-icono">
-                            <i class="fa-solid <?= htmlspecialchars($notif['icono']) ?>"></i>
+                <div class="notificaciones-lista">
+                    <?php foreach ($notificacionesGenerales as $notif): ?>
+                        <div class="notificacion-card <?= htmlspecialchars($notif['tipo']) ?>">
+                            <div class="notificacion-icono <?= htmlspecialchars($notif['tipo']) ?>-icono">
+                                <i class="fa-solid <?= htmlspecialchars($notif['icono']) ?>"></i>
+                            </div>
+                            <div class="notificacion-contenido">
+                                <div class="notificacion-header">
+                                    <h4><?= htmlspecialchars($notif['titulo']) ?></h4>
+                                    <span class="notificacion-tiempo">
+                                        <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($notif['tiempo']) ?>
+                                    </span>
+                                </div>
+                                <p class="notificacion-mensaje">
+                                    <?= htmlspecialchars($notif['mensaje']) ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+
+                    <!-- Mensaje cuando no hay más notificaciones -->
+                    <div class="notificacion-card vacia">
+                        <div class="notificacion-icono vacia-icono">
+                            <i class="fa-solid fa-check-circle"></i>
                         </div>
                         <div class="notificacion-contenido">
-                            <div class="notificacion-header">
-                                <h4><?= htmlspecialchars($notif['titulo']) ?></h4>
-                                <span class="notificacion-tiempo">
-                                    <i class="fa-regular fa-clock"></i> <?= htmlspecialchars($notif['tiempo']) ?>
-                                </span>
-                            </div>
                             <p class="notificacion-mensaje">
-                                <?= htmlspecialchars($notif['mensaje']) ?>
+                                ¡Estás al día! No tienes más notificaciones pendientes.
                             </p>
                         </div>
                     </div>
-                <?php endforeach; ?>
-
-                <!-- Mensaje cuando no hay más notificaciones -->
-                <div class="notificacion-card vacia">
-                    <div class="notificacion-icono vacia-icono">
-                        <i class="fa-solid fa-check-circle"></i>
-                    </div>
-                    <div class="notificacion-contenido">
-                        <p class="notificacion-mensaje">
-                            ¡Estás al día! No tienes más notificaciones pendientes.
-                        </p>
-                    </div>
                 </div>
             </div>
-        </div>
         <?php endif; ?>
 
     </div>
