@@ -182,7 +182,7 @@ class HomeController
         require_once "views/layout/footer.php";
     }
 
-    public function miCargo()
+    public function personal()
     {
         // Solo coordinadores o superiores
         if (!$this->tienePermiso(2)) {
@@ -222,9 +222,9 @@ class HomeController
 
         require_once "views/layout/header.php";
 
-        require_once "views/home/miCargo.php";
+        require_once "views/home/personal.php";
 
-        require_once "views/layout/footer.php";
+        // require_once "views/layout/footer.php";
     }
 
     public function coordinadores()
