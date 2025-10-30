@@ -25,6 +25,13 @@
 
 <?php $v = time(); ?> 
 
+    <?php // Incluir scripts globales necesarios para la UI (menú, utilidades) ?>
+    <?php if (isset($base_url)): ?>
+        <script src="<?php echo $base_url; ?>public/scripts/g.script.js?v=<?php echo $v; ?>"></script>
+    <?php else: ?>
+        <script src="public/scripts/g.script.js?v=<?php echo $v; ?>"></script>
+    <?php endif; ?>
+
     <?php if (isset($scripts) && is_array($scripts)): ?>
         <?php foreach ($scripts as $script_path): ?>
             <script src="<?php echo $script_path; ?>?v=<?php echo $v; ?>"></script>
