@@ -5,243 +5,461 @@
   padding-top: 9rem; 
 }
 
+/* Panel de administración mejorado */
 .admin-panel {
-  background: var(--color);
+  background: linear-gradient(180deg, var(--color) 0%, rgba(127, 0, 0, 0.95) 100%);
   color: var(--white);
-  width: 250px;
-  padding: 2rem 1rem;
-  box-shadow: var(--shadow);
+  width: 280px;
+  padding: 2.5rem 1.5rem;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
   position: fixed;
   top: 7rem;
   bottom: 0;
   left: 0;
   display: flex; 
   flex-direction: column; 
-  gap: 2rem; 
+  gap: 2rem;
+  z-index: 900;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.admin-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--secondary-color), var(--cuartiary-color));
 }
 
 .admin-panel h3 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   border-bottom: 2px solid var(--secondary-color);
   margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  letter-spacing: 0.3px;
+}
+
+.admin-panel h3::before {
+  content: '\f013';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--secondary-color);
+  font-size: 2.2rem;
 }
 
 .btn-agregar {
-  background: var(--button-color);
+  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
   color: var(--white);
   border: none;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-size: 1.4rem;
+  padding: 1.4rem 1.6rem;
+  border-radius: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
   width: 100%;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(219, 141, 7, 0.3);
+  position: relative;
+  overflow: hidden;
 }
 
-.btn-agregar:hover{
-  opacity: 0.9;
+.btn-agregar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
 }
 
+.btn-agregar:hover::before {
+  left: 100%;
+}
+
+.btn-agregar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(219, 141, 7, 0.4);
+}
+
+.btn-agregar i {
+  font-size: 1.6rem;
+}
+
+/* Botón toggle para móvil */
+.admin-toggle {
+  display: none;
+  position: fixed;
+  top: 8.5rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 2.4rem;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  z-index: 950;
+  transition: all 0.3s ease;
+}
+
+.admin-toggle:hover {
+  transform: scale(1.1) rotate(90deg);
+  box-shadow: 0 6px 25px rgba(127, 0, 0, 0.5);
+}
+
+.admin-toggle.active {
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
+}
+
+/* Overlay para panel móvil */
+.admin-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 899;
+}
+
+.admin-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Panel de formulario mejorado */
 .formulario-panel {
   position: fixed;
   top: 0;
   right: -100%;
-  width: 400px;
+  width: 480px;
   height: 100vh;
   background: var(--white);
-  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
-  transition: right 0.4s ease;
-  padding: 2rem;
+  box-shadow: -6px 0 30px rgba(0, 0, 0, 0.2);
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
   overflow-y: auto;
-  z-index: 1000;
+  z-index: 1100;
+}
+
+.formulario-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--color), var(--secondary-color));
 }
 
 .formulario-panel.active {
   right: 0;
 }
 
+.formulario {
+  padding: 2.5rem;
+}
+
 .formulario h2{
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
   color: var(--color);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--secondary-color);
+}
+
+.formulario h2::before {
+  content: '\f15b';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--secondary-color);
 }
 
 .formulario label {
   display: block;
-  font-size: 1.4rem;
-  margin-bottom: 0.3rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  margin-top: 1.2rem;
   color: #333;
+  font-weight: 600;
 }
 
 .formulario input,
 .formulario textarea,
 .formulario select { 
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 0.4rem;
-  margin-bottom: 1.2rem;
+  padding: 1.2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 0.6rem;
+  margin-bottom: 0.5rem;
   font-size: 1.4rem;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(219, 141, 7, 0.1);
 }
 
 .form-buttons { 
   display: flex;
-  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.btn-guardar,
+.btn-cancelar {
+  flex: 1;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .btn-guardar { 
-  background: var(--color);
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.4rem;
-  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
+}
+
+.btn-guardar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
 .btn-cancelar { 
-  background: #ccc;
-  color: black;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 0.4rem;
-  cursor: pointer;
+  background: #6c757d;
+  color: white;
 }
 
+.btn-cancelar:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* Requerimientos mejorados */
 .requerimientos-admin {
-  background: #f4f4f4;
-  border: 1px solid #ccc;
-  padding: 1rem;
-  border-radius: 0.6rem;
-  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border: 2px solid var(--secondary-color);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  margin: 2rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .requerimientos-admin h3 {
   color: var(--color);
-  font-size: 1.6rem;
-  margin-bottom: 1rem;
+  font-size: 1.7rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.requerimientos-admin h3::before {
+  content: '\f0cb';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--secondary-color);
+}
+
+#lista-requerimientos {
+  margin-bottom: 1.2rem;
+  min-height: 40px;
+  max-height: 300px;
+  overflow-y: auto;
 }
 
 .nuevo-requerimiento { 
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
   align-items: center;
 }
 
 #nuevo-label, #nuevo-tipo {
   flex: 1;
-  padding: 0.5rem;
-  border-radius: 0.4rem;
-  border: 1px solid #bbb;
+  padding: 1rem;
+  border-radius: 0.6rem;
+  border: 2px solid #ccc;
+  font-size: 1.4rem;
+  transition: border-color 0.3s ease;
+}
+
+#nuevo-label:focus, #nuevo-tipo:focus {
+  border-color: var(--secondary-color);
+  outline: none;
 }
 
 #btn-add-requerimiento { 
-  background: var(--color);
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
   border: none;
-  padding: 0.6rem 1rem;
-  border-radius: 0.4rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.6rem;
   cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(127, 0, 0, 0.3);
+  min-width: 45px;
+}
+
+#btn-add-requerimiento:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.4);
 }
 
 #lista-requerimientos div.requerimiento-item {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.8rem;
   justify-content: space-between;
   align-items: center;
   background: white;
-  border: 1px solid #ddd;
-  padding: 0.6rem;
-  border-radius: 0.4rem;
-  margin-bottom: 0.5rem;
+  border: 2px solid #e0e0e0;
+  padding: 1rem;
+  border-radius: 0.8rem;
+  margin-bottom: 0.8rem;
   font-size: 1.4rem;
+  transition: all 0.3s ease;
 }
 
-/* Estilo para el texto de visualización */
+.requerimiento-item:hover {
+  border-color: var(--secondary-color);
+  box-shadow: 0 2px 8px rgba(219, 141, 7, 0.2);
+}
+
 .requerimiento-display {
   flex-grow: 1;
   cursor: pointer;
-  padding: 0.2rem 0.5rem;
-  transition: background 0.2s;
+  padding: 0.5rem;
+  transition: all 0.2s;
+  border-radius: 0.4rem;
+  font-weight: 500;
 }
 
 .requerimiento-display:hover {
-  background: #f0f0f0;
-  border-radius: 0.2rem;
+  background: #f8f9fa;
 }
 
-/* Estilo para los inputs de edición */
 .req-input-edit, .req-select-edit {
   flex: 1;
-  padding: 0.2rem;
-  border: 1px solid var(--secondary-color);
-  border-radius: 0.3rem;
+  padding: 0.6rem;
+  border: 2px solid var(--secondary-color);
+  border-radius: 0.4rem;
   font-size: 1.3rem;
   margin-bottom: 0;
 }
 
 .btn-eliminar-req {
-  background: #ccc;
-  color: #333;
+  background: #dc3545;
+  color: white;
   font-weight: bold;
   border: none;
-  padding: 0.2rem 0.5rem;
+  padding: 0.5rem;
   border-radius: 50%;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  line-height: 1;
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
 }
 
 .btn-eliminar-req:hover {
-  background: #b60000;
-  color: white;
+  background: #c82333;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
 }
 
+/* Sección de trámites */
 .tramites { 
   flex: 1;
-  margin-left: 270px;
+  margin-left: 300px;
   padding: 3rem;
+  transition: margin-left 0.3s ease;
 }
 
 .tramites h1 {
   color: var(--color);
-  font-size: 2.4rem;
-  margin-bottom: 2rem;
+  font-size: 2.8rem;
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.tramites h1::before {
+  content: '\f15b';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  color: var(--secondary-color);
 }
 
 .lista-tramites { 
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-/* Nuevo diseño de tarjeta horizontal */
+/* Tarjetas de trámites mejoradas */
 .tramite-card { 
   background: var(--white);
-  border-radius: 0.8rem;
-  box-shadow: var(--shadow);
-  border-left: 5px solid var(--secondary-color);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 6px solid var(--secondary-color);
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .tramite-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateX(5px);
 }
 
 .tramite-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 2rem 2.5rem;
   gap: 2rem;
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
 
 .tramite-info {
@@ -251,17 +469,19 @@
 
 .tramite-info h3 {
   color: var(--color);
-  font-size: 1.8rem;
+  font-size: 2.2rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
 
 .tramite-info p {
   font-size: 1.4rem;
   color: #555;
-  margin: 0.3rem 0;
+  margin: 0.5rem 0;
+  line-height: 1.6;
 }
 
 .tramite-info i {
@@ -283,181 +503,164 @@
 .btn-editar, .btn-eliminar {
   border: none;
   cursor: pointer;
-  padding: 0.7rem 1.2rem;
-  border-radius: 0.4rem;
-  font-size: 1.3rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
   color: white;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  transition: opacity 0.3s ease;
+  gap: 0.6rem;
+  transition: all 0.3s ease;
 }
 
 .btn-editar { 
-  background: var(--color); 
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
 }
 
 .btn-editar:hover {
-  opacity: 0.85;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
 .btn-eliminar { 
-  background: #b60000; 
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 .btn-eliminar:hover {
-  opacity: 0.85;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
 
 .btn-solicitar {
   border: none;
   cursor: pointer;
-  padding: 0.7rem 1.5rem;
-  border-radius: 0.4rem;
-  font-size: 1.4rem;
+  padding: 1rem 2rem;
+  border-radius: 0.8rem;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: white;
-  background: var(--tertiary-color);
+  background: linear-gradient(135deg, var(--tertiary-color), rgba(14, 7, 37, 0.9));
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
   transition: all 0.3s ease;
-  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(14, 7, 37, 0.3);
 }
 
 .btn-solicitar:hover {
-  opacity: 0.9;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 7, 37, 0.4);
 }
 
 .btn-solicitar.active {
-  background: #666;
+  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
 }
 
 /* Formulario de solicitud desplegable */
 .form-solicitud-wrapper {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease;
+  transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   background: #f9f9f9;
 }
 
 .form-solicitud-wrapper.active {
-  max-height: 1000px;
-  border-top: 2px solid var(--secondary-color);
+  max-height: 1500px;
+  border-top: 3px solid var(--secondary-color);
 }
 
 .form-solicitud-content {
-  padding: 2rem;
+  padding: 2.5rem;
 }
 
 .form-solicitud-content h3 {
   color: var(--color);
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.8rem;
+  font-weight: 700;
 }
 
 .form-solicitud {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1.5rem;
 }
 
 .form-solicitud label {
   display: block;
-  font-size: 1.4rem;
-  margin-bottom: 0.3rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
   color: #333;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .form-solicitud input,
 .form-solicitud textarea {
   width: 100%;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 0.4rem;
+  padding: 1.2rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 0.6rem;
   font-size: 1.4rem;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
+  font-family: inherit;
 }
 
 .form-solicitud input:focus,
 .form-solicitud textarea:focus {
   outline: none;
-  border-color: var(--color);
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(219, 141, 7, 0.1);
 }
 
 .form-solicitud button[type="submit"] {
-  background: var(--color);
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 0.4rem;
-  font-size: 1.5rem;
+  padding: 1.4rem 2.5rem;
+  border-radius: 0.8rem;
+  font-size: 1.6rem;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 1rem;
-  transition: opacity 0.3s ease;
+  margin-top: 1.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
 }
 
 .form-solicitud button[type="submit"]:hover {
-  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
-.sin-cursos, .sin-tramites { 
-  color: #777;
+.sin-tramites { 
+  color: #999;
   text-align: center;
-  font-size: 1.6rem;
-  padding: 2rem;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0; 
-  top: 0;
-  width: 100%; 
-  height: 100%;
-  background: rgba(0,0,0,0.4);
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-contenido {
+  font-size: 1.8rem;
+  padding: 5rem;
   background: white;
-  padding: 2rem;
-  border-radius: 0.6rem;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  overflow-y: auto;
-  max-height: 90vh;
-}
-
-.cerrar-modal {
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  font-size: 2rem;
-  cursor: pointer;
-  color: var(--color);
-}
-
-footer {
-  position: relative;
-  z-index: 0;
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 1024px) {
   .tramite-header {
     flex-direction: column;
     align-items: stretch;
+    padding: 2rem;
   }
 
   .tramite-actions {
     justify-content: space-between;
+    width: 100%;
   }
 
   .acciones-admin {
@@ -471,8 +674,22 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .admin-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .admin-panel {
-    display: none;
+    transform: translateX(-100%);
+    width: 85%;
+    max-width: 320px;
+    top: 0;
+    padding-top: 8rem;
+  }
+
+  .admin-panel.active {
+    transform: translateX(0);
   }
 
   .tramites { 
@@ -480,8 +697,24 @@ footer {
     padding: 2rem;
   }
 
+  .tramites h1 {
+    font-size: 2.4rem;
+  }
+
   .formulario-panel {
     width: 100%;
+  }
+
+  .tramite-card {
+    border-left-width: 4px;
+  }
+
+  .tramite-header {
+    padding: 1.5rem;
+  }
+
+  .tramite-info h3 {
+    font-size: 1.9rem;
   }
 
   .tramite-actions {
@@ -495,5 +728,33 @@ footer {
   .btn-editar, .btn-eliminar, .btn-solicitar {
     flex: 1;
     justify-content: center;
+    width: 100%;
+  }
+
+  .form-solicitud-content {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-toggle {
+    width: 55px;
+    height: 55px;
+    font-size: 2rem;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .tramites {
+    padding: 1.5rem;
+  }
+
+  .tramite-card {
+    border-radius: 1rem;
+  }
+
+  .btn-agregar {
+    padding: 1.2rem;
+    font-size: 1.4rem;
   }
 }
