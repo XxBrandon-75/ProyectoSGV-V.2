@@ -459,11 +459,17 @@ main.contenido-pagina {
 }
 
 .acciones-container .btn-editar {
+  padding: 8px 16px;
+  font-size: 1.3rem;
+  border-radius: 5px;
   background: #28a745;
-  color: white;
-  margin-left: 0;
-  width: 100%;
-  min-width: 100px;
+  color: #fff;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: background 0.2s;
+  font-weight: 500;
 }
 
 .acciones-container .btn-editar:hover {
