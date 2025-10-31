@@ -58,11 +58,15 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
                         <div id="notify" class="fa-solid fa-bell" style="color: #ffffff;"></div>
                   </a>
                   <div id="menu-bar" class="fa-solid fa-bars"></div>
-                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=perfil">
+                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=perfil" style="display: flex; align-items: center; gap: 6px;">
                         <div id="user" class="fa-solid fa-user" style="color: #ffffff;"></div>
+                        <span style="color: #fff; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">
+                              <?php echo isset($_SESSION['user']['nombre']) ? htmlspecialchars($_SESSION['user']['nombre']) : 'Usuario'; ?>
+                        </span>
                   </a>
-                  <a href="<?php echo $base_url; ?>logout.php" title="Cerrar sesión">
+                  <a href="<?php echo $base_url; ?>logout.php" title="Cerrar sesión" style="display: flex; align-items: center; gap: 6px;">
                         <div id="logout" class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></div>
+                        <span style="color: #fff; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">Salir</span>
                   </a>
             </div>
              
@@ -72,3 +76,6 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
       <div id="nav-overlay" aria-hidden="true"></div>
 
         <main class="contenido-pagina">
+</body>
+
+</html>
