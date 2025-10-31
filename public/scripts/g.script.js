@@ -131,3 +131,48 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 250);
     });
 });
+// --- Contador de notificaciones (actualiza el badge del header) ---
+(function () {
+    // Determina base URL definida desde PHP en header (fallback a origin/)
+    var BASE_URL = window.baseUrl || (window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') );
+
+    function actualizarContadorHeader() {
+        var url = BASE_URL + 'controllers/NotificacionesAjaxController.php?action=contador';
+        fetch(url, { credentials: 'same-origin' })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                var badge = document.getElementById('notification-count');
+                if (!badge) return;
+
+                if (data && data.success && parseInt(data.totalPendientes) > 0) {
+                    badge.textContent = data.totalPendientes;
+                    badge.style.display = 'flex';
+                    badge.classList.add('show');
+                } else {
+                    badge.textContent = '';
+                    badge.style.display = 'none';
+                    badge.classList.remove('show');
+                }
+            })
+            .catch(function () { /* silent error */ });
+    }
+
+    // Permitir que otras partes (ej. n.script.js) actualicen el badge manualmente
+    window.actualizarBadgeHeader = function (count) {
+        var badge = document.getElementById('notification-count');
+        if (!badge) return;
+        if (count && parseInt(count) > 0) {
+            badge.textContent = parseInt(count);
+            badge.style.display = 'flex';
+        } else {
+            badge.textContent = '';
+            badge.style.display = 'none';
+        }
+    };
+
+    // Ejecutar al cargar y cada 30s
+    document.addEventListener('DOMContentLoaded', function () {
+        actualizarContadorHeader();
+        setInterval(actualizarContadorHeader, 30000);
+    });
+})();
