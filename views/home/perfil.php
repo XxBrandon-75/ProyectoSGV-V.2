@@ -363,6 +363,18 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
         </div>
       </div>
     </div>
+
+    <?php if ($puedeEditarRoles && !$esPropioUsuario): ?>
+      <div class="baja-voluntario-container">
+        <form action="<?php echo $base_url; ?>index.php?controller=home&action=bajaVoluntario" method="post" onsubmit="return confirm('¿Estás seguro de que deseas dar de baja a este voluntario? Esta acción no se puede deshacer.');">
+          <input type="hidden" name="voluntario_id" value="<?php echo htmlspecialchars($datosUsuario['VoluntarioID']); ?>">
+          <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+          <button type="submit" class="btn-baja" <?php echo (isset($datosUsuario['EstatusNombre']) && $datosUsuario['EstatusNombre'] !== 'Activo') ? 'disabled style="opacity:0.6;cursor:not-allowed;"' : ''; ?>>
+            <i class="fa-solid fa-user-slash"></i> Dar de baja voluntario
+          </button>
+        </form>
+      </div>
+    <?php endif; ?>
   </div>
 
 </section>

@@ -46,10 +46,6 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
                                 <td><?= isset($coord['FechaRegistro']) ? date('d/m/Y', strtotime($coord['FechaRegistro'])) : 'N/A' ?></td>
                                 <td>
                                     <div class="acciones-container">
-                                        <button class="btn-accion btn-ver" onclick="verDetallesCoordinador(<?= $coord['VoluntarioID'] ?>)" title="Ver detalles">
-                                            <i class="fa-solid fa-eye"></i>
-                                            <span>Ver</span>
-                                        </button>
                                         <a href="<?= $base_url ?>index.php?controller=home&action=perfil&id=<?= $coord['VoluntarioID'] ?>" class="btn-editar" title="Editar perfil">
                                             <i class="fa-solid fa-pen"></i> Editar
                                         </a>
@@ -67,15 +63,3 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
         <?php endif; ?>
     </div>
 </section>
-
-<!-- Modal para ver/editar detalles del coordinador -->
-<div id="modal-detalles" class="modal">
-    <div class="modal-content modal-grande">
-        <span class="cerrar-modal" onclick="cerrarModalDetalles()">&times;</span>
-        <h2 id="modal-titulo-detalles">Detalles del Coordinador</h2>
-        <div id="contenido-detalles" class="loading">
-            <i class="fa-solid fa-spinner fa-spin"></i>
-            <p>Cargando información...</p>
-        </div>
-    </div>
-</div>
