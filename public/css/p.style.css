@@ -649,6 +649,18 @@ main.contenido-pagina {
   color: white;
 }
 
+.perfil-foto-container {
+  margin-bottom: 20px;
+}
+
+.perfil-foto {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+}
+
 footer {
   position: relative;
   z-index: 0;
