@@ -7,9 +7,9 @@
             </a>
         </li>
         <?php if ($puedeVerVoluntarios): ?>
-            <li class="<?= ($paginaActual === 'miCargo') ? 'activo' : '' ?>">
-                <a href="<?= $base_url ?>index.php?controller=home&action=miCargo">
-                    <i class="fa-solid fa-users"></i> A mi cargo
+            <li class="<?= ($paginaActual === 'personal') ? 'activo' : '' ?>">
+                <a href="<?= $base_url ?>index.php?controller=home&action=personal">
+                    <i class="fa-solid fa-users"></i> Personal
                 </a>
             </li>
         <?php endif; ?>
