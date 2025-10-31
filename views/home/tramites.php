@@ -59,11 +59,12 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
 
 <div id="modal-solicitud" class="modal">
   <div class="modal-contenido">
-    <span class="cerrar-modal" id="cerrar-modal">&times;</span>
+    <span class="cerrar-modal" style="display: none;" id="cerrar-modal">&times;</span>
     <h2 id="titulo-solicitud"></h2>
     <p id="descripcion-solicitud"></p>
-    <p><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
-    <p><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
+  <!-- Fechas del trámite: ocultas por defecto (se usan desde JS al abrir el modal) -->
+  <p class="modal-fecha" style="display: none;"><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
+  <p class="modal-fecha" style="display: none;"><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
     <form id="form-solicitud" class="form-solicitud"></form>
   </div>
 </div>

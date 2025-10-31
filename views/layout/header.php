@@ -68,4 +68,7 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
              
       </header>
 
+      <!-- Overlay para el menú móvil -->
+      <div id="nav-overlay" aria-hidden="true"></div>
+
         <main class="contenido-pagina">
