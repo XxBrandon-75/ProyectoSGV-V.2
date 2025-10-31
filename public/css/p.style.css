@@ -483,6 +483,11 @@ main.contenido-pagina {
 }
 
 .estatus-inactivo {
+  background: #6c757d;
+  color: white;
+}
+
+.estatus-rechazado {
   background: #dc3545;
   color: white;
 }
