@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   function aplicarFiltro(filtro) {
-    console.log("Filtro aplicado:", filtro);
+    // filtro seleccionado (pendiente implementar lógica en backend)
     // TODO: Implementar lógica de filtrado cuando se conecte con backend
     // Por ahora solo muestra un mensaje en consola
   }
@@ -51,6 +51,8 @@ function aprobarVoluntario(id) {
               setTimeout(() => {
                 card.remove();
                 actualizarContadores(data.totalPendientes);
+                // Actualizar el badge del header
+                actualizarBadgeHeaderExterno(data.totalPendientes);
               }, 300);
             }, 1000);
           }
@@ -109,6 +111,8 @@ function rechazarVoluntario(id) {
               setTimeout(() => {
                 card.remove();
                 actualizarContadores(data.totalPendientes);
+                // Actualizar el badge del header
+                actualizarBadgeHeaderExterno(data.totalPendientes);
               }, 300);
             }, 1000);
           }
@@ -254,6 +258,25 @@ function actualizarContadores(totalPendientes) {
           <p>Todos los voluntarios han sido revisados.</p>
         </div>
       `;
+    }
+  }
+}
+
+// Función para actualizar el badge del header desde esta página
+function actualizarBadgeHeaderExterno(count) {
+  // Verificar si existe la función en el header
+  if (typeof window.actualizarBadgeHeader === 'function') {
+    window.actualizarBadgeHeader(count);
+  } else {
+    // Si no existe, actualizar directamente
+    const badge = document.getElementById('notification-count');
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = 'flex';
+      } else {
+        badge.style.display = 'none';
+      }
     }
   }
 }

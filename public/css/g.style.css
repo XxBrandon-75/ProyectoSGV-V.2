@@ -35,9 +35,6 @@ body {
   color: var(--text-color);
   background: var(--white);
   overflow-x: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
 .contenido-pagina {
@@ -48,7 +45,6 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  flex: 1 0 auto;
 }
 
 header {
@@ -185,8 +181,6 @@ body.menu-open {
   padding: 3rem 7%;
   position: relative;
   z-index: 10;
-  flex-shrink: 0;
-  margin-top: auto;
 }
 
 .inicio-footer {
@@ -423,82 +417,69 @@ body.menu-open {
   }
 }
 
-/* ============================================================
-   AÑADE ESTE CÓDIGO AL FINAL DE TU ARCHIVO DE ESTILOS GENERAL
-   (DESPUÉS DE LOS @media queries existentes)
-   ============================================================ */
+/*ESTILOS PARA EL BADGE DE NOTIFICACIONES*/
 
-/* Fix para estructura de páginas con panel de administración */
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+.notification-link {
+  position: relative;
+  display: inline-block;
 }
 
-/* Asegurar que el contenido principal empuje el footer hacia abajo */
-.contenido-pagina {
-  flex: 1 0 auto;
-  min-height: calc(100vh - 15rem);
+/* Badge de notificaciones */
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 50%;
+  min-width: 20px;
+  height: 20px;
+  display: none; 
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.2rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  animation: pulse-notification 2s infinite;
+  z-index: 10;
 }
 
-/* Footer siempre al fondo */
-.footer {
-  flex-shrink: 0;
-  margin-top: auto;
+/* Animación para el pulso */
+@keyframes pulse-notification {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(255, 107, 107, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+  }
 }
 
-/* Prevenir que elementos fixed afecten al footer */
-.admin-toggle,
-.admin-overlay,
-.nav-overlay {
-  /* Estos elementos no afectan al flujo del documento */
-  pointer-events: none;
+/* Ocultar cuando está vacío */
+.notification-badge:empty {
+  display: none !important;
 }
 
-.admin-toggle {
-  pointer-events: all;
-}
-
-.admin-overlay.active,
-.nav-overlay.active {
-  pointer-events: all;
-}
-
-/* Ajustes para páginas específicas con panel lateral */
-.documentos,
-.tramites {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 15rem);
-}
-
-/* ============================================================
-   RESPONSIVE: Ajustes adicionales para móvil
-   ============================================================ */
-
+/* Responsive para móviles */
 @media (max-width: 768px) {
-  /* Asegurar padding correcto en móvil */
-  .contenido-pagina {
-    padding-top: 9rem;
-    padding-bottom: 2rem;
-  }
-
-  .documentos,
-  .tramites {
-    padding-bottom: 3rem;
-  }
-  
-  /* Prevenir que el botón admin interfiera con el scroll */
-  body.menu-open .admin-toggle {
-    opacity: 0.5;
-    pointer-events: none;
+  .notification-badge {
+    top: -6px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
-  /* Ajustes menores para pantallas muy pequeñas */
-  .contenido-pagina {
-    padding-bottom: 1.5rem;
+  .notification-badge {
+    top: -5px;
+    right: -5px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.9rem;
   }
 }
