@@ -186,22 +186,18 @@ class VoluntarioModel
     /**
      * Cuenta el número total de voluntarios pendientes
      * 
-     * @return int Número de voluntarios pendientes
+     * @return int 
      */
     public function contarVoluntariosPendientes()
     {
         try {
-            $sql = "SELECT COUNT(*) as total 
-                    FROM dbo.Voluntarios v
-                    INNER JOIN dbo.EstatusVoluntario ev ON v.EstatusID = ev.EstatusID
-                    WHERE ev.Nombre = 'Pendiente de Aprobación'";
-            
+            $sql = "EXEC voluntariosSinAprobar";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            return (int) $resultado['total'];
-            
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return is_array($rows) ? count($rows) : 0;
+
         } catch (PDOException $e) {
             error_log("Error en contarVoluntariosPendientes: " . $e->getMessage());
             return 0;

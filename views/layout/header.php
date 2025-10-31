@@ -21,41 +21,64 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
 <html lang="es">
 
 <head>
-       
+       
       <meta charset="UTF-8" />
-       
+       
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title><?php echo $titulo_pagina; ?></title>
+        <title><?php echo $titulo_pagina; ?></title>
 
-         
+         
       <link rel="stylesheet" href="<?php echo $base_url; ?>public/css/g.style.css" />
+      <style>
+        .notification-link {
+            position: relative;
+            display: inline-block;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ff4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 2px solid #7f0000;
+        }
+      </style>
 
-          <?php foreach ($styles as $style_path): ?>
-               
+          <?php foreach ($styles as $style_path): ?>
+               
             <link rel="stylesheet" href="<?php echo $style_path; ?>" />
-              <?php endforeach; ?>
+              <?php endforeach; ?>
 
-          <script src="https://kit.fontawesome.com/910c92f415.js" crossorigin="anonymous"></script>
+          <script src="https://kit.fontawesome.com/910c92f415.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-        <header>
-                <div class="logo">
-                        <img src="<?php echo $base_url; ?>public/icons/logo_cruz.png" alt="">
-                        <h2>Red de voluntarios</h2>
-                      </div>
+        <header>
+                <div class="logo">
+                        <img src="<?php echo $base_url; ?>public/icons/logo_cruz.png" alt="">
+                        <h2>Red de voluntarios</h2>
+                      </div>
 
-                <nav class="barra-navegacion">
+                <nav class="barra-navegacion">
                   <a href="<?php echo $base_url; ?>index.php?controller=home&action=index">Inicio</a>
-                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=especialidades">Especialidades</a>
-                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=tramites">Trámites</a>
-                        <a href="<?php echo $base_url; ?>index.php?controller=home&action=documentacion">Documentación</a>
-                     
+                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=especialidades">Especialidades</a>
+                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=tramites">Trámites</a>
+                        <a href="<?php echo $base_url; ?>index.php?controller=home&action=documentacion">Documentación</a>
+                     
             </nav>
 
             <div class="menu-icons">
-                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=notificaciones">
+                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=notificaciones" class="notification-link">
                         <div id="notify" class="fa-solid fa-bell" style="color: #ffffff;"></div>
+                        <span class="notification-badge" id="notification-count" style="display: none;">0</span>
                   </a>
                   <div id="menu-bar" class="fa-solid fa-bars"></div>
                   <a href="<?php echo $base_url; ?>index.php?controller=home&action=perfil" style="display: flex; align-items: center; gap: 6px;">
@@ -69,7 +92,7 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
                         <span style="color: #fff; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">Salir</span>
                   </a>
             </div>
-             
+             
       </header>
 
       <!-- Overlay para el menú móvil -->

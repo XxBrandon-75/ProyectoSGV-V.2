@@ -32,6 +32,10 @@ switch ($action) {
         obtenerDetallesVoluntario($voluntarioModel);
         break;
 
+    case 'contador':
+        obtenerContadorNotificaciones($voluntarioModel);
+        break;
+
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Acción no válida']);
@@ -190,4 +194,40 @@ function obtenerDetallesVoluntario($voluntarioModel)
         http_response_code(404);
         echo json_encode(['success' => false, 'message' => 'Voluntario no encontrado']);
     }
+}
+
+/**
+ * Obtiene el contador de notificaciones pendientes
+ * NUEVO ENDPOINT para el badge del header
+ */
+function obtenerContadorNotificaciones($voluntarioModel)
+{
+    $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
+    $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
+
+    // Log para debugging
+    error_log("NotificacionesAjax - Obteniendo contador para rol: $rolUsuario");
+    error_log("NotificacionesAjax - Es coordinador o más: " . ($esCoordinadorOMas ? 'Sí' : 'No'));
+
+    if (!$esCoordinadorOMas) {
+        error_log("NotificacionesAjax - Usuario no tiene permisos suficientes");
+        echo json_encode([
+            'success' => true,
+            'totalPendientes' => 0,
+            'rolUsuario' => $rolUsuario
+        ]);
+        return;
+    }
+
+    // Obtener el contador de voluntarios pendientes
+    $totalPendientes = $voluntarioModel->contarVoluntariosPendientes();
+
+    // Log para debugging
+    error_log("NotificacionesAjax - Total pendientes: $totalPendientes");
+
+    echo json_encode([
+        'success' => true,
+        'totalPendientes' => $totalPendientes,
+        'rolUsuario' => $rolUsuario
+    ]);
 }
