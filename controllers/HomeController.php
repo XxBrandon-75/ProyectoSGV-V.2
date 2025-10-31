@@ -298,4 +298,44 @@ class HomeController
 
         require_once "views/layout/footer.php";
     }
+
+    public function bajaVoluntario()
+    {
+        // Solo administradores o superiores pueden dar de baja
+        if (!$this->tienePermiso(3)) {
+            header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['voluntario_id'], $_POST['csrf_token'])) {
+            require_once 'config/database.php';
+            require_once 'helpers/SecurityHelper.php';
+
+            if (!SecurityHelper::validarTokenCSRF($_POST['csrf_token'])) {
+                $_SESSION['error'] = 'Token de seguridad inválido.';
+                header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil&id=' . (int)$_POST['voluntario_id']);
+                exit();
+            }
+
+            $voluntarioID = (int)$_POST['voluntario_id'];
+            try {
+                $db = Database::getInstance()->getConnection();
+                $stmt = $db->prepare("EXEC DardeBajaVoluntario @VoluntarioID = :id");
+                $stmt->bindParam(':id', $voluntarioID, PDO::PARAM_INT);
+                $success = $stmt->execute();
+
+                if ($success) {
+                    $_SESSION['success'] = 'El voluntario ha sido dado de baja correctamente.';
+                } else {
+                    $_SESSION['error'] = 'No se pudo dar de baja al voluntario.';
+                }
+            } catch (Exception $e) {
+                $_SESSION['error'] = 'Error en la base de datos: ' . $e->getMessage();
+            }
+            header('Location: ' . $this->base_url . 'index.php?controller=home&action=personal');
+            exit();
+        }
+        header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+        exit();
+    }
 }
