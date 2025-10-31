@@ -163,6 +163,22 @@ main.contenido-pagina {
   font-size: 1.4rem;
 }
 
+.btn-baja {
+  background: #dc3545;
+  color: #fff;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-baja:hover {
+  background: #b52a37;
+}
+
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -670,4 +686,10 @@ footer {
   position: relative;
   z-index: 0;
   display: none;
+}
+
+.baja-voluntario-container {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
 }
