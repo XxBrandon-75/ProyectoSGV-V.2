@@ -29,29 +29,6 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
 
          
       <link rel="stylesheet" href="<?php echo $base_url; ?>public/css/g.style.css" />
-      <style>
-        .notification-link {
-            position: relative;
-            display: inline-block;
-        }
-        .notification-badge {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background: #ff4444;
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            border: 2px solid #7f0000;
-        }
-      </style>
-
           <?php foreach ($styles as $style_path): ?>
                
             <link rel="stylesheet" href="<?php echo $style_path; ?>" />
@@ -62,43 +39,54 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
 
 <body>
         <header>
-                <div class="logo">
-                        <img src="<?php echo $base_url; ?>public/icons/logo_cruz.png" alt="">
-                        <h2>Red de voluntarios</h2>
-                      </div>
+                <!-- Header Top - Cruz Roja e Iconos de Usuario -->
+                <div class="header-top">
+                        <div class="header-top-left">
+                              <img src="<?php echo $base_url; ?>public/img/cruz_roja_logo.png" alt="Cruz Roja">
+                        </div>
+                        <div class="header-top-right">
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=notificaciones" class="notification-link">
+                                    <div id="notify" class="fa-solid fa-bell" style="color: #ffffff;"></div>
+                                    <span class="notification-badge" id="notification-count" style="display: none;">0</span>
+                              </a>
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=perfil" class="user-link">
+                                    <div id="user" class="fa-solid fa-user" style="color: #ffffff;"></div>
+                                    <span class="user-name">
+                                          <?php echo isset($_SESSION['user']['nombre']) ? htmlspecialchars($_SESSION['user']['nombre']) : 'Usuario'; ?>
+                                    </span>
+                              </a>
+                              <a href="<?php echo $base_url; ?>logout.php" title="Cerrar sesión" class="logout-link">
+                                    <div id="logout" class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></div>
+                                    <span class="logout-text">Salir</span>
+                              </a>
+                        </div>
+                </div>
 
-                <nav class="barra-navegacion">
-                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=index">Inicio</a>
-                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=especialidades">Especialidades</a>
-                      <a href="<?php echo $base_url; ?>index.php?controller=home&action=tramites">Trámites</a>
-                        <a href="<?php echo $base_url; ?>index.php?controller=home&action=documentacion">Documentación</a>
-                     
-            </nav>
+                <!-- Header Bottom - Logo, Título y Navegación -->
+                <div class="header-bottom">
+                        <div class="logo">
+                              <img src="<?php echo $base_url; ?>public/icons/logo_cruz.png" alt="">
+                              <h2>Red de voluntarios</h2>
+                        </div>
 
-            <div class="menu-icons">
-                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=notificaciones" class="notification-link">
-                        <div id="notify" class="fa-solid fa-bell" style="color: #ffffff;"></div>
-                        <span class="notification-badge" id="notification-count" style="display: none;">0</span>
-                  </a>
-                  <div id="menu-bar" class="fa-solid fa-bars"></div>
-                  <a href="<?php echo $base_url; ?>index.php?controller=home&action=perfil" style="display: flex; align-items: center; gap: 6px;">
-                        <div id="user" class="fa-solid fa-user" style="color: #ffffff;"></div>
-                        <span style="color: #fff; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">
-                              <?php echo isset($_SESSION['user']['nombre']) ? htmlspecialchars($_SESSION['user']['nombre']) : 'Usuario'; ?>
-                        </span>
-                  </a>
-                  <a href="<?php echo $base_url; ?>logout.php" title="Cerrar sesión" style="display: flex; align-items: center; gap: 6px;">
-                        <div id="logout" class="fa-solid fa-right-from-bracket" style="color: #ffffff;"></div>
-                        <span style="color: #fff; font-weight: 600; font-size: 1.25rem; letter-spacing: 0.5px; text-shadow: 0 1px 2px rgba(0,0,0,0.15);">Salir</span>
-                  </a>
-            </div>
+                        <nav class="barra-navegacion">
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=index">Inicio</a>
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=especialidades">Especialidades</a>
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=tramites">Trámites</a>
+                              <a href="<?php echo $base_url; ?>index.php?controller=home&action=documentacion">Documentación</a>
+                        </nav>
+
+                        <div class="menu-icons">
+                              <div id="menu-bar" class="fa-solid fa-bars"></div>
+                        </div>
+                </div>
              
       </header>
 
       <!-- Overlay para el menú móvil -->
-      <div id="nav-overlay" aria-hidden="true"></div>
+      <div class="nav-overlay" aria-hidden="true"></div>
 
-        <main class="contenido-pagina">
+        <main class="contenido-pagina">
 </body>
 
 </html>
