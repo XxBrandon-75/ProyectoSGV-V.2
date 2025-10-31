@@ -1,4 +1,12 @@
 <aside class="perfil-aside">
+    <div class="perfil-foto-container" style="text-align:center; margin-bottom: 20px;">
+        <?php
+        $fotoPerfil = isset($datosUsuario['FotoPerfil']) && $datosUsuario['FotoPerfil']
+            ? $datosUsuario['FotoPerfil']
+            : $base_url . 'public\img\perfiles\default.png'; // sirve por si no hay foto
+        ?>
+        <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Foto de perfil" class="perfil-foto">
+    </div>
     <h3>Panel de administración</h3>
     <ul class="perfil-menu">
         <li class="<?= ($paginaActual === 'perfil') ? 'activo' : '' ?>">
