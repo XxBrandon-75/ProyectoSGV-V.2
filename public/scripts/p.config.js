@@ -343,4 +343,18 @@ const seccionesConfig = {
       },
     ],
   },
+
+  foto_perfil: {
+    titulo: "Cambiar foto de perfil",
+    campos: [
+      {
+        nombre: "foto_perfil",
+        label: "Nueva foto de perfil",
+        tipo: "file",
+        required: true,
+        accept: "image/*",
+        title: "Selecciona una imagen (JPG, PNG, WEBP, máx. 2MB)",
+      },
+    ],
+  },
 };
