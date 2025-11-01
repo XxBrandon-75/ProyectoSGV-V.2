@@ -173,7 +173,7 @@
 /* === FORMULARIO MODAL === */
 .formulario-panel {
     position: fixed;
-    top: 0rem;
+    top: 0;
     right: -100%;
     width: 90%; 
     max-width: 550px; 

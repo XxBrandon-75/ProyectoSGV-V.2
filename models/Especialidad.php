@@ -9,10 +9,7 @@ class Especialidad
         $this->db = Database::getInstance()->getConnection();
     }
 
-    /**
-     * Verificar si el voluntario ya tiene una especialidad registrada
-     */
-    public function tieneEspecialidad($voluntarioID, $nombreEspecialidad)
+     public function tieneEspecialidad($voluntarioID, $nombreEspecialidad)
     {
         try {
             $stmt = $this->db->prepare("
@@ -34,7 +31,7 @@ class Especialidad
             return false;
         }
     }
-
+    
     /**
      * Agregar una nueva especialidad para un voluntario
      * Ejecuta el procedimiento almacenado AgregarEspecialidad
@@ -78,26 +75,7 @@ class Especialidad
 
             $especialidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Filtrar duplicados: mantener solo el registro más reciente de cada especialidad
-            $especialidadesUnicas = [];
-            $yaVistos = [];
-            
-            // Ordenar por fecha descendente para obtener los más recientes primero
-            usort($especialidades, function($a, $b) {
-                return strtotime($b['Fecha de Solicitud']) - strtotime($a['Fecha de Solicitud']);
-            });
-            
-            foreach ($especialidades as $esp) {
-                $key = $esp['Nombre Especialidad'];
-                
-                // Solo agregar si no hemos visto esta especialidad antes
-                if (!isset($yaVistos[$key])) {
-                    $especialidadesUnicas[] = $esp;
-                    $yaVistos[$key] = true;
-                }
-            }
-            
-            return $especialidadesUnicas;
+            return $especialidades;
         } catch (PDOException $e) {
             error_log("Error en verEspecialidades: " . $e->getMessage());
             throw new Exception("Error al obtener las especialidades: " . $e->getMessage());
