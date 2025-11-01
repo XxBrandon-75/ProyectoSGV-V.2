@@ -1,4 +1,3 @@
-
 /*EN ESTE APARTADO DE ROOT PUEDES CAMBIAR LOS COLORES 
 SI NO TE AGRADAN, Y SI QUIERES UN SECCION NUEVA AGREGA UNA NUEVA "VARIABLE":
 TIPO --quintiary-color : xxxxx;*/
@@ -38,7 +37,7 @@ body {
 }
 
 .contenido-pagina {
-  margin-top: 8rem;
+  margin-top: 11rem;
   min-height: calc(100vh - 15rem);
   overflow: hidden;
   width: 100%;
@@ -47,19 +46,74 @@ body {
   justify-content: flex-start;
 }
 
+/* HEADER PRINCIPAL */
 header {
   background-color: var(--color);
   color: var(--white);
   width: 100%;
-  padding: 1.5rem 7%;
   position: fixed;
   top: 0;
   left: 0;
+  box-shadow: var(--shadow);
+  z-index: 1001;
+}
+
+/* HEADER TOP - Cruz Roja e Iconos de Usuario */
+.header-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow);
-  z-index: 1001;
+  padding: 0.8rem 7%;
+  background-color: rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-top-left img {
+  height: 3.5rem;
+  width: auto;
+  object-fit: contain;
+}
+
+.header-top-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-top-right a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: #ffffff !important;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background 0.3s ease;
+}
+
+.header-top-right a:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-top-right a div {
+  font-size: 1.8rem;
+}
+
+.user-name, .logout-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+/* HEADER BOTTOM - Logo, Título y Navegación */
+.header-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 7%;
 }
 
 .logo {
@@ -109,7 +163,7 @@ header {
   width: 100%;
 }
 
-.menu-icons{
+.menu-icons {
   display: flex;
   align-items: center;
   gap: 1.5rem;
@@ -168,9 +222,7 @@ header {
   pointer-events: all;
 }
 
-
 /*ESTE APARTADO PREVIENE EL SCROLL DE MENU HAMBURGUESA CUANDO ESTA ABIERTO*/
-
 body.menu-open {
   overflow: hidden !important;
 }
@@ -229,10 +281,45 @@ body.menu-open {
 }
 
 /*APARTADO RESPONSIVE PARA CELULARES*/
-
 @media (max-width: 768px) {
   html {
     font-size: 55%;
+  }
+
+  .contenido-pagina {
+    margin-top: 9rem;
+  }
+
+  /* Header Top en móvil */
+  .header-top {
+    padding: 0.6rem 5%;
+  }
+
+  .header-top-left img {
+    height: 2.8rem;
+  }
+
+  .header-top-right {
+    gap: 1rem;
+  }
+
+  .header-top-right a {
+    gap: 0.4rem;
+    padding: 0.4rem 0.6rem;
+    font-size: 1.2rem;
+  }
+
+  .header-top-right a div {
+    font-size: 1.6rem;
+  }
+
+  .user-name, .logout-text {
+    display: none;
+  }
+
+  /* Header Bottom en móvil */
+  .header-bottom {
+    padding: 1rem 5%;
   }
 
   #menu-bar {
@@ -340,7 +427,6 @@ body.menu-open {
     opacity: 1;
   }
 
-  /* Efecto de línea en hover */
   .barra-navegacion a::before {
     content: "";
     position: absolute;
@@ -395,8 +481,24 @@ body.menu-open {
     font-size: 50%;
   }
 
-  header {
-    padding: 1rem 5%;
+  .contenido-pagina {
+    margin-top: 8rem;
+  }
+
+  .header-top {
+    padding: 0.5rem 3%;
+  }
+
+  .header-top-left img {
+    height: 2.4rem;
+  }
+
+  .header-top-right {
+    gap: 0.8rem;
+  }
+
+  .header-bottom {
+    padding: 0.8rem 3%;
   }
 
   .logo h2 {
@@ -418,13 +520,11 @@ body.menu-open {
 }
 
 /*ESTILOS PARA EL BADGE DE NOTIFICACIONES*/
-
 .notification-link {
   position: relative;
   display: inline-block;
 }
 
-/* Badge de notificaciones */
 .notification-badge {
   position: absolute;
   top: -8px;
@@ -445,7 +545,6 @@ body.menu-open {
   z-index: 10;
 }
 
-/* Animación para el pulso */
 @keyframes pulse-notification {
   0% {
     box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
@@ -458,12 +557,10 @@ body.menu-open {
   }
 }
 
-/* Ocultar cuando está vacío */
 .notification-badge:empty {
   display: none !important;
 }
 
-/* Responsive para móviles */
 @media (max-width: 768px) {
   .notification-badge {
     top: -6px;

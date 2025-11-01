@@ -487,4 +487,26 @@ class Voluntario
             ];
         }
     }
+
+    public function actualizarFotoPerfil($voluntarioID, $rutaFoto)
+    {
+        try {
+            $sql = "UPDATE Voluntarios SET FotoPerfil = :rutaFoto WHERE VoluntarioID = :voluntarioID";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':rutaFoto', $rutaFoto, PDO::PARAM_STR);
+            $stmt->bindParam(':voluntarioID', $voluntarioID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return [
+                'success' => true,
+                'message' => 'Foto de perfil actualizada correctamente'
+            ];
+        } catch (PDOException $e) {
+            error_log("Error en actualizarFotoPerfil: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al actualizar foto de perfil'
+            ];
+        }
+    }
 }

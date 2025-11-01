@@ -73,6 +73,94 @@ async function editarSeccion(seccion, event) {
   const camposContainer = document.getElementById("campos-editar");
   const modalTitulo = document.getElementById("modal-titulo");
 
+  // Lógica especial para foto de perfil
+  if (seccion === "foto_perfil") {
+    modalTitulo.textContent = "Cambiar foto de perfil";
+    camposContainer.innerHTML = `
+      <div class="foto-perfil-requisitos">
+        <div class="requisitos-header">
+          <i class="fa-solid fa-circle-info"></i>
+          <h4>Requisitos de la fotografía</h4>
+        </div>
+        <ul class="requisitos-lista">
+          <li><i class="fa-solid fa-check"></i> Fondo blanco o neutro</li>
+          <li><i class="fa-solid fa-check"></i> Mirando al frente</li>
+          <li><i class="fa-solid fa-check"></i> Sin accesorios (gorras, lentes oscuros, etc.)</li>
+          <li><i class="fa-solid fa-check"></i> Formato: JPG, PNG o WEBP</li>
+          <li><i class="fa-solid fa-check"></i> Tamaño máximo: 2MB</li>
+          <li><i class="fa-solid fa-check"></i> Dimensiones mínimas: 400x480 píxeles</li>
+        </ul>
+      </div>
+      
+      <div class="foto-perfil-preview-container">
+        <div class="preview-header">
+          <i class="fa-solid fa-image"></i>
+          <span>Vista previa</span>
+        </div>
+        <div class="preview-foto-wrapper">
+          <img id=\"preview-foto-perfil\" 
+               src=\"${datosUsuario.FotoPerfil || ""}\" 
+               alt=\"Previsualización\" 
+               class=\"preview-foto-img\">
+          <div class="preview-placeholder" id="preview-placeholder">
+            <i class="fa-solid fa-user"></i>
+            <p>Selecciona una foto para ver la previsualización</p>
+          </div>
+        </div>
+      </div>
+
+      <div class=\"form-group\">
+        <label for=\"edit-foto_perfil\">
+          <i class="fa-solid fa-upload"></i> Seleccionar fotografía
+        </label>
+        <input type=\"file\" 
+               id=\"edit-foto_perfil\" 
+               name=\"foto_perfil\" 
+               accept=\"image/jpeg,image/jpg,image/png,image/webp\" 
+               required>
+        <input type=\"hidden\" name=\"seccion\" value=\"foto_perfil\">
+      </div>
+    `;
+    modal.style.display = "flex";
+
+    // Previsualización JS
+    const input = document.getElementById("edit-foto_perfil");
+    const preview = document.getElementById("preview-foto-perfil");
+    const placeholder = document.getElementById("preview-placeholder");
+
+    input.addEventListener("change", function (event) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+
+        // Validar tamaño
+        if (file.size > 2 * 1024 * 1024) {
+          alert("La imagen no debe superar los 2MB");
+          input.value = "";
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          preview.src = e.target.result;
+          preview.style.display = "block";
+          if (placeholder) placeholder.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Mostrar foto actual o placeholder
+    if (datosUsuario.FotoPerfil) {
+      preview.style.display = "block";
+      if (placeholder) placeholder.style.display = "none";
+    } else {
+      preview.style.display = "none";
+      if (placeholder) placeholder.style.display = "flex";
+    }
+
+    return;
+  }
+
   // Obtener configuración de la sección
   const config = seccionesConfig[seccion];
   if (!config) {
@@ -332,9 +420,38 @@ function solicitarActualizacion(seccion) {
 // Función para guardar cambios
 function guardarCambios(event) {
   event.preventDefault();
-
   const formData = new FormData(event.target);
-
+  // Si es foto_perfil, enviar a cambiarFotoPerfil sin validar cambios
+  if (formData.get("seccion") === "foto_perfil") {
+    fetch("index.php?controller=home&action=cambiarFotoPerfil", {
+      method: "POST",
+      body: formData,
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.success) {
+          // Actualizar la imagen de perfil en el DOM sin recargar
+          if (data.url) {
+            // Agregar timestamp para evitar caché del navegador
+            const urlConTimestamp = data.url + "?t=" + new Date().getTime();
+            document
+              .querySelectorAll("#img-perfil-preview, #preview-foto-perfil")
+              .forEach((img) => {
+                img.src = urlConTimestamp;
+                img.style.display = "inline-block";
+              });
+          }
+          cerrarModal();
+          alert(data.message);
+        } else {
+          alert(data.message || "Error al subir la foto");
+        }
+      })
+      .catch(() => {
+        alert("Error al subir la foto");
+      });
+    return;
+  }
   // Verificar si hay cambios reales
   let hayCambios = false;
 
@@ -387,4 +504,87 @@ function guardarCambios(event) {
       console.error("Error:", error);
       alert("Error al actualizar datos: " + error.message);
     });
+}
+
+function cambiarFotoPerfil(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+
+    // Validar tipo de archivo
+    if (!file.type.match("image.*")) {
+      alert("Por favor selecciona una imagen válida");
+      return;
+    }
+
+    // Validar tamaño (máximo 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("La imagen no debe superar los 5MB");
+      return;
+    }
+
+    // Previsualizar imagen
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("preview-foto-perfil").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    // Subir imagen al servidor
+    const formData = new FormData();
+    formData.append("foto_perfil", file);
+    formData.append(
+      "csrf_token",
+      document.querySelector('input[name="csrf_token"]').value
+    );
+
+    fetch("controllers/perfilController.php?action=cambiarFoto", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          mostrarNotificacion(
+            "Foto de perfil actualizada correctamente",
+            "success"
+          );
+        } else {
+          mostrarNotificacion(
+            data.message || "Error al actualizar la foto",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarNotificacion("Error al actualizar la foto de perfil", "error");
+      });
+  }
+}
+
+function mostrarNotificacion(mensaje, tipo) {
+  const notif = document.createElement("div");
+  notif.style.cssText = `
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    padding: 1.5rem 2rem;
+    background: ${tipo === "success" ? "#28a745" : "#dc3545"};
+    color: white;
+    border-radius: 8px;
+    font-size: 1.4rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    animation: slideIn 0.3s ease;
+  `;
+  notif.innerHTML = `<i class="fa-solid fa-${
+    tipo === "success" ? "check" : "exclamation"
+  }-circle"></i> ${mensaje}`;
+
+  document.body.appendChild(notif);
+
+  setTimeout(() => {
+    notif.style.animation = "slideOut 0.3s ease";
+    setTimeout(() => notif.remove(), 300);
+  }, 3000);
 }

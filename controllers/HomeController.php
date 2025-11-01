@@ -123,8 +123,8 @@ class HomeController
         $voluntarioModel = new Voluntario();
 
         // Verificar si se está viendo el perfil de otro usuario
-        $voluntarioID = isset($_GET['id']) ? (int)$_GET['id'] : $_SESSION['user']['id'];
-        $esPropioUsuario = ($voluntarioID === $_SESSION['user']['id']);
+        $voluntarioID = isset($_GET['id']) ? (int)$_GET['id'] : (int)$_SESSION['user']['id'];
+        $esPropioUsuario = ($voluntarioID === (int)$_SESSION['user']['id']);
 
         // Obtener datos completos del voluntario
         $datosUsuario = $voluntarioModel->obtenerDatosCompletos($voluntarioID);
@@ -185,6 +185,10 @@ class HomeController
         // Obtener datos del coordinador para saber su delegación
         $datosCoordinador = $voluntarioModel->obtenerDatosCompletos($usuario_id);
 
+        // Obtener datos del usuario actual para el menú lateral (perfil-menu.php)
+        $datosUsuario = $datosCoordinador;
+        $esPropioUsuario = true; // Siempre es el propio usuario en esta página
+
         // Obtener voluntarios de su delegación
         $voluntariosCargo = [];
         if ($datosCoordinador && isset($datosCoordinador['DelegacionID'])) {
@@ -225,6 +229,11 @@ class HomeController
         require_once 'config/database.php';
 
         $voluntarioModel = new Voluntario();
+        $usuario_id = $_SESSION['user']['id'];
+
+        // Obtener datos del usuario actual para el menú lateral (perfil-menu.php)
+        $datosUsuario = $voluntarioModel->obtenerDatosCompletos($usuario_id);
+        $esPropioUsuario = true; // Siempre es el propio usuario en esta página
 
         // Obtener el rol del usuario actual
         $rolUsuario = $this->user_role;
@@ -272,33 +281,6 @@ class HomeController
         exit();
     }
 
-    public function misSolicitudes()
-    {
-        require_once 'models/voluntario.php';
-        require_once 'config/database.php';
-
-        $voluntarioModel = new Voluntario();
-        $usuario_id = $_SESSION['user']['id'];
-
-        // Variables de permisos
-        $puedeEditarDatosBasicos = true;
-        $puedeEditarRol = $this->tienePermiso(3);
-        $puedeVerVoluntarios = $this->tienePermiso(2);
-        $puedeEditarOtros = $this->tienePermiso(3);
-
-        $titulo_pagina = "Mis Solicitudes | Red de Voluntarios";
-
-        $styles = [$this->base_url . 'public/css/p.style.css'];
-
-        $scripts = [$this->base_url . 'public/scripts/p.script.js'];
-
-        require_once "views/layout/header.php";
-
-        require_once "views/home/misSolicitudes.php";
-
-        require_once "views/layout/footer.php";
-    }
-
     public function bajaVoluntario()
     {
         // Solo administradores o superiores pueden dar de baja
@@ -336,6 +318,135 @@ class HomeController
             exit();
         }
         header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+        exit();
+    }
+
+    public function cambiarFotoPerfil()
+    {
+        header('Content-Type: application/json');
+        if (!isset($_SESSION['user']['id'])) {
+            echo json_encode(['success' => false, 'message' => 'No autenticado.']);
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto_perfil'])) {
+            $error = $_FILES['foto_perfil']['error'];
+            if ($error !== UPLOAD_ERR_OK) {
+                $msg = 'No se recibió ninguna imagen.';
+                if ($error === UPLOAD_ERR_INI_SIZE || $error === UPLOAD_ERR_FORM_SIZE) {
+                    $msg = 'La imagen no debe superar los 2MB.';
+                } elseif ($error === UPLOAD_ERR_PARTIAL) {
+                    $msg = 'La imagen se subió solo parcialmente.';
+                } elseif ($error === UPLOAD_ERR_NO_FILE) {
+                    $msg = 'No se seleccionó ninguna imagen.';
+                }
+                echo json_encode(['success' => false, 'message' => $msg]);
+                exit();
+            }
+
+            $voluntarioID = (int)$_SESSION['user']['id'];
+
+            // Nombre del archivo simplificado: perfil_VoluntarioID.jpg
+            $nombreArchivo = 'perfil_' . $voluntarioID . '.jpg';
+
+            require_once 'models/voluntario.php';
+            $voluntarioModel = new Voluntario();
+
+            $permitidas = ['jpg', 'jpeg', 'png', 'webp'];
+            $extension = strtolower(pathinfo($_FILES['foto_perfil']['name'], PATHINFO_EXTENSION));
+
+            if ($_FILES['foto_perfil']['size'] > 2 * 1024 * 1024) {
+                echo json_encode(['success' => false, 'message' => 'La imagen no debe superar los 2MB.']);
+                exit();
+            }
+
+            if (!in_array($extension, $permitidas)) {
+                echo json_encode(['success' => false, 'message' => 'Formato de imagen no permitido.']);
+                exit();
+            }
+
+            $info = getimagesize($_FILES['foto_perfil']['tmp_name']);
+            if (!$info || $info[0] < 400 || $info[1] < 480) {
+                echo json_encode(['success' => false, 'message' => 'La imagen debe tener al menos 400x480 píxeles.']);
+                exit();
+            }
+
+            $rutaDestino = 'public/img/perfiles/' . $nombreArchivo;
+            $rutaCompleta = __DIR__ . '/../' . $rutaDestino;
+
+            // Eliminar foto anterior si existe y no es la default
+            if (!empty($_SESSION['user']['FotoPerfil'])) {
+                $fotoAnterior = $_SESSION['user']['FotoPerfil'];
+                $defaultFoto = $this->base_url . 'public/img/perfiles/default.png';
+                if ($fotoAnterior !== $defaultFoto && strpos($fotoAnterior, 'public/img/perfiles/') !== false) {
+                    $rutaAnterior = __DIR__ . '/../' . str_replace($this->base_url, '', $fotoAnterior);
+                    if (file_exists($rutaAnterior)) {
+                        @unlink($rutaAnterior);
+                    }
+                }
+            }
+
+            // Procesar imagen: recortar/redimensionar a 400x480px
+            $anchoFinal = 400;
+            $altoFinal = 480;
+            $imgTmp = null;
+            if ($extension === 'jpg' || $extension === 'jpeg') {
+                $imgTmp = imagecreatefromjpeg($_FILES['foto_perfil']['tmp_name']);
+            } elseif ($extension === 'png') {
+                $imgTmp = imagecreatefrompng($_FILES['foto_perfil']['tmp_name']);
+            } elseif ($extension === 'webp') {
+                $imgTmp = imagecreatefromwebp($_FILES['foto_perfil']['tmp_name']);
+            }
+            if (!$imgTmp) {
+                echo json_encode(['success' => false, 'message' => 'No se pudo procesar la imagen.']);
+                exit();
+            }
+            $anchoOriginal = imagesx($imgTmp);
+            $altoOriginal = imagesy($imgTmp);
+            $ratioFinal = $anchoFinal / $altoFinal;
+            $ratioOriginal = $anchoOriginal / $altoOriginal;
+            if ($ratioOriginal > $ratioFinal) {
+                $nuevoAlto = $altoOriginal;
+                $nuevoAncho = intval($altoOriginal * $ratioFinal);
+                $src_x = intval(($anchoOriginal - $nuevoAncho) / 2);
+                $src_y = 0;
+            } else {
+                $nuevoAncho = $anchoOriginal;
+                $nuevoAlto = intval($anchoOriginal / $ratioFinal);
+                $src_x = 0;
+                $src_y = intval(($altoOriginal - $nuevoAlto) / 2);
+            }
+            $imgRecortada = imagecreatetruecolor($anchoFinal, $altoFinal);
+            $blanco = imagecolorallocate($imgRecortada, 255, 255, 255);
+            imagefill($imgRecortada, 0, 0, $blanco);
+            imagecopyresampled(
+                $imgRecortada,
+                $imgTmp,
+                0,
+                0,
+                $src_x,
+                $src_y,
+                $anchoFinal,
+                $altoFinal,
+                $nuevoAncho,
+                $nuevoAlto
+            );
+            if (imagejpeg($imgRecortada, $rutaCompleta, 90)) {
+                $voluntarioModel->actualizarFotoPerfil($voluntarioID, $rutaDestino);
+                $_SESSION['success'] = 'Foto de perfil actualizada correctamente.';
+                $_SESSION['user']['FotoPerfil'] = $this->base_url . $rutaDestino;
+
+                // Devolver URL con timestamp para evitar caché del navegador
+                $urlConTimestamp = $this->base_url . $rutaDestino . '?t=' . time();
+                echo json_encode(['success' => true, 'message' => 'Foto de perfil actualizada correctamente.', 'url' => $urlConTimestamp]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'No se pudo guardar la imagen.']);
+            }
+            imagedestroy($imgTmp);
+            imagedestroy($imgRecortada);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'No se recibió ninguna imagen.']);
+        }
         exit();
     }
 }

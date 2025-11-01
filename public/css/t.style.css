@@ -2,7 +2,7 @@
   display: flex;
   min-height: calc(100vh - 100px);
   background: var(--light-bg);
-  padding-top: 9rem; 
+  padding-top: 6rem; 
 }
 
 /* Panel de administración mejorado */
@@ -13,7 +13,7 @@
   padding: 2.5rem 1.5rem;
   box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
   position: fixed;
-  top: 7rem;
+  top: 11.5rem;
   bottom: 0;
   left: 0;
   display: flex; 
@@ -100,7 +100,7 @@
 .admin-toggle {
   display: none;
   position: fixed;
-  top: 8.5rem;
+  top: 15rem;
   right: 2rem;
   width: 60px;
   height: 60px;
@@ -685,7 +685,7 @@
     width: 85%;
     max-width: 320px;
     top: 0;
-    padding-top: 8rem;
+    padding-top: 14rem;
   }
 
   .admin-panel.active {
