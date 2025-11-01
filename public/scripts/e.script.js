@@ -1,206 +1,178 @@
 document.addEventListener("DOMContentLoaded", () => {
-
-  const btnAgregar = document.getElementById("btn-agregar"); // Ahora es btn-agregar-nueva
+    const btnAgregar = document.getElementById("btn-agregar");
     const panel = document.getElementById("formulario-panel");
     const btnCerrar = document.getElementById("btn-cerrar");
     const form = document.getElementById("form-especialidad");
     const lista = document.getElementById("lista-especialidades");
-    const formTitulo = document.getElementById("form-titulo");
-    const indexEditar = document.getElementById("index-editar");
-    
-    const listaRequerimientosForm = document.getElementById("lista-requerimientos-form");
 
-    let registrosVoluntario = JSON.parse(localStorage.getItem("registrosVoluntario")) || [];
-    let requerimientosEspecialidadSeleccionada = []; // Requerimientos de la especialidad elegida
-    
-    // --- Lógica del Voluntario ---
+    // Cargar especialidades al iniciar
+    cargarEspecialidades();
 
-    function cargarRequerimientos(nombreEspecialidad) {
-        const especialidadesReales = {
-            "Tutorial": [
-                { label: "Archivos de la Misión", tipo: "file" },
-                { label: "¿Ha completado el curso?", tipo: "select", options: ["Sí", "No"] }
-            ],
-            "Primeros Auxilios": [
-                { label: "Adjuntar Certificado (PDF)", tipo: "file" },
-                { label: "Años de experiencia", tipo: "number" }
-            ],
-            "Rescate": [
-                { label: "Adjuntar Licencia de buceo", tipo: "file" }
-            ]
-        };
-        
-        const requerimientos = especialidadesReales[nombreEspecialidad] || [];
-        requerimientosEspecialidadSeleccionada = requerimientos;
-        listaRequerimientosForm.innerHTML = "";
-
-        requerimientos.forEach((req, index) => {
-            const label = document.createElement("label");
-            label.textContent = req.label;
-            
-            let input;
-            if (req.tipo === "select") {
-                input = document.createElement("select");
-                req.options.forEach(optText => {
-                    const opt = document.createElement("option");
-                    opt.value = optText;
-                    opt.textContent = optText;
-                    input.appendChild(opt);
-                });
-            } else {
-                input = document.createElement("input");
-                input.type = req.tipo;
-                // Los campos de archivo necesitan un nombre único, pero para este caso de ejemplo, solo se marca como requerido
-                input.name = `req_${index}`; 
-            }
-            input.required = true;
-            input.dataset.label = req.label; // Guardar la etiqueta en el elemento para facilitar el envío
-            
-            listaRequerimientosForm.append(label, input);
-        });
-      }
-
-    // Evento para cargar requerimientos al seleccionar una especialidad
-    const selectEspecialidad = document.getElementById("nombre");
-    if(selectEspecialidad) {
-        selectEspecialidad.addEventListener("change", (e) => {
-            cargarRequerimientos(e.target.value);
-        });
-    }
-
-    // --- Eventos de UI ---
-    if(btnAgregar){
+    // Abrir panel de formulario
+    if (btnAgregar) {
         btnAgregar.addEventListener("click", () => {
             form.reset();
-            indexEditar.value = "";
-            formTitulo.innerHTML = '<i class="fa-solid fa-list-check"></i> Registrar Nueva Especialidad';
-            // Limpiar requerimientos anteriores
-            listaRequerimientosForm.innerHTML = ""; 
-            requerimientosEspecialidadSeleccionada = [];
-            
-            // Si es un nuevo registro, forzar la selección inicial si hay un select
-            selectEspecialidad.value = "";
-            
             panel.classList.add("active");
         });
     }
-    
-    if(btnCerrar){
+
+    // Cerrar panel
+    if (btnCerrar) {
         btnCerrar.addEventListener("click", () => {
             panel.classList.remove("active");
             form.reset();
         });
     }
 
-    if(form){
-        form.addEventListener("submit", (e) => {
+    // Enviar formulario
+    if (form) {
+        form.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const nombreEspecialidad = form.nombre.value;
-            const notas = form.descripcion.value;
+            // Validar que sea PDF
+            const archivoInput = document.getElementById('archivo');
+            if (archivoInput.files.length > 0) {
+                const archivo = archivoInput.files[0];
+                const extension = archivo.name.split('.').pop().toLowerCase();
+                
+                if (extension !== 'pdf') {
+                    mostrarNotificacion('Solo se permiten archivos en formato PDF.', 'error');
+                    return;
+                }
+                
+                if (archivo.size > 5 * 1024 * 1024) {
+                    mostrarNotificacion('El archivo no debe superar los 5MB.', 'error');
+                    return;
+                }
+            }
+
+            const formData = new FormData(form);
+            const btnGuardar = form.querySelector('.btn-guardar');
             
-            // Recolectar las respuestas del formulario de requerimientos
-            const respuestas = [];
-            const reqInputs = listaRequerimientosForm.querySelectorAll('input, select');
-            reqInputs.forEach(input => {
-                respuestas.push({
-                    label: input.dataset.label,
-                    valor: input.type === 'file' ? input.files[0]?.name || 'Archivo no adjunto' : input.value
+            // Deshabilitar botón mientras se procesa
+            btnGuardar.disabled = true;
+            btnGuardar.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando...';
+
+            try {
+                const response = await fetch('index.php?controller=especialidades&action=agregarEspecialidad', {
+                    method: 'POST',
+                    body: formData
                 });
-            });
 
-            const data = {
-                nombre: nombreEspecialidad,
-                notas: notas,
-                respuestasRequerimientos: respuestas
-            };
+                const result = await response.json();
 
-            const index = indexEditar.value;
-            if (index === "") registrosVoluntario.push(data);
-            else registrosVoluntario[index] = data;
-
-            localStorage.setItem("registrosVoluntario", JSON.stringify(registrosVoluntario));
-            renderEspecialidades();
-            panel.classList.remove("active");
-            form.reset();
+                if (result.success) {
+                    mostrarNotificacion(result.message, 'success');
+                    panel.classList.remove("active");
+                    form.reset();
+                    cargarEspecialidades(); // Recargar lista
+                } else {
+                    mostrarNotificacion(result.message || 'Error al guardar la especialidad', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                mostrarNotificacion('Error de conexión. Intenta de nuevo.', 'error');
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = '<i class="fa-solid fa-save"></i> Guardar Especialidad';
+            }
         });
     }
 
-    // --- Renderizado de Tarjetas ---
-    function renderEspecialidades() {
+    /**
+     * Cargar especialidades del voluntario
+     */
+    async function cargarEspecialidades() {
+        lista.innerHTML = '<div class="cargando-especialidades"><i class="fa-solid fa-spinner fa-spin"></i> Cargando especialidades...</div>';
+
+        try {
+            const response = await fetch('index.php?controller=especialidades&action=obtenerEspecialidades');
+            const result = await response.json();
+
+            if (result.success) {
+                renderEspecialidades(result.data);
+            } else {
+                lista.innerHTML = `<p class="sin-cursos">Error al cargar especialidades: ${result.message}</p>`;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            lista.innerHTML = '<p class="sin-cursos">Error de conexión. Intenta recargar la página.</p>';
+        }
+    }
+
+    /**
+     * Renderizar tarjetas de especialidades
+     */
+    function renderEspecialidades(especialidades) {
         lista.innerHTML = "";
-        if (registrosVoluntario.length === 0) {
-            lista.innerHTML = `<p class="sin-cursos">No has registrado ninguna especialidad. Haz clic en "Agregar / Editar Especialidades" para empezar.</p>`;
+
+        if (!especialidades || especialidades.length === 0) {
+            lista.innerHTML = `<p class="sin-cursos">No has registrado ninguna especialidad. Haz clic en "Agregar Nueva Especialidad" para empezar.</p>`;
             return;
         }
 
-        registrosVoluntario.forEach((reg, i) => {
+        especialidades.forEach((esp) => {
             const card = document.createElement("div");
-            card.classList.add("especialidad-card"); // Nuevo nombre de clase
+            card.classList.add("especialidad-card");
+
+            // Determinar clase de estatus
+            let estatusClass = 'estatus-pendiente';
+            let estatusIcono = 'fa-clock';
             
-            // Renderizar las respuestas de los requerimientos
-            const respuestasHTML = reg.respuestasRequerimientos.map(r => 
-                `<p><strong>${r.label}:</strong> ${r.valor}</p>`
-            ).join('');
+            if (esp['Estatus de la Especialidad'] === 'Aprobado') {
+                estatusClass = 'estatus-aprobado';
+                estatusIcono = 'fa-check-circle';
+            } else if (esp['Estatus de la Especialidad'] === 'Rechazado') {
+                estatusClass = 'estatus-rechazado';
+                estatusIcono = 'fa-times-circle';
+            }
 
             card.innerHTML = `
-                <h3><i class="fa-solid fa-medal"></i> ${reg.nombre}</h3>
-                <p><strong>Notas Personales:</strong> ${reg.notas || 'Sin notas.'}</p>
-                <div class="requerimientos-registrados">
-                    <h4>Datos de Experiencia:</h4>
-                    ${respuestasHTML}
+                <div class="especialidad-header">
+                    <h3><i class="fa-solid fa-medal"></i> ${esp['Nombre Especialidad']}</h3>
+                    <span class="estatus-badge ${estatusClass}">
+                        <i class="fa-solid ${estatusIcono}"></i> ${esp['Estatus de la Especialidad']}
+                    </span>
                 </div>
-                <div class="card-acciones">
-                    <button class="btn-accion-card btn-editar-reg" data-i="${i}">
-                        <i class="fa-solid fa-pen"></i> Editar
-                    </button>
-                    <button class="btn-accion-card btn-eliminar-reg" data-i="${i}">
-                        <i class="fa-solid fa-trash"></i> Eliminar
-                    </button>
+                
+                <div class="especialidad-body">
+                    <div class="info-item">
+                        <strong><i class="fa-solid fa-file-alt"></i> Documento Adjunto:</strong>
+                        <span>${esp['NombreArchivo'] || 'Sin documento'}</span>
+                    </div>
                 </div>
             `;
+
             lista.appendChild(card);
         });
-
-        document.querySelectorAll(".btn-editar-reg").forEach(b => b.onclick = e => editarRegistro(e));
-        document.querySelectorAll(".btn-eliminar-reg").forEach(b => b.onclick = e => eliminarRegistro(e));
     }
 
-    function editarRegistro(e) {
-        const i = e.target.closest("button").dataset.i;
-        const reg = registrosVoluntario[i];
+    /**
+     * Mostrar notificaciones
+     */
+    function mostrarNotificacion(mensaje, tipo = 'info') {
+        // Crear elemento de notificación
+        const notif = document.createElement('div');
+        notif.className = `notificacion notif-${tipo}`;
         
-        indexEditar.value = i;
-        formTitulo.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Editar Registro';
+        let icono = 'fa-info-circle';
+        if (tipo === 'success') icono = 'fa-check-circle';
+        if (tipo === 'error') icono = 'fa-exclamation-circle';
         
-        // 1. Seleccionar la especialidad
-        form.nombre.value = reg.nombre;
+        notif.innerHTML = `
+            <i class="fa-solid ${icono}"></i>
+            <span>${mensaje}</span>
+        `;
         
-        // 2. Cargar los requerimientos y pre-llenar los campos
-        cargarRequerimientos(reg.nombre);
+        document.body.appendChild(notif);
         
-        form.descripcion.value = reg.notas;
+        // Mostrar con animación
+        setTimeout(() => notif.classList.add('show'), 10);
         
-        // Pre-llenar las respuestas
-        const reqInputs = listaRequerimientosForm.querySelectorAll('input, select');
-        reg.respuestasRequerimientos.forEach(res => {
-            const input = Array.from(reqInputs).find(i => i.dataset.label === res.label);
-            if(input && input.type !== 'file') {
-                input.value = res.valor;
-            }
-        });
-        
-        panel.classList.add("active");
+        // Ocultar después de 4 segundos
+        setTimeout(() => {
+            notif.classList.remove('show');
+            setTimeout(() => notif.remove(), 300);
+        }, 4000);
     }
-
-    function eliminarRegistro(e) {
-        const i = e.target.closest("button").dataset.i;
-        if (confirm("¿Estás seguro de eliminar este registro de especialidad?")) {
-            registrosVoluntario.splice(i, 1);
-            localStorage.setItem("registrosVoluntario", JSON.stringify(registrosVoluntario));
-            renderEspecialidades();
-        }
-    }
-        
-    renderEspecialidades();
 });
