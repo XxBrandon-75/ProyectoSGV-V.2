@@ -9,7 +9,7 @@
     flex: 1;
     margin: 3rem auto;
     padding: 0 3rem;
-    max-width: 1100px; /* Aumentar ligeramente el ancho para diseño moderno */
+    max-width: 1200px;
 }
 
 .especialidades-voluntario h1 {
@@ -27,10 +27,10 @@
     padding-bottom: 1rem;
 }
 
-/* Botón principal de acción */
+/* Botón principal */
 .btn-agregar-nueva {
     background: var(--cuartiary-color);
-    color: #333; /* Texto oscuro para el fondo amarillo */
+    color: #333;
     border: none;
     padding: 1.2rem 2.5rem;
     border-radius: 0.6rem;
@@ -40,7 +40,7 @@
     align-items: center;
     gap: 1rem;
     margin-bottom: 3rem;
-    transition: background 0.3s, transform 0.2s;
+    transition: all 0.3s;
     font-weight: 600;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -48,128 +48,142 @@
 .btn-agregar-nueva:hover {
     background: #db8d07;
     transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Grid de las tarjetas (más compacto) */
+/* Grid de especialidades - más compacto */
 .lista-especialidades {
     display: grid;
-    /* Reducir minmax para tarjetas más pequeñas */
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 2.5rem; /* Aumentar un poco el espacio entre tarjetas */
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
 }
 
-.sin-cursos {
+.sin-cursos, .cargando-especialidades {
     color: #777;
     text-align: center;
     font-size: 1.6rem;
-    grid-column: 1 / -1; /* Ocupar todo el ancho del grid */
-    padding: 2rem;
+    grid-column: 1 / -1;
+    padding: 3rem;
 }
 
-/* === ESTILO DE TARJETA DE REGISTRO (MODERNO) === */
+.cargando-especialidades i {
+    font-size: 2.5rem;
+    color: var(--color);
+    display: block;
+    margin-bottom: 1rem;
+}
+
+/* === TARJETAS DE ESPECIALIDAD === */
 .especialidad-card {
     background: var(--white);
     border: 1px solid #ddd;
-    border-left: 8px solid var(--color); /* Barra roja de Cruz Roja */
-    border-radius: 1rem; /* Borde más redondeado */
-    padding: 1.5rem; /* Reducir padding para hacerla más compacta */
+    border-left: 6px solid var(--color);
+    border-radius: 1rem;
+    padding: 0;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: box-shadow 0.3s ease;
-    display: flex; /* Usar flex para organizar el contenido */
-    flex-direction: column;
+    transition: all 0.3s ease;
+    overflow: hidden;
 }
 
 .especialidad-card:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-3px);
 }
 
-.especialidad-card h3 {
-    color: var(--color);
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-    border-bottom: 2px solid #eee; /* Separador sutil */
-    padding-bottom: 0.5rem;
-}
-
-.requerimientos-registrados {
-    flex-grow: 1; /* Permite que el contenido ocupe el espacio disponible */
-    margin-top: 1rem;
-    margin-bottom: 1.5rem; /* Espacio antes de los botones */
-}
-
-.requerimientos-registrados h4 {
-    font-size: 1.5rem;
-    color: var(--secondary-color);
-    margin-top: 1rem;
-    margin-bottom: 0.8rem;
-}
-
-.especialidad-card p {
-    font-size: 1.35rem; /* Letra ligeramente más pequeña */
-    color: #444;
-    margin: 0.3rem 0;
-    line-height: 1.4;
-}
-
-.especialidad-card strong {
-    color: #333;
-    font-weight: 600;
-}
-
-/* Botones centrados y espaciados */
-.card-acciones {
+.especialidad-header {
+    background: linear-gradient(135deg, var(--color) 0%, #a00 100%);
+    padding: 1.5rem;
     display: flex;
-    justify-content: center; /* Centrar botones */
+    justify-content: space-between;
+    align-items: center;
     gap: 1rem;
-    margin-top: auto; /* Empuja los botones al final de la tarjeta */
-    border-top: 1px dashed #ddd;
-    padding-top: 1rem;
 }
 
-.card-acciones .btn-accion-card {
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1.4rem;
-    cursor: pointer;
-    transition: background 0.3s;
+.especialidad-header h3 {
     color: white;
+    font-size: 1.9rem;
+    margin: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+/* Badges de estatus */
+.estatus-badge {
+    padding: 0.6rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.estatus-pendiente {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.estatus-aprobado {
+    background: #d4edda;
+    color: #155724;
+}
+
+.estatus-rechazado {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.especialidad-body {
+    padding: 1.8rem;
+}
+
+.info-item {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item strong {
+    color: var(--color);
+    font-size: 1.4rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.btn-editar-reg {
-    background: #1a922e;
+.info-item span, .info-item p {
+    font-size: 1.4rem;
+    color: #444;
+    line-height: 1.6;
+    margin: 0;
 }
 
-.btn-eliminar-reg {
-    background: #8e131f;
+.notas-item p {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--secondary-color);
 }
 
-.btn-accion-card:hover {
-    filter: brightness(1.1);
-    transform: translateY(-1px);
-}
-
-
-/* === FORMULARIO MODAL (Ajustes de UI) === */
-
+/* === FORMULARIO MODAL === */
 .formulario-panel {
     position: fixed;
-    top: 10rem;
+    top: 0;
     right: -100%;
-    /* Ajuste de ancho responsivo */
     width: 90%; 
-    max-width: 500px; 
-    height: calc(100vh - 10rem);
+    max-width: 550px; 
+    height: 100vh;
     background: var(--white);
-    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
     transition: right 0.4s ease;
-    padding: 2rem;
+    padding: 2.5rem;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .formulario-panel.active {
@@ -178,16 +192,20 @@
 
 .formulario h2 {
     font-size: 2.2rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     color: var(--color);
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .formulario label {
     display: block;
     font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--color); /* Destacar etiquetas */
+    margin-bottom: 0.6rem;
+    color: var(--color);
     font-weight: 600;
 }
 
@@ -195,96 +213,168 @@
 .formulario textarea,
 .formulario select { 
     width: 100%;
-    padding: 1rem;
-    border: 1px solid #ccc;
+    padding: 1.1rem;
+    border: 2px solid #ddd;
     border-radius: 0.6rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     font-size: 1.5rem;
+    transition: border-color 0.3s;
+}
+
+.formulario input:focus,
+.formulario textarea:focus,
+.formulario select:focus {
+    outline: none;
+    border-color: var(--color);
+}
+
+.formulario textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.formulario input[type="file"] {
+    padding: 0.8rem;
+    cursor: pointer;
+}
+
+.formulario small {
+    font-size: 1.3rem;
+}
+
+.requerimientos-admin {
+    background: #fff8e1;
+    border: 2px dashed var(--cuartiary-color);
+    padding: 1.8rem;
+    border-radius: 0.8rem;
+    margin-bottom: 2rem;
+}
+
+.requerimientos-admin h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--color);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.requerimientos-admin .instruccion-req {
+    font-size: 1.4rem;
+    color: #666;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
 }
 
 .form-buttons {
     display: flex;
-    justify-content: space-between;
+    gap: 1rem;
     padding-top: 1.5rem;
-    border-top: 1px solid #eee;
+    border-top: 2px solid #eee;
+}
+
+.btn-guardar, .btn-cancelar {
+    flex: 1;
+    padding: 1.2rem 2rem;
+    border: none;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.5rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
 }
 
 .btn-guardar {
     background: var(--color);
     color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 0.6rem;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
+}
+
+.btn-guardar:hover:not(:disabled) {
+    background: #a00;
+    transform: translateY(-2px);
+}
+
+.btn-guardar:disabled {
+    background: #ccc;
+    cursor: not-allowed;
 }
 
 .btn-cancelar {
-    background: #aaa;
+    background: #6c757d;
     color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 0.6rem;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s;
 }
 
-/* Estilos para el bloque de Requerimientos/Evidencia */
-.requerimientos-admin {
-    background: #fff;
-    border: 2px dashed var(--secondary-color);
-    padding: 1.5rem;
+.btn-cancelar:hover {
+    background: #5a6268;
+}
+
+/* === NOTIFICACIONES === */
+.notificacion {
+    position: fixed;
+    top: 11rem;
+    right: -400px;
+    background: white;
+    padding: 1.5rem 2rem;
     border-radius: 0.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.requerimientos-admin h3 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-}
-
-.requerimientos-admin .instruccion-req {
-    font-size: 1.4rem;
-    color: #777;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.5rem;
-}
-
-#lista-requerimientos-form label {
-    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     font-size: 1.5rem;
-    color: #333;
-    margin-top: 1rem;
+    z-index: 10000;
+    transition: right 0.3s ease;
+    min-width: 300px;
+    max-width: 400px;
 }
 
-input[type=number]::-webkit-outer-spin-button,
-
-input[type=number]::-webkit-inner-spin-button {
-
-  -webkit-appearance: none;
-
-  margin: 0;
-
+.notificacion.show {
+    right: 2rem;
 }
 
-/* Quitar flechas en Firefox - forma recomendada */
-
-input[type=number] {
-
-  -moz-appearance: textfield; /* Firefox */
-
-  appearance: textfield;
-
+.notificacion i {
+    font-size: 2rem;
 }
 
-/* === RESPONSIVE DESIGN === */
+.notif-success {
+    border-left: 5px solid #28a745;
+    color: #155724;
+}
 
+.notif-success i {
+    color: #28a745;
+}
+
+.notif-error {
+    border-left: 5px solid #dc3545;
+    color: #721c24;
+}
+
+.notif-error i {
+    color: #dc3545;
+}
+
+.notif-info {
+    border-left: 5px solid #17a2b8;
+    color: #0c5460;
+}
+
+.notif-info i {
+    color: #17a2b8;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 900px) {
     .especialidades-voluntario {
         padding: 0 2rem;
+    }
+    
+    .lista-especialidades {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -296,48 +386,40 @@ input[type=number] {
     
     .especialidades-voluntario .descripcion-pagina {
         text-align: center;
+        font-size: 1.4rem;
     }
 
     .btn-agregar-nueva {
         width: 100%;
         justify-content: center;
-        margin-bottom: 2rem;
     }
 
-    /* Reducir gap en móviles */
-    .lista-especialidades {
-        gap: 1.5rem;
-    }
-
-    .especialidad-card {
-        padding: 1.2rem;
-    }
-
-    .card-acciones {
+    .especialidad-header {
         flex-direction: column;
-        gap: 0.8rem;
+        align-items: flex-start;
     }
 
-    .card-acciones .btn-accion-card {
-        width: 100%;
-        justify-content: center;
+    .especialidad-header h3 {
+        font-size: 1.7rem;
+    }
+
+    .estatus-badge {
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
     }
 
     .formulario-panel {
         width: 100%;
         max-width: none;
-        padding: 1.5rem;
+        padding: 2rem 1.5rem;
     }
     
     .form-buttons {
-        flex-direction: column-reverse; /* Pone Guardar arriba y Cancelar abajo */
-        gap: 1rem;
+        flex-direction: column;
     }
 
-    .btn-cancelar {
-        order: 1; /* Cancelar va primero */
-    }
-    .btn-guardar {
-        order: 2; /* Guardar va de segundo */
+    .notificacion {
+        max-width: calc(100% - 4rem);
+        font-size: 1.4rem;
     }
 }

@@ -58,21 +58,24 @@ class HomeController
 
     public function especialidades()
     {
-        // Variables de permisos
-        $ver_cont_gest = $this->tienePermiso(2); // Coordinador o superior puede agregar especialidades
-        $ver_card_edit = $this->tienePermiso(2); // Coordinador o superior puede editar/eliminar
+        // Redirigir al controlador dedicado de especialidades
+        $especialidadesController = __DIR__ . '/EspecialidadesController.php';
+        
+        if (file_exists($especialidadesController)) {
+            require_once $especialidadesController;
 
-        $titulo_pagina = "Especialidades | Red de Voluntarios";
-
-        $styles = [$this->base_url . 'public/css/e.style.css'];
-
-        $scripts = [$this->base_url . 'public/scripts/e.script.js'];
-
-        require_once "views/layout/header.php";
-
-        require_once "views/home/especialidades.php";
-
-        require_once "views/layout/footer.php";
+            if (class_exists('EspecialidadesController')) {
+                $ctrl = new EspecialidadesController();
+                if (method_exists($ctrl, 'index')) {
+                    $ctrl->index();
+                    return;
+                }
+            }
+        }
+        
+        // Si no existe el controlador, mostrar error
+        echo "Error: No se pudo cargar el controlador de especialidades.";
+        exit();
     }
 
     public function tramites()
