@@ -58,21 +58,16 @@ class Voluntario
             return false;
         }
     }
-    public function voluntariosSinAprobar()
-    {
-        try {
-            $sql = "SELECT 
-                    v.VoluntarioID, 
-                    v.Nombres, 
-                    v.ApellidoPaterno, 
-                    v.Email, 
-                    ev.Nombre AS EstatusNombre
-                FROM 
-                    dbo.Voluntarios AS v
-                INNER JOIN 
-                    dbo.EstatusVoluntario AS ev ON v.EstatusID = ev.EstatusID
-                WHERE 
-                    ev.Nombre = 'Pendiente de Aprobación'";
+    public function voluntariosSinAprobar() {
+    try {
+        $sql = "exec voluntariosSinAprobar";
+        
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        
+        // ----> CAMBIO PRINCIPAL AQUÍ <----
+        // Usamos fetchAll() para obtener TODOS los voluntarios, no solo el primero.
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); 
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->execute();
@@ -178,44 +173,8 @@ class Voluntario
             // Debug: Verificar qué ID estamos recibiendo
             error_log("obtenerDatosCompletos - VoluntarioID recibido: " . $voluntarioID);
 
-            $query = "SELECT 
-                v.*,
-                ec.Nombre as EstadoCivilNombre,
-                gs.Nombre as GrupoSanguineoNombre,
-                a.Nombre as AreaNombre,
-                d.Nombre as DelegacionNombre,
-                r.Nombre as RolNombre,
-                ev.Nombre as EstatusNombre,
-                t.NombreCompleto as TutorNombreCompleto,
-                t.Parentesco as TutorParentesco,
-                t.Telefono as TutorTelefono,
-                dir.DireccionID,
-                dir.Calle,
-                dir.NumeroExterior,
-                dir.NumeroInterior,
-                dir.CodigoPostal,
-                dir.Colonia,
-                dir.CiudadID,
-                dir.EstadoID,
-                c.Nombre as CiudadNombre,
-                e.Nombre as EstadoNombre,
-                ce.ContactoID as ContactoEmergenciaID,
-                ce.NombreCompleto as ContactoEmergenciaNombre,
-                ce.Parentesco as ContactoEmergenciaParentesco,
-                ce.Telefono as ContactoEmergenciaTelefono
-            FROM Voluntarios v
-            LEFT JOIN CatEstadosCiviles ec ON v.EstadoCivilID = ec.EstadoCivilID
-            LEFT JOIN CatGruposSanguineos gs ON v.GrupoSanguineoID = gs.GrupoSanguineoID
-            LEFT JOIN Areas a ON v.AreaID = a.AreaID
-            LEFT JOIN Delegaciones d ON v.DelegacionID = d.DelegacionID
-            LEFT JOIN Roles r ON v.RolID = r.RolID
-            LEFT JOIN EstatusVoluntario ev ON v.EstatusID = ev.EstatusID
-            LEFT JOIN Tutores t ON v.TutorID = t.TutorID
-            LEFT JOIN Direcciones dir ON v.VoluntarioID = dir.VoluntarioID
-            LEFT JOIN CatCiudades c ON dir.CiudadID = c.CiudadID
-            LEFT JOIN CatEstados e ON dir.EstadoID = e.EstadoID
-            LEFT JOIN ContactosEmergencia ce ON v.VoluntarioID = ce.VoluntarioID
-            WHERE v.VoluntarioID = :voluntarioID";
+            $query = "exec [obtenerDatosCompleto]
+                        @VoluntarioID= :voluntarioID";
 
             $stmt = $this->pdo->prepare($query);
 
@@ -259,28 +218,8 @@ class Voluntario
     public function obtenerVoluntariosPorDelegacion($delegacionID)
     {
         try {
-            $query = "SELECT 
-                v.*,
-                ec.Nombre as EstadoCivilNombre,
-                gs.Nombre as GrupoSanguineoNombre,
-                a.Nombre as AreaNombre,
-                d.Nombre as DelegacionNombre,
-                r.Nombre as RolNombre,
-                ev.Nombre as EstatusNombre,
-                t.NombreCompleto as TutorNombreCompleto,
-                t.Parentesco as TutorParentesco,
-                t.Telefono as TutorTelefono
-            FROM Voluntarios v
-            LEFT JOIN CatEstadosCiviles ec ON v.EstadoCivilID = ec.EstadoCivilID
-            LEFT JOIN CatGruposSanguineos gs ON v.GrupoSanguineoID = gs.GrupoSanguineoID
-            LEFT JOIN Areas a ON v.AreaID = a.AreaID
-            LEFT JOIN Delegaciones d ON v.DelegacionID = d.DelegacionID
-            LEFT JOIN Roles r ON v.RolID = r.RolID
-            LEFT JOIN EstatusVoluntario ev ON v.EstatusID = ev.EstatusID
-            LEFT JOIN Tutores t ON v.TutorID = t.TutorID
-            WHERE v.DelegacionID = :delegacionID
-            AND r.Nombre NOT IN ('Administrador', 'Superadministrador')
-            ORDER BY v.ApellidoPaterno, v.ApellidoMaterno, v.Nombres";
+            $query = "exec [ObtenerVoluntarioPorDelegacion] 
+                        @DelegacionID = :delegacionID";
 
             $stmt = $this->pdo->prepare($query);
             $stmt->bindParam(':delegacionID', $delegacionID, PDO::PARAM_INT);
@@ -301,36 +240,17 @@ class Voluntario
     public function obtenerCoordinadores($rolUsuario = 'Administrador')
     {
         try {
-            $query = "SELECT 
-                v.*,
-                ec.Nombre as EstadoCivilNombre,
-                gs.Nombre as GrupoSanguineoNombre,
-                a.Nombre as AreaNombre,
-                d.Nombre as DelegacionNombre,
-                r.Nombre as RolNombre,
-                ev.Nombre as EstatusNombre,
-                t.NombreCompleto as TutorNombreCompleto,
-                t.Parentesco as TutorParentesco,
-                t.Telefono as TutorTelefono
-            FROM Voluntarios v
-            LEFT JOIN CatEstadosCiviles ec ON v.EstadoCivilID = ec.EstadoCivilID
-            LEFT JOIN CatGruposSanguineos gs ON v.GrupoSanguineoID = gs.GrupoSanguineoID
-            LEFT JOIN Areas a ON v.AreaID = a.AreaID
-            LEFT JOIN Delegaciones d ON v.DelegacionID = d.DelegacionID
-            LEFT JOIN Roles r ON v.RolID = r.RolID
-            LEFT JOIN EstatusVoluntario ev ON v.EstatusID = ev.EstatusID
-            LEFT JOIN Tutores t ON v.TutorID = t.TutorID
-            WHERE r.Nombre LIKE '%Coordinador%'";
+            $query = "exec [obtenerCoordinadores]";
 
             // Si el usuario es Superadministrador, puede ver Administradores
             // Si el usuario es Administrador, no puede ver Administradores ni Superadministradores
             if ($rolUsuario === 'Superadministrador') {
                 // Superadministrador puede ver todo excepto otros Superadministradores
-                $query .= " OR r.Nombre = 'Administrador'";
+                $query .= "@Rolusuario = 'diferent'";
             }
             // Si no es Superadministrador, no añadimos nada más (solo coordinadores)
 
-            $query .= " ORDER BY v.ApellidoPaterno, v.ApellidoMaterno, v.Nombres";
+            //$query .= " ORDER BY v.ApellidoPaterno, v.ApellidoMaterno, v.Nombres";
 
             $stmt = $this->pdo->prepare($query);
             $stmt->execute();
