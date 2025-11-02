@@ -1,5 +1,5 @@
 <?php
-
+// /controllers/TramiteController.php
 require_once __DIR__ . '/../models/tramitesModels.php';
 require_once __DIR__ . '/../config/database.php';
 
@@ -196,6 +196,83 @@ class TramiteController {
                 $descripcionTramite,
                 $requerimientosArray
             );
+
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+
+        } catch (Exception $e) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    /**
+     * ✅ NUEVO: Modifica un trámite existente
+     */
+    public function modificarTramite() {
+        try {
+            $tipoTramiteID = $_POST['tipo_tramite_id'] ?? 0;
+            $nombreTramite = $_POST['nombre_tramite'] ?? '';
+            $descripcionTramite = $_POST['descripcion_tramite'] ?? '';
+
+            if ($tipoTramiteID == 0) {
+                throw new Exception('No se especificó el ID del trámite a modificar');
+            }
+
+            if (empty($nombreTramite) || empty($descripcionTramite)) {
+                throw new Exception('Nombre y descripción son obligatorios');
+            }
+
+            $nombresReq = $_POST['req_nombre'] ?? [];
+            $tiposDatoReq = $_POST['req_tipodato'] ?? [];
+            $nombresDocReq = $_POST['req_docnombre'] ?? [];
+            $tiposDocReq = $_POST['req_tipodoc'] ?? [];
+
+            $requerimientosArray = [];
+            foreach ($nombresReq as $i => $nombre) {
+                if (!empty($nombre)) {
+                    $requerimientosArray[] = [
+                        'NombreRequerimiento' => $nombre,
+                        'TipoDato' => $tiposDatoReq[$i] ?? 'texto',
+                        'NombreDocumento' => $nombresDocReq[$i] ?: null,
+                        'TipoDocumento' => $tiposDocReq[$i] ?: null
+                    ];
+                }
+            }
+
+            if (empty($requerimientosArray)) {
+                throw new Exception('Debes agregar al menos un requerimiento');
+            }
+
+            $resultado = $this->tramiteModel->modificarTramiteCompleto(
+                $tipoTramiteID,
+                $nombreTramite,
+                $descripcionTramite,
+                $requerimientosArray
+            );
+
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
+
+        } catch (Exception $e) {
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
+        }
+    }
+
+    /**
+     * ✅ NUEVO: Da de baja (desactiva) un trámite
+     */
+    public function eliminarTramite() {
+        try {
+            // Puede venir por POST o GET
+            $tipoTramiteID = $_POST['tipo_tramite_id'] ?? $_GET['id'] ?? 0;
+
+            if ($tipoTramiteID == 0) {
+                throw new Exception('No se especificó el ID del trámite a eliminar');
+            }
+
+            $resultado = $this->tramiteModel->darBajaTramite($tipoTramiteID);
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);

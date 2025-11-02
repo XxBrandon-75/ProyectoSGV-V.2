@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let requerimientosTemp = [];
   let formAbierto = null;
 
-  // YA NO HAY LOCAL STORAGE :(
-  //PERO YA JALA CON LA BD :)
+  // ⚠️ ELIMINADO EL USO DE LOCALSTORAGE - Ahora todo viene de la BD
   
   // Crear botón toggle y overlay para móvil
   if (adminPanel) {
@@ -117,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const selectTipo = document.createElement('select');
       selectTipo.classList.add('req-select-edit');
       
-      // ✅ CORREGIDO: Solo Texto y Archivo
       const tipos = [
         {val: 'text', text: 'Texto'}, 
         {val: 'file', text: 'Archivo'}
@@ -229,6 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ✅ NUEVO: Guardar trámite en la base de datos
   if (form) {
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -238,26 +237,41 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
+      // Determinar si es edición o creación
+      const esEdicion = indexEditar.value !== '';
+      const accion = esEdicion ? 'modificar_tramite' : 'guardar_tramite';
+
+      // Preparar los datos para enviar al backend
       const formData = new FormData();
       formData.append('nombre_tramite', form.nombre.value);
       formData.append('descripcion_tramite', form.descripcion.value);
       
+      // Si es edición, agregar el ID del trámite
+      if (esEdicion) {
+        formData.append('tipo_tramite_id', indexEditar.value);
+      }
+      
+      // Agregar requerimientos como arrays
       requerimientosTemp.forEach((req, i) => {
         formData.append(`req_nombre[]`, req.label);
         
+        // ✅ MAPEAR: text -> texto, file -> Archivo
         const tipoDato = req.tipo === 'file' ? 'Archivo' : 'texto';
         formData.append(`req_tipodato[]`, tipoDato);
         
+        // Por ahora, NombreDocumento y TipoDocumento pueden ser null
         formData.append(`req_docnombre[]`, '');
         formData.append(`req_tipodoc[]`, '');
       });
 
       try {
-        const response = await fetch('?action=guardar_tramite', {
+        // ✅ Enviar al controlador PHP
+        const response = await fetch(`?action=${accion}`, {
           method: 'POST',
           body: formData
         });
 
+        // ✅ Verificar si la respuesta es JSON válido
         const textResponse = await response.text();
         console.log('Respuesta del servidor:', textResponse);
         
@@ -270,11 +284,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (resultado.Estatus === 'Éxito') {
-          mostrarNotificacion("Trámite guardado exitosamente", "success");
+          const mensaje = esEdicion ? "Trámite actualizado exitosamente" : "Trámite guardado exitosamente";
+          mostrarNotificacion(mensaje, "success");
           panel.classList.remove("active");
           form.reset();
           requerimientosTemp = [];
-
+          indexEditar.value = ''; // Limpiar el índice de edición
+          // Recargar trámites desde la BD
           await cargarTramites();
         } else {
           mostrarNotificacion(`Error: ${resultado.Mensaje}`, "error");
@@ -287,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ✅ NUEVO: Cargar trámites desde la base de datos
   async function cargarTramites() {
     try {
       // Si ya tenemos trámites iniciales, usarlos
@@ -382,6 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // ✅ NUEVO: Cargar requerimientos y mostrar formulario
   async function toggleFormulario(e) {
     const btn = e.target.closest("button");
     const tramiteID = btn.dataset.id;
@@ -473,7 +491,6 @@ document.addEventListener("DOMContentLoaded", () => {
           e.preventDefault();
           
           try {
-            // PASO 1: Iniciar la solicitud (esto crea los registros vacíos)
             const formDataInicio = new FormData();
             
             if (typeof VOLUNTARIO_ID === 'undefined' || VOLUNTARIO_ID === 0) {
@@ -497,15 +514,13 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const solicitudID = resultadoInicio.SolicitudID;
             
-
+            // PASO 2: Guardar los datos del formulario
             const responseDetalles = await fetch(`?action=obtener_datos_solicitud&solicitudID=${solicitudID}`);
             const datosSolicitud = await responseDetalles.json();
             
-            // Preparar los datos para guardar
             const formDataGuardar = new FormData();
             
             datosSolicitud.forEach((dato, idx) => {
-
               const nombreReq = dato.NombreRequerimiento || dato['Nombre de los requerimientos'] || dato.Nombre || '';
               const inputName = nombreReq.toLowerCase().replace(/\s+/g, '_');
               const input = formSolicitud.querySelector(`[name="${inputName}"]`);
@@ -568,18 +583,108 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  //CONFIESO QUE SIEMPRE ME HA GUSTADO LA MUCHACHA DE LENTES, BNO NO LA CONOCES PERO ANDABA ALLA EN LA TIENDA PERO LA NETA TABA BONITA
-  //POR CIERTO NO HAY PROCEDURE PARA ESTA LINEA POR LO TANTO HACE FALTA DE IMPLEMENTAR 
   function editar(e) {
-    // TODO: Implementar edición de trámites
-    mostrarNotificacion("Función de edición en desarrollo", "info");
+    if (!form || !panel || !formTitulo || !listaRequerimientos) return;
+
+    const tramiteID = e.target.closest("button").dataset.id;
+    
+    // Buscar el trámite en el array
+    const tramite = tramites.find(t => {
+      const id = t.Id || t.TipoTramiteID;
+      return id == tramiteID;
+    });
+    
+    if (!tramite) {
+      mostrarNotificacion("No se encontró el trámite", "error");
+      return;
+    }
+
+    // Llenar el formulario con los datos del trámite
+    indexEditar.value = tramiteID; // Guardar el ID para edición
+    formTitulo.textContent = "Editar trámite";
+    form.nombre.value = tramite['Nombre del tramite'] || tramite.Nombre || '';
+    form.descripcion.value = tramite.Descripcion || '';
+    
+    // Las fechas no están en el SP actual, así que las dejamos vacías
+    form.fecha_inicio.value = '';
+    form.fecha_corte.value = '';
+
+    // Cargar requerimientos existentes
+    requerimientosTemp = [];
+    
+    // Hacer petición para obtener los requerimientos
+    fetch(`?action=ver_requerimientos&id=${tramiteID}`)
+      .then(response => response.json())
+      .then(requerimientos => {
+        requerimientos.forEach(req => {
+          const nombreReq = req['Nombre de los requerimientos'] || req['Nombre'] || req['NombreRequerimiento'] || '';
+          const tipoDato = req['Tipos de datos'] || req['TipoDato'] || 'texto';
+          
+          // Mapear el tipo de dato
+          let tipoMapeado = 'text';
+          if (tipoDato.toLowerCase() === 'archivo' || tipoDato.toLowerCase() === 'file') {
+            tipoMapeado = 'file';
+          }
+          
+          requerimientosTemp.push({
+            label: nombreReq,
+            tipo: tipoMapeado
+          });
+        });
+        
+        renderRequerimientosTemp();
+        panel.classList.add("active");
+        
+        if (adminPanel && adminPanel.classList.contains("active")) {
+          adminPanel.classList.remove("active");
+          document.querySelector(".admin-toggle")?.classList.remove("active");
+          document.querySelector(".admin-overlay")?.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      })
+      .catch(error => {
+        console.error('Error al cargar requerimientos:', error);
+        mostrarNotificacion("Error al cargar los datos del trámite", "error");
+      });
   }
 
-
-  //FALTA IMPLEMENTAR NO HAY PROCEDURE PÁ QUIEN LO VEA PA
   function eliminar(e) {
-    // TODO: Implementar eliminación de trámites
-    mostrarNotificacion("Función de eliminación en desarrollo", "info");
+    const tramiteID = e.target.closest("button").dataset.id;
+    
+    // Buscar el trámite para mostrar su nombre en la confirmación
+    const tramite = tramites.find(t => {
+      const id = t.Id || t.TipoTramiteID;
+      return id == tramiteID;
+    });
+    
+    const nombreTramite = tramite ? (tramite['Nombre del tramite'] || tramite.Nombre) : 'este trámite';
+    
+    if (!confirm(`¿Estás seguro de dar de baja "${nombreTramite}"?\n\nEsto lo marcará como inactivo y no será visible para los usuarios.`)) {
+      return;
+    }
+
+    // Enviar petición para eliminar
+    const formData = new FormData();
+    formData.append('tipo_tramite_id', tramiteID);
+
+    fetch('?action=eliminar_tramite', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(resultado => {
+        if (resultado.Estatus === 'Éxito') {
+          mostrarNotificacion("Trámite dado de baja correctamente", "success");
+          // Recargar trámites
+          cargarTramites();
+        } else {
+          mostrarNotificacion(`Error: ${resultado.Mensaje}`, "error");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion("Error al dar de baja el trámite", "error");
+      });
   }
 
   function mostrarNotificacion(mensaje, tipo = "success") {

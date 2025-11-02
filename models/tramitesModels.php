@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/database.php';
 class Tramites {
     private $pdo;
 
-
+    // ⚠️ CORREGIDO: El constructor no debe recibir parámetros
     public function __construct() {
         $this->pdo = Database::getInstance()->getConnection();
     }
@@ -129,6 +129,58 @@ class Tramites {
 
         } catch (PDOException $e) {
             error_log("Error en guardarDatosSolicitud: " . $e->getMessage());
+            return ['Estatus' => 'Error', 'Mensaje' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * ✅ NUEVO: Llama a [usp_ModificarTramiteCompleto]
+     * Modifica un trámite existente y sincroniza sus requerimientos.
+     */
+    public function modificarTramiteCompleto($tipoTramiteID, $nombreTramite, $descripcionTramite, $requerimientosArray) {
+        try {
+            $requerimientosJSON = json_encode($requerimientosArray, JSON_UNESCAPED_UNICODE);
+
+            $sql = "exec [dbo].[usp_ModificarTramiteCompleto] 
+                        @TipoTramiteID = :TipoTramiteID,
+                        @NombreTramite = :NombreTramite,
+                        @DescripcionTramite = :DescripcionTramite,
+                        @NuevosRequerimientos_JSON = :NuevosRequerimientos_JSON";
+            
+            $stmt = $this->pdo->prepare($sql);
+            
+            $stmt->bindParam(':TipoTramiteID', $tipoTramiteID, PDO::PARAM_INT);
+            $stmt->bindParam(':NombreTramite', $nombreTramite, PDO::PARAM_STR);
+            $stmt->bindParam(':DescripcionTramite', $descripcionTramite, PDO::PARAM_STR);
+            $stmt->bindParam(':NuevosRequerimientos_JSON', $requerimientosJSON, PDO::PARAM_STR);
+            
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        } catch (PDOException $e) {
+            error_log("Error en modificarTramiteCompleto: " . $e->getMessage());
+            return ['Estatus' => 'Error', 'Mensaje' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * ✅ NUEVO: Llama a [darBajaTramite]
+     * Marca un trámite como inactivo (no lo elimina físicamente).
+     */
+    public function darBajaTramite($tipoTramiteID) {
+        try {
+            $sql = "exec [dbo].[darBajaTramite] @tipotramiteid = :tipotramiteid";
+            
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->bindParam(':tipotramiteid', $tipoTramiteID, PDO::PARAM_INT);
+            
+            $stmt->execute();
+            
+            // El SP no devuelve un resultado, así que asumimos éxito si no hay excepción
+            return ['Estatus' => 'Éxito', 'Mensaje' => 'Trámite dado de baja correctamente'];
+
+        } catch (PDOException $e) {
+            error_log("Error en darBajaTramite: " . $e->getMessage());
             return ['Estatus' => 'Error', 'Mensaje' => $e->getMessage()];
         }
     }
