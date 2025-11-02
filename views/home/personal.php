@@ -3,7 +3,25 @@ $paginaActual = 'personal';
 require_once __DIR__ . '/../layout/perfil-menu.php';
 ?>
 
-<section class="perfil-contenido" id="perfil-contenido">
+<section class="perfil-contenido" id="perfil-contenido"
+    data-perfil-config='<?= json_encode([
+                            "camposEditables" => ["FotoPerfil"],
+                            "puedeModificar" => true,
+                            "esAdmin" => $puedeEditarRol,
+                            "esPropioUsuario" => true,
+                            "datosUsuario" => [
+                                "VoluntarioID" => $datosCoordinador['VoluntarioID'] ?? null,
+                                "Nombres" => $datosCoordinador['Nombres'] ?? '',
+                                "ApellidoPaterno" => $datosCoordinador['ApellidoPaterno'] ?? '',
+                                "ApellidoMaterno" => $datosCoordinador['ApellidoMaterno'] ?? '',
+                                "FotoPerfil" => $datosCoordinador['FotoPerfil'] ?? '',
+                                "Email" => $datosCoordinador['Email'] ?? ''
+                            ],
+                            "rolUsuarioActual" => $_SESSION['user']['rol_id'] ?? 1,
+                            "idUsuarioActual" => (int)$_SESSION['user']['id'],
+                            "catCiudades" => $catCiudades ?? [],
+                            "catEstados" => $catEstados ?? []
+                        ]) ?>'>
     <div class="seccion-contenido activa">
         <h2>Voluntarios Personal</h2>
         <p class="seccion-descripcion">Delegación: <strong><?= htmlspecialchars($datosCoordinador['DelegacionNombre'] ?? 'No asignada') ?></strong></p>

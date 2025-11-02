@@ -5,7 +5,25 @@ $paginaActual = 'coordinadores';
 require_once __DIR__ . '/../layout/perfil-menu.php';
 ?>
 
-<section class="perfil-contenido" id="perfil-contenido">
+<section class="perfil-contenido" id="perfil-contenido"
+    data-perfil-config='<?= json_encode([
+                            "camposEditables" => ["FotoPerfil"],
+                            "puedeModificar" => true,
+                            "esAdmin" => $puedeEditarRol,
+                            "esPropioUsuario" => true,
+                            "datosUsuario" => [
+                                "VoluntarioID" => $datosUsuario['VoluntarioID'] ?? null,
+                                "Nombres" => $datosUsuario['Nombres'] ?? '',
+                                "ApellidoPaterno" => $datosUsuario['ApellidoPaterno'] ?? '',
+                                "ApellidoMaterno" => $datosUsuario['ApellidoMaterno'] ?? '',
+                                "FotoPerfil" => $datosUsuario['FotoPerfil'] ?? '',
+                                "Email" => $datosUsuario['Email'] ?? ''
+                            ],
+                            "rolUsuarioActual" => $_SESSION['user']['rol_id'] ?? 1,
+                            "idUsuarioActual" => (int)$_SESSION['user']['id'],
+                            "catCiudades" => $catCiudades ?? [],
+                            "catEstados" => $catEstados ?? []
+                        ]) ?>'>
     <div class="seccion-contenido activa">
         <h2>Gestión de Coordinadores</h2>
         <p class="seccion-descripcion">Listado de todos los coordinadores del sistema.</p>

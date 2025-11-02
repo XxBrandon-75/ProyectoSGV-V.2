@@ -1,7 +1,7 @@
 let catalogosDB = null;
 
-const {
-  camposEditables,
+// Variables globales de configuración (se inicializarán en DOMContentLoaded)
+let camposEditables,
   puedeModificar,
   esAdmin,
   esPropioUsuario,
@@ -9,10 +9,38 @@ const {
   rolUsuarioActual,
   idUsuarioActual,
   catCiudades,
-  catEstados,
-} = window.perfilConfig || {};
+  catEstados;
 
 document.addEventListener("DOMContentLoaded", () => {
+  // Intentar obtener configuración desde data-attribute (para páginas personal/coordinadores)
+  // Si no existe, usar window.perfilConfig (para página perfil)
+  let perfilConfigData = null;
+  const perfilContenidoElement = document.getElementById("perfil-contenido");
+
+  if (perfilContenidoElement && perfilContenidoElement.dataset.perfilConfig) {
+    try {
+      perfilConfigData = JSON.parse(
+        perfilContenidoElement.dataset.perfilConfig
+      );
+    } catch (e) {
+      console.error("Error al parsear data-perfil-config:", e);
+    }
+  }
+
+  // Usar configuración desde data-attribute o window.perfilConfig
+  const configSource = perfilConfigData || window.perfilConfig || {};
+
+  // Asignar a variables globales
+  camposEditables = configSource.camposEditables;
+  puedeModificar = configSource.puedeModificar;
+  esAdmin = configSource.esAdmin;
+  esPropioUsuario = configSource.esPropioUsuario;
+  datosUsuario = configSource.datosUsuario;
+  rolUsuarioActual = configSource.rolUsuarioActual;
+  idUsuarioActual = configSource.idUsuarioActual;
+  catCiudades = configSource.catCiudades;
+  catEstados = configSource.catEstados;
+
   cargarCatalogos();
 
   // Navegación entre secciones (solo si existen elementos con data-section)
@@ -68,10 +96,62 @@ async function cargarCatalogos() {
 // Variable para almacenar los valores originales del formulario
 let valoresOriginales = {};
 
-async function editarSeccion(seccion, event) {
+// Función para crear el modal dinámicamente si no existe
+function crearModalDinamico() {
+  const modalHTML = `
+    <div id="modal-editar" class="modal">
+      <div class="modal-content">
+        <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+        <h2 id="modal-titulo">Editar información</h2>
+        <form id="form-editar">
+          <div id="campos-editar"></div>
+          <div class="modal-botones">
+            <button type="button" class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+            <button type="submit" class="btn-guardar">Guardar cambios</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  // Insertar el modal en el body
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+
+  // Agregar event listener al formulario
+  const formEditar = document.getElementById("form-editar");
+  if (formEditar) {
+    formEditar.addEventListener("submit", guardarCambios);
+  }
+
+  // Agregar event listener para cerrar al hacer clic fuera
   const modal = document.getElementById("modal-editar");
-  const camposContainer = document.getElementById("campos-editar");
-  const modalTitulo = document.getElementById("modal-titulo");
+  if (modal) {
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        cerrarModal();
+      }
+    });
+  }
+}
+
+async function editarSeccion(seccion, event) {
+  let modal = document.getElementById("modal-editar");
+  let camposContainer = document.getElementById("campos-editar");
+  let modalTitulo = document.getElementById("modal-titulo");
+
+  // Si el modal no existe (páginas personal/coordinadores), crearlo dinámicamente
+  if (!modal) {
+    crearModalDinamico();
+    modal = document.getElementById("modal-editar");
+    camposContainer = document.getElementById("campos-editar");
+    modalTitulo = document.getElementById("modal-titulo");
+  }
+
+  // Verificar que los elementos existen
+  if (!modal || !camposContainer || !modalTitulo) {
+    console.error("Error: No se pudieron obtener los elementos del modal");
+    return;
+  }
 
   // Lógica especial para foto de perfil
   if (seccion === "foto_perfil") {
@@ -99,9 +179,10 @@ async function editarSeccion(seccion, event) {
         </div>
         <div class="preview-foto-wrapper">
           <img id=\"preview-foto-perfil\" 
-               src=\"${datosUsuario.FotoPerfil || ""}\" 
+               src=\"\" 
                alt=\"Previsualización\" 
-               class=\"preview-foto-img\">
+               class=\"preview-foto-img\" 
+               style=\"display: none;\">
           <div class="preview-placeholder" id="preview-placeholder">
             <i class="fa-solid fa-user"></i>
             <p>Selecciona una foto para ver la previsualización</p>
@@ -149,14 +230,9 @@ async function editarSeccion(seccion, event) {
       }
     });
 
-    // Mostrar foto actual o placeholder
-    if (datosUsuario.FotoPerfil) {
-      preview.style.display = "block";
-      if (placeholder) placeholder.style.display = "none";
-    } else {
-      preview.style.display = "none";
-      if (placeholder) placeholder.style.display = "flex";
-    }
+    // Siempre mostrar placeholder inicialmente
+    preview.style.display = "none";
+    if (placeholder) placeholder.style.display = "flex";
 
     return;
   }
@@ -361,7 +437,10 @@ function obtenerOpcionesCampo(campo) {
 
 // Función para cerrar modal
 function cerrarModal() {
-  document.getElementById("modal-editar").style.display = "none";
+  const modal = document.getElementById("modal-editar");
+  if (modal) {
+    modal.style.display = "none";
+  }
 }
 
 // Función para solicitar actualización de datos
