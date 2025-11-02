@@ -2,7 +2,7 @@
 // /models/tramitesModels.php
 require_once __DIR__ . '/../config/database.php';
 
-class Tramites {
+class Tramite {
     private $pdo;
 
     // ⚠️ CORREGIDO: El constructor no debe recibir parámetros

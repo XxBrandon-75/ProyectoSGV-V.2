@@ -1,13 +1,13 @@
 <?php
 // /controllers/TramiteController.php
-require_once __DIR__ . '/../models/tramitesModels.php';
+require_once __DIR__ . '/../models/Tramite.php';
 require_once __DIR__ . '/../config/database.php';
 
 class TramiteController {
     private $tramiteModel;
 
     public function __construct() {
-        $this->tramiteModel = new Tramites();
+        $this->tramiteModel = new Tramite();
     }
 
     /**
