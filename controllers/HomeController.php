@@ -60,7 +60,7 @@ class HomeController
     {
         // Redirigir al controlador dedicado de especialidades
         $especialidadesController = __DIR__ . '/EspecialidadesController.php';
-        
+
         if (file_exists($especialidadesController)) {
             require_once $especialidadesController;
 
@@ -72,7 +72,7 @@ class HomeController
                 }
             }
         }
-        
+
         // Si no existe el controlador, mostrar error
         echo "Error: No se pudo cargar el controlador de especialidades.";
         exit();
@@ -181,6 +181,7 @@ class HomeController
 
         require_once 'models/voluntario.php';
         require_once 'config/database.php';
+        require_once 'helpers/CatalogoHelper.php';
 
         $voluntarioModel = new Voluntario();
         $usuario_id = $_SESSION['user']['id'];
@@ -204,6 +205,10 @@ class HomeController
         $puedeVerVoluntarios = $this->tienePermiso(2);
         $puedeEditarOtros = $this->tienePermiso(3);
 
+        // Datos para configuración JavaScript
+        $catCiudades = CatalogoHelper::obtenerCiudades();
+        $catEstados = CatalogoHelper::obtenerEstados();
+
         $titulo_pagina = "Voluntarios Personal | Red de Voluntarios";
 
         $styles = [$this->base_url . 'public/css/p.style.css'];
@@ -217,7 +222,7 @@ class HomeController
 
         require_once "views/home/personal.php";
 
-        // require_once "views/layout/footer.php";
+        require_once "views/layout/footer.php";
     }
 
     public function coordinadores()
@@ -230,6 +235,7 @@ class HomeController
 
         require_once 'models/voluntario.php';
         require_once 'config/database.php';
+        require_once 'helpers/CatalogoHelper.php';
 
         $voluntarioModel = new Voluntario();
         $usuario_id = $_SESSION['user']['id'];
@@ -249,6 +255,10 @@ class HomeController
         $puedeEditarRol = $this->tienePermiso(3);
         $puedeVerVoluntarios = $this->tienePermiso(2);
         $puedeEditarOtros = $this->tienePermiso(3);
+
+        // Datos para configuración JavaScript
+        $catCiudades = CatalogoHelper::obtenerCiudades();
+        $catEstados = CatalogoHelper::obtenerEstados();
 
         $titulo_pagina = "Coordinadores | Red de Voluntarios";
 
