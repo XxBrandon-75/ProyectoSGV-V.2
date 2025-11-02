@@ -54,8 +54,8 @@ class NotificacionesController
 
         // Cargar el modelo de voluntarios
         // Asumiendo que VoluntarioModel.php está en models/
-        require_once 'models/VoluntarioModel.php'; 
-        $voluntarioModel = new VoluntarioModel();
+        require_once 'models/Notificacion.php'; 
+        $notificacionModel = new Notificacion();
 
         // Variables para la vista
         $notificacionesPendientes = [];
@@ -63,7 +63,7 @@ class NotificacionesController
 
         // Si es coordinador o superior, obtener voluntarios pendientes
         if ($esCoordinadorOMas) {
-            $voluntariosPendientes = $voluntarioModel->getVoluntariosSinAprobar();
+            $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
             
             // Formatear los datos para la vista
             foreach ($voluntariosPendientes as $voluntario) {

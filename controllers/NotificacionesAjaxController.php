@@ -3,7 +3,7 @@ ob_start();
 
 require_once __DIR__ . '/../config/security.php';
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../models/VoluntarioModel.php';
+require_once __DIR__ . '/../models/Notificacion.php';
 
 ob_end_clean();
 
@@ -17,23 +17,23 @@ if (!isset($_SESSION['user'])) {
 }
 
 $action = $_GET['action'] ?? '';
-$voluntarioModel = new VoluntarioModel();
+$notificacionModel = new Notificacion();
 
 switch ($action) {
     case 'aprobar':
-        aprobarVoluntario($voluntarioModel);
+        aprobarVoluntario($notificacionModel);
         break;
 
     case 'rechazar':
-        rechazarVoluntario($voluntarioModel);
+        rechazarVoluntario($notificacionModel);
         break;
 
     case 'detalles':
-        obtenerDetallesVoluntario($voluntarioModel);
+        obtenerDetallesVoluntario($notificacionModel);
         break;
 
     case 'contador':
-        obtenerContadorNotificaciones($voluntarioModel);
+        obtenerContadorNotificaciones($notificacionModel);
         break;
 
     default:
