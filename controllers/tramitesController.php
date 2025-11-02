@@ -1,22 +1,17 @@
 <?php
-// /controllers/TramiteController.php
+// /controllers/tramitesController.php
 
 // Incluimos el modelo que vamos a utilizar
-require_once __DIR__ . '/../models/tramitesModels.php'; // <-- CORREGIDO 1: El nombre del archivo
+require_once __DIR__ . '/../models/tramitesModels.php'; // Asegúrate que el nombre de archivo coincide
 
 class TramiteController {
     
     private $tramiteModel;
 
-    // Dentro de controllers/tramitesController.php
     public function __construct() {
-        // 1. Obtén la conexión usando el Singleton (el método estático)
-        // (Asegúrate de que 'getInstance' y 'getConnection' sean los nombres correctos)
-        $pdo = Database::getInstance()->getConnection(); 
-        
-        // 2. Instancia tu modelo ('Tramites') pasándole la conexión
-        // (Usa el nombre de la clase que está en 'models/tramitesModels.php')
-        $this->tramiteModel = new Tramites($pdo);
+        // Asumiendo que tu clase Database es un Singleton
+        $pdo = Database::getInstance()->getConnection();
+        $this->tramiteModel = new Tramites($pdo); // Asegúrate que el nombre de clase coincide
     }
 
     /**
@@ -47,7 +42,7 @@ class TramiteController {
         }
 
         // 2. Pide los requerimientos al Modelo
-        $requerimientos = $this->tramiteModel->obtenerRequerimientosPorTramite($tramiteID);
+        $requerimientos = $this->tramiteModel->obtenerRequerimientosPorTramite($tipoTramiteID);
 
         // 3. Devuelve los datos como JSON para que JavaScript los lea
         header('Content-Type: application/json');
@@ -69,7 +64,6 @@ class TramiteController {
                  throw new Exception('Faltan IDs de voluntario o trámite.');
             }
 
-            // <-- CORREGIDO 3: Usar $this->tramiteModel
             $resultado = $this->tramiteModel->iniciarSolicitud($voluntarioID, $tipoTramiteID, $observaciones);
 
             header('Content-Type: application/json');
@@ -118,7 +112,6 @@ class TramiteController {
             }
 
             // 3. Llamar al Modelo con los datos listos
-            // <-- CORREGIDO 3: Usar $this->tramiteModel
             $resultado = $this->tramiteModel->guardarDatosSolicitud($datosArray, $nuevoEstatus);
 
             // 4. Devolver el resultado como JSON a la vista (para AJAX)
@@ -132,7 +125,7 @@ class TramiteController {
     }
 
     /**
-     * AÑADIDO: Recibe los datos de un formulario de "Nuevo Trámite" y
+     * Recibe los datos de un formulario de "Nuevo Trámite" y
      * lo guarda en la base de datos.
      */
     public function guardarTramite() {
@@ -162,6 +155,59 @@ class TramiteController {
 
             // 4. Llamar al Modelo con los datos listos
             $resultado = $this->tramiteModel->gestionarTramiteCompleto(
+                $nombreTramite,
+                $descripcionTramite,
+                $requerimientosArray
+            );
+
+            // 5. Devolver el resultado como JSON a la vista (para AJAX)
+            header('Content-Type: application/json');
+            echo json_encode($resultado);
+
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()]);
+        }
+    }
+
+    /**
+     * (NUEVA ACCIÓN)
+     * Recibe los datos de un formulario de "Modificar Trámite" y
+     * lo actualiza en la base de datos.
+     */
+    public function modificarTramite() {
+        try {
+            // 1. Obtener los datos principales del trámite
+            $tipoTramiteID = $_POST['tipo_tramite_id'] ?? 0; // ID del trámite a editar
+            $nombreTramite = $_POST['nombre_tramite'] ?? '';
+            $descripcionTramite = $_POST['descripcion_tramite'] ?? '';
+
+            if ($tipoTramiteID == 0) {
+                throw new Exception('No se especificó el ID del trámite a modificar.');
+            }
+
+            // 2. Obtener los arrays de requerimientos
+            $nombresReq = $_POST['req_nombre'] ?? [];
+            $tiposDatoReq = $_POST['req_tipodato'] ?? [];
+            $nombresDocReq = $_POST['req_docnombre'] ?? [];
+            $tiposDocReq = $_POST['req_tipodoc'] ?? [];
+
+            // 3. Re-formatear los datos
+            $requerimientosArray = [];
+            foreach ($nombresReq as $i => $nombre) {
+                if (!empty($nombre)) {
+                    $requerimientosArray[] = [
+                        'NombreRequerimiento' => $nombre,
+                        'TipoDato' => $tiposDatoReq[$i] ?? null,
+                        'NombreDocumento' => $nombresDocReq[$i] ?: null,
+                        'TipoDocumento' => $tiposDocReq[$i] ?: null
+                    ];
+                }
+            }
+
+            // 4. Llamar al Modelo con los datos listos
+            $resultado = $this->tramiteModel->modificarTramiteCompleto(
+                $tipoTramiteID,
                 $nombreTramite,
                 $descripcionTramite,
                 $requerimientosArray

@@ -1,12 +1,13 @@
 <?php
-// /models/Tramites.php
-require_once __DIR__ . '/../config/database.php';
+// /models/tramitesModels.php
+
+require_once __DIR__ . '/../config/database.php'; // Asegúrate que la ruta sea correcta
 
 class Tramites {
     private $pdo;
 
     public function __construct() {
-        // Asumo que tu clase Database tiene este método estático
+        // Asumiendo que tu clase Database es un Singleton
         $this->pdo = Database::getInstance()->getConnection();
     }
     
@@ -56,10 +57,14 @@ class Tramites {
         }
     }
     
-
     /**
      * Llama al SP "GestionarTramiteCompleto" para crear/actualizar
      * un trámite y todos sus requerimientos asociados.
+     *
+     * @param string $nombreTramite El nombre del trámite.
+     * @param string $descripcionTramite La descripción del trámite.
+     * @param array $requerimientosArray Un array de PHP con los requerimientos.
+     * @return array El resultado del Stored Procedure.
      */
     public function gestionarTramiteCompleto($nombreTramite, $descripcionTramite, $requerimientosArray) {
         try {
@@ -90,10 +95,42 @@ class Tramites {
         }
     }
 
-    // --- FUNCIONES QUE FALTABAN ---
+    /**
+     * (NUEVA FUNCIÓN)
+     * Llama al SP "usp_ModificarTramiteCompleto" para modificar
+     * un trámite y sincronizar sus requerimientos.
+     */
+    public function modificarTramiteCompleto($tipoTramiteID, $nombreTramite, $descripcionTramite, $requerimientosArray) {
+        try {
+            $requerimientosJSON = json_encode($requerimientosArray);
+
+            $sql = "exec [dbo].[usp_ModificarTramiteCompleto] 
+                        @TipoTramiteID = :TipoTramiteID,
+                        @NombreTramite = :NombreTramite,
+                        @DescripcionTramite = :DescripcionTramite,
+                        @NuevosRequerimientos_JSON = :NuevosRequerimientos_JSON";
+            
+            $stmt = $this->pdo->prepare($sql);
+            
+            // Vincular los parámetros
+            $stmt->bindParam(':TipoTramiteID', $tipoTramiteID, PDO::PARAM_INT);
+            $stmt->bindParam(':NombreTramite', $nombreTramite, PDO::PARAM_STR);
+            $stmt->bindParam(':DescripcionTramite', $descripcionTramite, PDO::PARAM_STR);
+            $stmt->bindParam(':NuevosRequerimientos_JSON', $requerimientosJSON, PDO::PARAM_STR);
+            
+            $stmt->execute();
+            
+            return $stmt->fetch(PDO::FETCH_ASSOC); 
+
+        } catch (PDOException $e) {
+            error_log("Error en modificarTramiteCompleto: " . $e->getMessage());
+            return ['Estatus' => 'Error', 'Mensaje' => $e->getMessage()];
+        }
+    }
+
 
     /**
-     * Llama a [usp_IniciarNuevaSolicitud]
+     * Llama al SP "usp_IniciarNuevaSolicitud"
      * Crea la solicitud principal y los registros vacíos en DatoSolicitud.
      */
     public function iniciarSolicitud($voluntarioID, $tipoTramiteID, $observaciones) {
@@ -110,9 +147,7 @@ class Tramites {
             $stmt->bindParam(':Observaciones', $observaciones, PDO::PARAM_STR);
             
             $stmt->execute();
-            
-            // Devuelve la fila de resultado ('Éxito', 'Mensaje', 'SolicitudID')
-            return $stmt->fetch(PDO::FETCH_ASSOC); 
+            return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve {Estatus, Mensaje, SolicitudID}
 
         } catch (PDOException $e) {
             error_log("Error en iniciarSolicitud: " . $e->getMessage());
@@ -121,12 +156,11 @@ class Tramites {
     }
 
     /**
-     * Llama a [usp_GuardarDatosSolicitud]
-     * Actualiza los registros de DatoSolicitud con la información del usuario.
+     * Llama al SP "usp_GuardarDatosSolicitud"
+     * Actualiza las filas en DatoSolicitud con la info del usuario.
      */
-    public function guardarDatosSolicitud($datosArray, $nuevoEstatusNombre) {
+    public function guardarDatosSolicitud($datosArray, $nuevoEstatus) {
         try {
-            // 1. Convertir el array de datos a un string JSON
             $datosJSON = json_encode($datosArray);
 
             $sql = "exec [dbo].[usp_GuardarDatosSolicitud] 
@@ -135,14 +169,11 @@ class Tramites {
             
             $stmt = $this->pdo->prepare($sql);
             
-            // 2. Vincular los parámetros
             $stmt->bindParam(':NuevosDatos_JSON', $datosJSON, PDO::PARAM_STR);
-            $stmt->bindParam(':NuevoEstatusNombre', $nuevoEstatusNombre, PDO::PARAM_STR);
+            $stmt->bindParam(':NuevoEstatusNombre', $nuevoEstatus, PDO::PARAM_STR);
             
             $stmt->execute();
-            
-            // Devuelve la fila de resultado ('Éxito' o 'Error')
-            return $stmt->fetch(PDO::FETCH_ASSOC); 
+            return $stmt->fetch(PDO::FETCH_ASSOC); // Devuelve {Estatus, Mensaje}
 
         } catch (PDOException $e) {
             error_log("Error en guardarDatosSolicitud: " . $e->getMessage());
