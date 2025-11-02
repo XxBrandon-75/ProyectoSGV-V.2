@@ -84,6 +84,12 @@ class HomeController
         $ver_cont_gest = $this->tienePermiso(2); // Coordinador o superior puede agregar trámites
         $ver_card_edit = $this->tienePermiso(2); // Coordinador o superior puede editar/eliminar
 
+        require_once __DIR__ . '/../models/tramitesModels.php';
+        $tramitesModel = new Tramites();
+        $tramites = $tramitesModel->obtenerTramitesActivos();
+
+        $voluntarioID = $_SESSION['user']['id'];
+
         $titulo_pagina = "Trámites | Red de Voluntarios";
 
         $styles = [$this->base_url . 'public/css/t.style.css'];
