@@ -78,8 +78,8 @@ function rechazarVoluntario(id) {
   if (motivo === null) {
     return; // Usuario canceló
   }
-  
-  if (motivo.trim() === '') {
+
+  if (motivo.trim() === "") {
     mostrarMensaje("El motivo del rechazo es obligatorio", "error");
     return;
   }
@@ -188,6 +188,11 @@ function mostrarModalDetalles(voluntario) {
           </div>
         </div>
         <div class="modal-footer">
+          <a href="index.php?controller=home&action=perfil&id=${
+            voluntario.VoluntarioID
+          }" class="btn-accion btn-perfil">
+            <i class="fa-solid fa-user"></i> Ver Perfil Completo
+          </a>
           <button class="btn-accion btn-aprobar" onclick="aprobarVoluntario(${
             voluntario.VoluntarioID
           }); cerrarModal();">
@@ -265,17 +270,17 @@ function actualizarContadores(totalPendientes) {
 // Función para actualizar el badge del header desde esta página
 function actualizarBadgeHeaderExterno(count) {
   // Verificar si existe la función en el header
-  if (typeof window.actualizarBadgeHeader === 'function') {
+  if (typeof window.actualizarBadgeHeader === "function") {
     window.actualizarBadgeHeader(count);
   } else {
     // Si no existe, actualizar directamente
-    const badge = document.getElementById('notification-count');
+    const badge = document.getElementById("notification-count");
     if (badge) {
       if (count > 0) {
         badge.textContent = count;
-        badge.style.display = 'flex';
+        badge.style.display = "flex";
       } else {
-        badge.style.display = 'none';
+        badge.style.display = "none";
       }
     }
   }
