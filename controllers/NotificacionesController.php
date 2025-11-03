@@ -5,7 +5,7 @@ class NotificacionesController
     private $user_role;
     private $base_url;
 
-    // Definir los roles y sus niveles de acceso (Copia de HomeController)
+    // Definir los roles y sus niveles de acceso
     private $roles = [
         'Voluntario' => 1,
         'Coordinador de Area' => 2,
@@ -15,10 +15,9 @@ class NotificacionesController
 
     public function __construct()
     {
-        // La inclusión de security.php debe ser la primera
         require_once __DIR__ . '/../config/security.php';
 
-        // Calcular la ruta base automáticamente (Copia de HomeController)
+        // Calcular la ruta base automáticamente
         $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
             || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on');
@@ -40,32 +39,30 @@ class NotificacionesController
 
     private function tienePermiso($nivelMinimo)
     {
-        // Se puede mantener aquí o mover a un Helper si se usa mucho
         return $this->roles[$this->user_role] >= $nivelMinimo;
     }
 
     public function index()
     {
-        // Implementación de la lógica de notificaciones
-        
         // Obtener el rol del usuario desde la sesión
         $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
-        $esCoordinadorOMas = $this->tienePermiso(2); // Usamos el método de la clase
+        $esCoordinadorOMas = $this->tienePermiso(2);
 
-        // Cargar el modelo de voluntarios
-        // Asumiendo que VoluntarioModel.php está en models/
+        // Cargar el modelo de notificaciones
         require_once 'models/Notificacion.php'; 
         $notificacionModel = new Notificacion();
 
         // Variables para la vista
         $notificacionesPendientes = [];
         $totalPendientes = 0;
+        $tramitesSolicitados = [];
+        $totalTramites = 0;
 
-        // Si es coordinador o superior, obtener voluntarios pendientes
+        // Si es coordinador o superior, obtener voluntarios pendientes y trámites
         if ($esCoordinadorOMas) {
+            // VOLUNTARIOS PENDIENTES
             $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
             
-            // Formatear los datos para la vista
             foreach ($voluntariosPendientes as $voluntario) {
                 $notificacionesPendientes[] = [
                     'id' => $voluntario['VoluntarioID'],
@@ -79,6 +76,28 @@ class NotificacionesController
             }
             
             $totalPendientes = count($notificacionesPendientes);
+
+            // TRÁMITES SOLICITADOS
+            $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
+            
+            foreach ($tramitesPendientes as $tramite) {
+                $tramitesSolicitados[] = [
+                    'id' => $tramite['SolicitudID'],
+                    'voluntario_id' => $tramite['VoluntarioID'],
+                    'nombre' => $tramite['NombreCompleto'],
+                    'email' => $tramite['Email'],
+                    'tramite' => $tramite['TramiteNombre'],
+                    'descripcion' => $tramite['TramiteDescripcion'],
+                    'motivo' => $tramite['MotivoDeSolicitud'],
+                    'fecha_solicitud' => $tramite['FechaSolicitud'],
+                    'numero_credencial' => $tramite['NumeroCredencial'],
+                    'vigencia' => $tramite['VigenciaCredencial'],
+                    'delegacion' => $tramite['DelegacionNombre'] ?? 'Sin asignar',
+                    'area' => $tramite['AreaNombre'] ?? 'Sin asignar',
+                ];
+            }
+            
+            $totalTramites = count($tramitesSolicitados);
         }
 
         // Notificaciones generales del sistema
@@ -99,15 +118,15 @@ class NotificacionesController
             ]
         ];
 
+        // Total general de notificaciones
+        $totalNotificacionesGeneral = $totalPendientes + $totalTramites;
+
         // Configuración para el layout
         $titulo_pagina = "Notificaciones | Red de Voluntarios";
         $styles = [$this->base_url . 'public/css/n.style.css'];
         $scripts = [$this->base_url . 'public/scripts/n.script.js'];
 
         // Cargar las vistas
-        // NOTA: Asegúrate de que 'views/home/notificaciones.php' sea movida 
-        // o copiada a 'views/notificaciones/index.php' si sigues la convención. 
-        // Por ahora, mantendremos la ruta original para mínima modificación.
         require_once "views/layout/header.php";
         require_once "views/home/notificaciones.php";
         require_once "views/layout/footer.php";
