@@ -54,6 +54,31 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
   <div class="seccion-contenido activa" id="seccion-mi-perfil">
     <h2><?php echo $esPropioUsuario ? 'Mi Perfil' : 'Perfil de ' . htmlspecialchars($datosUsuario['Nombres']); ?></h2>
 
+    <?php
+    // Mostrar alertas de aprobación si el voluntario está pendiente y el usuario tiene permisos
+    // Usar RolHelper para verificar permisos (coordinador o superior)
+    $esCoordinadorOMas = RolHelper::puedeVerCoordinadores(); // Coordinador, Admin o Superadmin
+    $voluntarioPendiente = isset($datosUsuario['EstatusNombre']) && $datosUsuario['EstatusNombre'] === 'Pendiente';
+
+    if (!$esPropioUsuario && $esCoordinadorOMas && $voluntarioPendiente): ?>
+      <!-- Alerta de voluntario pendiente de aprobación -->
+      <div class="alerta-aprobacion">
+        <div class="alerta-header">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+          <h3>Este voluntario está pendiente de aprobación</h3>
+        </div>
+        <p>Este voluntario requiere tu aprobación para poder acceder al sistema y participar activamente en la red de voluntarios.</p>
+        <div class="alerta-acciones">
+          <button class="btn-accion btn-aprobar" onclick="aprobarVoluntarioDesdeModal(<?= $datosUsuario['VoluntarioID'] ?>)">
+            <i class="fa-solid fa-check"></i> Aprobar Voluntario
+          </button>
+          <button class="btn-accion btn-rechazar" onclick="rechazarVoluntarioDesdeModal(<?= $datosUsuario['VoluntarioID'] ?>)">
+            <i class="fa-solid fa-times"></i> Rechazar Voluntario
+          </button>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <!-- Información Personal -->
     <div class="perfil-card">
       <div class="card-header">
