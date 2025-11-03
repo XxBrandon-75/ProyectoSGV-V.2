@@ -94,14 +94,14 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <button class="btn-editar" onclick="editarSeccion('personal', event)">
               <i class="fa-solid fa-pen"></i> Editar
             </button>
-            <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php elseif ($esPropioUsuario): ?>
             <!-- Sin permisos de edición en su propio perfil: Solo Solicitar -->
-            <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php endif; ?>
         </div>
       </div>
@@ -145,9 +145,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
               <i class="fa-solid fa-pen"></i> Editar
             </button>
           <?php elseif ($esPropioUsuario): ?>
-            <button class="btn-solicitar" onclick="solicitarActualizacion('tutor')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('tutor')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php endif; ?>
         </div>
         <div class="card-body">
@@ -178,9 +178,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('contacto')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('contacto')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -214,9 +214,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('emergencia')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('emergencia')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -246,9 +246,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('direccion')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('direccion')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -294,9 +294,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('profesional')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('profesional')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -330,9 +330,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('medica')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('medica')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -362,9 +362,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('voluntariado')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('voluntariado')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
