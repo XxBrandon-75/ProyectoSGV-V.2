@@ -172,7 +172,7 @@ function mostrarModalDetalles(voluntario) {
           </div>
           <div class="detalle-row">
             <strong>Teléfono:</strong>
-            <span>${voluntario.Telefono || "No proporcionado"}</span>
+            <span>${voluntario.TelefonoCelular || "No proporcionado"}</span>
           </div>
           <div class="detalle-row">
             <strong>Delegación:</strong>

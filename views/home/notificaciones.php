@@ -69,18 +69,14 @@ if (!isset($notificacionesGenerales)) {
                                         <i class="fa-solid fa-envelope"></i>
                                         <?= htmlspecialchars($notif['email']) ?>
                                     </span>
-                                    <?php if (isset($notif['delegacion'])): ?>
-                                        <span class="detalle-item">
-                                            <i class="fa-solid fa-map-marker-alt"></i>
-                                            <?= htmlspecialchars($notif['delegacion']) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <?php if (isset($notif['area'])): ?>
-                                        <span class="detalle-item">
-                                            <i class="fa-solid fa-briefcase"></i>
-                                            <?= htmlspecialchars($notif['area']) ?>
-                                        </span>
-                                    <?php endif; ?>
+                                    <span class="detalle-item">
+                                        <i class="fa-solid fa-map-marker-alt"></i>
+                                        <?= isset($notif['delegacion']) && $notif['delegacion'] ? htmlspecialchars($notif['delegacion']) : 'Sin asignar' ?>
+                                    </span>
+                                    <span class="detalle-item">
+                                        <i class="fa-solid fa-briefcase"></i>
+                                        <?= isset($notif['area']) && $notif['area'] ? htmlspecialchars($notif['area']) : 'Sin asignar' ?>
+                                    </span>
                                 </div>
                                 <div class="notificacion-acciones">
                                     <button class="btn-accion btn-aprobar" onclick="aprobarVoluntario(<?= $notif['id'] ?>)">
