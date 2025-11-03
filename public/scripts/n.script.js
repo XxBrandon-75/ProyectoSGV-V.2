@@ -212,45 +212,40 @@ function mostrarModalDetalles(voluntario) {
 // ====================================================================
 
 function aprobarTramite(id) {
-  const modalHTML = `
-    <div class="modal-overlay" id="modal-aprobar-tramite">
-      <div class="modal-contenido">
-        <div class="modal-header">
-          <h3><i class="fa-solid fa-check-circle"></i> Aprobar Trámite</h3>
-          <button class="modal-cerrar" onclick="cerrarModal()">
-            <i class="fa-solid fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="observaciones-aprobacion"><strong>Observaciones:</strong></label>
-            <textarea id="observaciones-aprobacion" rows="3" placeholder="Observaciones sobre la aprobación..."></textarea>
-          </div>
-          <div class="form-group" style="margin-top: 1.5rem;">
-            <label for="numero-credencial"><strong>Número de Credencial (opcional):</strong></label>
-            <input type="text" id="numero-credencial" placeholder="Ej: CRV12345">
-          </div>
-          <div class="form-group" style="margin-top: 1.5rem;">
-            <label for="vigencia-credencial"><strong>Vigencia de Credencial (opcional):</strong></label>
-            <input type="date" id="vigencia-credencial">
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-accion btn-aprobar" onclick="confirmarAprobacionTramite(${id})">
-            <i class="fa-solid fa-check"></i> Confirmar Aprobación
-          </button>
-          <button class="btn-accion" onclick="cerrarModal()" style="background: #6c757d;">
-            <i class="fa-solid fa-times"></i> Cancelar
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
+  if (confirm("¿Estás seguro de aprobar este trámite?")) {
+    fetch("controllers/NotificacionesAjaxController.php?action=aprobar-tramite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ solicitudId: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const card = document.querySelector(`.tramite-card[data-id="${id}"]`);
+          if (card) {
+            card.style.background = "#d4edda";
+            card.style.borderLeftColor = "#28a745";
 
-  document.body.insertAdjacentHTML("beforeend", modalHTML);
-  document.getElementById("modal-aprobar-tramite").addEventListener("click", (e) => {
-    if (e.target.id === "modal-aprobar-tramite") cerrarModal();
-  });
+            setTimeout(() => {
+              card.style.opacity = "0";
+              card.style.transform = "translateX(100%)";
+              setTimeout(() => {
+                card.remove();
+                actualizarContadores(null, data.totalTramites);
+                actualizarBadgeHeaderExterno();
+              }, 300);
+            }, 1000);
+          }
+          mostrarMensaje(data.message, "success");
+        } else {
+          mostrarMensaje(data.message || "Error al aprobar trámite", "error");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarMensaje("Error de conexión con el servidor", "error");
+      });
+  }
 }
 
 function confirmarAprobacionTramite(id) {
@@ -299,48 +294,41 @@ function confirmarAprobacionTramite(id) {
     });
 }
 
-function rechazarTramite(id) {
-  const observaciones = prompt("¿Por qué rechazas este trámite? (obligatorio)");
-
-  if (observaciones === null) return;
-  
-  if (observaciones.trim() === '') {
-    mostrarMensaje("Las observaciones del rechazo son obligatorias", "error");
-    return;
-  }
-
-  fetch("controllers/NotificacionesAjaxController.php?action=rechazar-tramite", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ solicitudId: id, observaciones: observaciones }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.success) {
-        const card = document.querySelector(`.tramite-card[data-id="${id}"]`);
-        if (card) {
-          card.style.background = "#f8d7da";
-          card.style.borderLeftColor = "#dc3545";
-
-          setTimeout(() => {
-            card.style.opacity = "0";
-            card.style.transform = "translateX(-100%)";
-            setTimeout(() => {
-              card.remove();
-              actualizarContadores(null, data.totalTramites);
-              actualizarBadgeHeaderExterno();
-            }, 300);
-          }, 1000);
-        }
-        mostrarMensaje(data.message, "error");
-      } else {
-        mostrarMensaje(data.message || "Error al rechazar trámite", "error");
-      }
+  function rechazarTramite(id) {
+  if (confirm("¿Estás seguro de rechazar este trámite?")) {
+    fetch("controllers/NotificacionesAjaxController.php?action=rechazar-tramite", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ solicitudId: id }),
     })
-    .catch((error) => {
-      console.error("Error:", error);
-      mostrarMensaje("Error de conexión con el servidor", "error");
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const card = document.querySelector(`.tramite-card[data-id="${id}"]`);
+          if (card) {
+            card.style.background = "#f8d7da";
+            card.style.borderLeftColor = "#dc3545";
+
+            setTimeout(() => {
+              card.style.opacity = "0";
+              card.style.transform = "translateX(-100%)";
+              setTimeout(() => {
+                card.remove();
+                actualizarContadores(null, data.totalTramites);
+                actualizarBadgeHeaderExterno();
+              }, 300);
+            }, 1000);
+          }
+          mostrarMensaje(data.message, "error");
+        } else {
+          mostrarMensaje(data.message || "Error al rechazar trámite", "error");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarMensaje("Error de conexión con el servidor", "error");
+      });
+  }
 }
 
 function verDetallesTramite(id) {
@@ -348,86 +336,78 @@ function verDetallesTramite(id) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        mostrarModalDetallesTramite(data.data);
+        mostrarModalDetallesTramite(data.data, id);
       } else {
         mostrarMensaje(data.message || "Error al obtener detalles", "error");
       }
     })
-    .catch((error) => {
-      console.error("Error:", error);
-      mostrarMensaje("Error de conexión con el servidor", "error");
-    });
 }
 
-function mostrarModalDetallesTramite(tramite) {
-  const modalHTML = `
-    <div class="modal-overlay" id="modal-detalles">
-      <div class="modal-contenido">
-        <div class="modal-header">
-          <h3><i class="fa-solid fa-file-contract"></i> Detalles del Trámite</h3>
-          <button class="modal-cerrar" onclick="cerrarModal()">
-            <i class="fa-solid fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="detalle-row">
-            <strong>Voluntario:</strong>
-            <span>${tramite.NombreCompleto}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Email:</strong>
-            <span>${tramite.Email}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Teléfono:</strong>
-            <span>${tramite.Telefono || "No proporcionado"}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Trámite:</strong>
-            <span>${tramite.TramiteNombre}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Fecha de solicitud:</strong>
-            <span>${new Date(tramite.FechaSolicitud).toLocaleDateString('es-MX')}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Motivo de solicitud:</strong>
-            <span>${tramite.MotivoDeSolicitud || "No especificado"}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Delegación:</strong>
-            <span>${tramite.DelegacionNombre || "Sin asignar"}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Área:</strong>
-            <span>${tramite.AreaNombre || "Sin asignar"}</span>
-          </div>
-          <div class="detalle-row">
-            <strong>Estatus:</strong>
-            <span class="badge-estatus">${tramite.EstatusNombre}</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn-accion btn-aprobar" onclick="aprobarTramite(${tramite.SolicitudID}); cerrarModal();">
-            <i class="fa-solid fa-check"></i> Aprobar
-          </button>
-          <button class="btn-accion btn-rechazar" onclick="rechazarTramite(${tramite.SolicitudID}); cerrarModal();">
-            <i class="fa-solid fa-times"></i> Rechazar
-          </button>
-          <button class="btn-accion" onclick="cerrarModal()" style="background: #6c757d;">
-            <i class="fa-solid fa-arrow-left"></i> Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  `;
+  function mostrarModalDetallesTramite(tramite) {
+      let modalHTML = `
+          <div class="modal-overlay" id="modal-detalles">
+              <div class="modal-contenido">
+                  <div class="modal-header">
+                      <h3><i class="fa-solid fa-file-contract"></i> Detalles del Trámite</h3>
+                      <button class="modal-cerrar" onclick="cerrarModal()">
+                          <i class="fa-solid fa-times"></i>
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <h4>Requerimientos</h4>
+                      <div class="requerimientos-lista">
+      `;
 
-  document.body.insertAdjacentHTML("beforeend", modalHTML);
-  document.getElementById("modal-detalles").addEventListener("click", (e) => {
-    if (e.target.id === "modal-detalles") cerrarModal();
-  });
-}
+      tramite.requerimientos.forEach(req => {
+          modalHTML += `
+              <div class="requerimiento-item">
+                  <strong>${req.NombreRequerimiento}</strong>
+                  <div class="requerimiento-dato">
+          `;
 
+          if (req.TipoDato === 'Texto') {
+              modalHTML += `<span>${req.DatoTexto || 'No proporcionado'}</span>`;
+          } else if (req.TipoDato === 'Número') {
+              modalHTML += `<span>${req.DatoNumero || 'No proporcionado'}</span>`;
+          } else if (req.TipoDato === 'Fecha') {
+              modalHTML += `<span>${req.DatoFecha || 'No proporcionado'}</span>`;
+          } else if (req.TipoDato === 'Archivo') {
+              if (req.RutaArchivo) {
+                  modalHTML += `<a href="${req.RutaArchivo}" target="_blank">${req.NombreArchivo}</a>`;
+              } else {
+                  modalHTML += `<span>No se ha subido archivo</span>`;
+              }
+          }
+
+          modalHTML += `
+                  </div>
+              </div>
+          `;
+      });
+
+      modalHTML += `
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                      <button class="btn-accion btn-aprobar" onclick="aprobarTramite(${tramite.SolicitudID}); cerrarModal();">
+                          <i class="fa-solid fa-check"></i> Aprobar
+                      </button>
+                      <button class="btn-accion btn-rechazar" onclick="rechazarTramite(${tramite.SolicitudID}); cerrarModal();">
+                          <i class="fa-solid fa-times"></i> Rechazar
+                      </button>
+                      <button class="btn-accion" onclick="cerrarModal()" style="background: #6c757d;">
+                          <i class="fa-solid fa-arrow-left"></i> Cerrar
+                      </button>
+                  </div>
+              </div>
+          </div>
+      `;
+
+      document.body.insertAdjacentHTML("beforeend", modalHTML);
+      document.getElementById("modal-detalles").addEventListener("click", (e) => {
+          if (e.target.id === "modal-detalles") cerrarModal();
+      });
+  }
 // ====================================================================
 // FUNCIONES COMPARTIDAS
 // ====================================================================

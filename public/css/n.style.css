@@ -667,3 +667,37 @@ footer {
     padding: 0.8rem 1.5rem;
   }
 }
+
+/* Estilos para requerimientos en el modal */
+.requerimientos-lista {
+    margin-top: 1rem;
+}
+
+.requerimiento-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.requerimiento-item strong {
+    display: block;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+}
+
+.requerimiento-dato {
+    font-size: 1.4rem;
+    color: #666;
+}
+
+.requerimiento-dato a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.requerimiento-dato a:hover {
+    text-decoration: underline;
+}

@@ -274,10 +274,6 @@ function aprobarTramite($notificacionModel)
 
     $data = json_decode(file_get_contents('php://input'), true);
     $solicitudId = $data['solicitudId'] ?? null;
-    $observaciones = $data['observaciones'] ?? 'Trámite aprobado';
-    $numeroCredencial = $data['numeroCredencial'] ?? null;
-    $vigenciaCredencial = $data['vigenciaCredencial'] ?? null;
-    $adminId = $_SESSION['user']['id'] ?? null;
 
     if (!$solicitudId) {
         http_response_code(400);
@@ -285,26 +281,9 @@ function aprobarTramite($notificacionModel)
         exit();
     }
 
-    if (!$adminId) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'No se pudo identificar al usuario que aprueba']);
-        exit();
-    }
+    error_log("NotificacionesAjax - Aprobando trámite ID: $solicitudId");
 
-    // Obtener el ID del estatus "Aprobado"
-    $estatusIds = $notificacionModel->getEstatusSolicitudIds();
-    $estatusAprobadoId = $estatusIds['Aprobado'] ?? 2; // 2 es el valor por defecto
-
-    error_log("NotificacionesAjax - Aprobando trámite ID: $solicitudId por admin ID: $adminId");
-
-    $resultado = $notificacionModel->validarSolicitudTramite(
-        $solicitudId,
-        $adminId,
-        $estatusAprobadoId,
-        $observaciones,
-        $numeroCredencial,
-        $vigenciaCredencial
-    );
+    $resultado = $notificacionModel->aprobarTramite($solicitudId);
 
     if ($resultado['success']) {
         echo json_encode([
@@ -340,8 +319,6 @@ function rechazarTramite($notificacionModel)
 
     $data = json_decode(file_get_contents('php://input'), true);
     $solicitudId = $data['solicitudId'] ?? null;
-    $observaciones = $data['observaciones'] ?? '';
-    $adminId = $_SESSION['user']['id'] ?? null;
 
     if (!$solicitudId) {
         http_response_code(400);
@@ -349,32 +326,9 @@ function rechazarTramite($notificacionModel)
         exit();
     }
 
-    if (!$adminId) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'No se pudo identificar al usuario que rechaza']);
-        exit();
-    }
+    error_log("NotificacionesAjax - Rechazando trámite ID: $solicitudId");
 
-    if (empty(trim($observaciones))) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Las observaciones del rechazo son obligatorias']);
-        exit();
-    }
-
-    // Obtener el ID del estatus "Rechazado"
-    $estatusIds = $notificacionModel->getEstatusSolicitudIds();
-    $estatusRechazadoId = $estatusIds['Rechazado'] ?? 3; // 3 es el valor por defecto
-
-    error_log("NotificacionesAjax - Rechazando trámite ID: $solicitudId por admin ID: $adminId");
-
-    $resultado = $notificacionModel->validarSolicitudTramite(
-        $solicitudId,
-        $adminId,
-        $estatusRechazadoId,
-        $observaciones,
-        null,
-        null
-    );
+    $resultado = $notificacionModel->rechazarTramite($solicitudId);
 
     if ($resultado['success']) {
         echo json_encode([

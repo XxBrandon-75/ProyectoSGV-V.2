@@ -131,81 +131,70 @@ if (!isset($notificacionesGenerales)) {
         <!-- ============================================================ -->
         <!-- SECCIÓN DE TRÁMITES SOLICITADOS -->
         <!-- ============================================================ -->
-        <?php if ($esCoordinadorOMas && $totalTramites > 0): ?>
-            <div class="notificaciones-seccion tramites-seccion">
-                <h3 class="seccion-titulo">
-                    <i class="fa-solid fa-file-contract"></i> Trámites Pendientes de Validación
-                    <span class="badge-pendientes badge-tramites"><?= $totalTramites ?></span>
-                </h3>
+ <?php if ($esCoordinadorOMas && $totalTramites > 0): ?>
+    <div class="notificaciones-seccion tramites-seccion">
+        <h3 class="seccion-titulo">
+            <i class="fa-solid fa-file-contract"></i> Trámites Pendientes de Validación
+            <span class="badge-pendientes badge-tramites"><?= $totalTramites ?></span>
+        </h3>
 
-                <div class="notificaciones-lista">
-                    <?php foreach ($tramitesSolicitados as $tramite): ?>
-                        <div class="notificacion-card tramite-card" data-id="<?= htmlspecialchars($tramite['id']) ?>">
-                            <div class="notificacion-icono tramite-icono">
-                                <i class="fa-solid fa-file-contract"></i>
-                            </div>
-                            <div class="notificacion-contenido">
-                                <div class="notificacion-header">
-                                    <h4><?= htmlspecialchars($tramite['nombre']) ?></h4>
-                                    <span class="notificacion-tiempo">
-                                        <i class="fa-regular fa-clock"></i> 
-                                        <?= date('d/m/Y', strtotime($tramite['fecha_solicitud'])) ?>
-                                    </span>
-                                </div>
-                                <p class="notificacion-mensaje">
-                                    <strong>Trámite:</strong> <?= htmlspecialchars($tramite['tramite']) ?>
-                                </p>
-                                <?php if (!empty($tramite['motivo'])): ?>
-                                    <p class="notificacion-submensaje">
-                                        <strong>Motivo:</strong> <?= htmlspecialchars($tramite['motivo']) ?>
-                                    </p>
-                                <?php endif; ?>
-                                <div class="notificacion-detalles">
-                                    <span class="detalle-item">
-                                        <i class="fa-solid fa-envelope"></i>
-                                        <?= htmlspecialchars($tramite['email']) ?>
-                                    </span>
-                                    <?php if (isset($tramite['delegacion'])): ?>
-                                        <span class="detalle-item">
-                                            <i class="fa-solid fa-map-marker-alt"></i>
-                                            <?= htmlspecialchars($tramite['delegacion']) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                    <?php if (isset($tramite['area'])): ?>
-                                        <span class="detalle-item">
-                                            <i class="fa-solid fa-briefcase"></i>
-                                            <?= htmlspecialchars($tramite['area']) ?>
-                                        </span>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="notificacion-acciones">
-                                    <button class="btn-accion btn-aprobar" onclick="aprobarTramite(<?= $tramite['id'] ?>)">
-                                        <i class="fa-solid fa-check"></i> Aprobar
-                                    </button>
-                                    <button class="btn-accion btn-rechazar" onclick="rechazarTramite(<?= $tramite['id'] ?>)">
-                                        <i class="fa-solid fa-times"></i> Rechazar
-                                    </button>
-                                    <button class="btn-accion btn-ver" onclick="verDetallesTramite(<?= $tramite['id'] ?>)">
-                                        <i class="fa-solid fa-eye"></i> Ver Detalles
-                                    </button>
-                                </div>
-                            </div>
+        <div class="notificaciones-lista">
+            <!-- AQUÍ VA EL CÓDIGO QUE ME DISTE -->
+            <?php foreach ($tramitesSolicitados as $tramite): ?>
+                <div class="notificacion-card tramite-card" data-id="<?= htmlspecialchars($tramite['SolicitudID']) ?>">
+                    <div class="notificacion-icono tramite-icono">
+                        <i class="fa-solid fa-file-contract"></i>
+                    </div>
+                    <div class="notificacion-contenido">
+                        <div class="notificacion-header">
+                            <h4><?= htmlspecialchars($tramite['Nombres']) ?></h4>
+                            <span class="notificacion-tiempo">
+                                <i class="fa-regular fa-clock"></i> 
+                                <?= date('d/m/Y', strtotime($tramite['FechaSolicitud'])) ?>
+                            </span>
                         </div>
-                    <?php endforeach; ?>
+                        <p class="notificacion-mensaje">
+                            <strong>Trámite:</strong> <?= htmlspecialchars($tramite['NombreTramite']) ?>
+                        </p>
+                        <div class="notificacion-detalles">
+                            <span class="detalle-item">
+                                <i class="fa-solid fa-envelope"></i>
+                                <?= htmlspecialchars($tramite['email']) ?>
+                            </span>
+                            <span class="detalle-item">
+                                <i class="fa-solid fa-id-card"></i>
+                                <?= htmlspecialchars($tramite['curp']) ?>
+                            </span>
+                        </div>
+                        <div class="notificacion-acciones">
+                            <button class="btn-accion btn-aprobar" onclick="aprobarTramite(<?= $tramite['SolicitudID'] ?>)">
+                                <i class="fa-solid fa-check"></i> Aprobar
+                            </button>
+                            <button class="btn-accion btn-rechazar" onclick="rechazarTramite(<?= $tramite['SolicitudID'] ?>)">
+                                <i class="fa-solid fa-times"></i> Rechazar
+                            </button>
+                            <button class="btn-accion btn-ver" onclick="verDetallesTramite(<?= $tramite['SolicitudID'] ?>)">
+                                <i class="fa-solid fa-eye"></i> Ver Detalles
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        <?php elseif ($esCoordinadorOMas): ?>
-            <div class="notificaciones-seccion tramites-seccion">
-                <h3 class="seccion-titulo">
-                    <i class="fa-solid fa-check-circle"></i>
-                    No hay trámites pendientes de validación
-                </h3>
-                <div class="mensaje-vacio">
-                    <i class="fa-solid fa-file-check"></i>
-                    <p>Todos los trámites han sido procesados.</p>
-                </div>
-            </div>
-        <?php endif; ?>
+            <?php endforeach; ?>
+            <!-- FIN DEL CÓDIGO QUE ME DISTE -->
+        </div>
+    </div>
+<?php elseif ($esCoordinadorOMas): ?>
+    <div class="notificaciones-seccion tramites-seccion">
+        <h3 class="seccion-titulo">
+            <i class="fa-solid fa-check-circle"></i>
+            No hay trámites pendientes de validación
+        </h3>
+        <div class="mensaje-vacio">
+            <i class="fa-solid fa-file-check"></i>
+            <p>Todos los trámites han sido procesados.</p>
+        </div>
+    </div>
+<?php endif; ?>
 
         <!-- ============================================================ -->
         <!-- SECCIÓN DE NOTIFICACIONES GENERALES -->

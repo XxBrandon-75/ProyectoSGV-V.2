@@ -78,26 +78,22 @@ class NotificacionesController
             $totalPendientes = count($notificacionesPendientes);
 
             // TRÁMITES SOLICITADOS
-            $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
-            
-            foreach ($tramitesPendientes as $tramite) {
-                $tramitesSolicitados[] = [
-                    'id' => $tramite['SolicitudID'],
-                    'voluntario_id' => $tramite['VoluntarioID'],
-                    'nombre' => $tramite['NombreCompleto'],
-                    'email' => $tramite['Email'],
-                    'tramite' => $tramite['TramiteNombre'],
-                    'descripcion' => $tramite['TramiteDescripcion'],
-                    'motivo' => $tramite['MotivoDeSolicitud'],
-                    'fecha_solicitud' => $tramite['FechaSolicitud'],
-                    'numero_credencial' => $tramite['NumeroCredencial'],
-                    'vigencia' => $tramite['VigenciaCredencial'],
-                    'delegacion' => $tramite['DelegacionNombre'] ?? 'Sin asignar',
-                    'area' => $tramite['AreaNombre'] ?? 'Sin asignar',
-                ];
-            }
-            
-            $totalTramites = count($tramitesSolicitados);
+        $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
+
+        foreach ($tramitesPendientes as $tramite) {
+            $tramitesSolicitados[] = [
+                'SolicitudID' => $tramite['SolicitudID'],
+                'VoluntarioID' => $tramite['VoluntarioID'],
+                'Nombres' => $tramite['Nombres'],
+                'email' => $tramite['email'],
+                'curp' => $tramite['curp'],
+                'FechaSolicitud' => $tramite['FechaSolicitud'],
+                'Estatus' => $tramite['Estatus'],
+                'NombreTramite' => $tramite['NombreTramite'],
+            ];
+        }
+
+        $totalTramites = count($tramitesSolicitados);
         }
 
         // Notificaciones generales del sistema

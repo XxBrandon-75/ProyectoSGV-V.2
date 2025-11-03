@@ -184,29 +184,7 @@ class Notificacion
     public function getTramitesSolicitados()
     {
         try {
-            $sql = "SELECT 
-                        st.SolicitudID,
-                        st.VoluntarioID,
-                        CONCAT(v.Nombres, ' ', v.ApellidoPaterno, ' ', ISNULL(v.ApellidoMaterno, '')) AS NombreCompleto,
-                        v.Email,
-                        t.Nombre AS TramiteNombre,
-                        t.Descripcion AS TramiteDescripcion,
-                        st.FechaSolicitud,
-                        st.MotivoDeSolicitud,
-                        st.NumeroCredencial,
-                        st.VigenciaCredencial,
-                        es.Nombre AS EstatusNombre,
-                        d.Nombre AS DelegacionNombre,
-                        a.Nombre AS AreaNombre
-                    FROM dbo.SolicitudesTramites st
-                    INNER JOIN dbo.Voluntarios v ON st.VoluntarioID = v.VoluntarioID
-                    INNER JOIN dbo.Tramites t ON st.TramiteID = t.TramiteID
-                    INNER JOIN dbo.EstatusSolicitud es ON st.EstatusSolicitudID = es.EstatusSolicitudID
-                    LEFT JOIN dbo.Delegaciones d ON v.DelegacionID = d.DelegacionID
-                    LEFT JOIN dbo.Areas a ON v.AreaID = a.AreaID
-                    WHERE es.Nombre = 'Solicitado'
-                    ORDER BY st.FechaSolicitud DESC";
-            
+            $sql = "EXEC voluntariosSinAprobar @TipoNotify = 'Tramites'";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -217,27 +195,54 @@ class Notificacion
     }
 
     /**
-     * Obtiene los detalles de una solicitud de trámite por su ID
+     * Obtiene los detalles detallados de una solicitud de trámite
+     * usando el procedimiento almacenado voluntariosSinAprobar con @TipoNotify = 'TramitesDetallado'
      * 
      * @param int $solicitudId ID de la solicitud
-     * @return array|null Datos de la solicitud o null si no existe
+     * @return array|null Datos detallados de la solicitud
+     */
+    public function getDetallesTramiteCompleto($solicitudId)
+    {
+        try {
+            $sql = "EXEC voluntariosSinAprobar @TipoNotify = 'TramitesDetallado', @solicitudid = :solicitudId";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':solicitudId', $solicitudId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error en getDetallesTramiteCompleto: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtiene la información básica de una solicitud de trámite
+     * 
+     * @param int $solicitudId ID de la solicitud
+     * @return array|null Datos básicos de la solicitud
      */
     public function getSolicitudTramiteById($solicitudId)
     {
         try {
+            // Primero obtenemos la información básica de la solicitud
             $sql = "SELECT 
-                        st.*,
+                        st.SolicitudID,
+                        st.VoluntarioID,
                         CONCAT(v.Nombres, ' ', v.ApellidoPaterno, ' ', ISNULL(v.ApellidoMaterno, '')) AS NombreCompleto,
                         v.Email,
                         v.Telefono,
                         t.Nombre AS TramiteNombre,
                         t.Descripcion AS TramiteDescripcion,
+                        tt.Nombre AS TipoTramite,
+                        st.FechaSolicitud,
+                        st.MotivoDeSolicitud,
                         es.Nombre AS EstatusNombre,
                         d.Nombre AS DelegacionNombre,
                         a.Nombre AS AreaNombre
                     FROM dbo.SolicitudesTramites st
                     INNER JOIN dbo.Voluntarios v ON st.VoluntarioID = v.VoluntarioID
                     INNER JOIN dbo.Tramites t ON st.TramiteID = t.TramiteID
+                    INNER JOIN dbo.TiposTramite tt ON st.TipoTramiteID = tt.TipoTramiteID
                     INNER JOIN dbo.EstatusSolicitud es ON st.EstatusSolicitudID = es.EstatusSolicitudID
                     LEFT JOIN dbo.Delegaciones d ON v.DelegacionID = d.DelegacionID
                     LEFT JOIN dbo.Areas a ON v.AreaID = a.AreaID
@@ -246,117 +251,94 @@ class Notificacion
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':solicitudId', $solicitudId, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $solicitud = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($solicitud) {
+                // Luego obtenemos los requerimientos detallados
+                $solicitud['requerimientos'] = $this->getDetallesTramiteCompleto($solicitudId);
+            }
+
+            return $solicitud;
         } catch (PDOException $e) {
             error_log("Error en getSolicitudTramiteById: " . $e->getMessage());
             return null;
         }
     }
 
-    /**
-     * Valida una solicitud de trámite usando el procedimiento almacenado
+   /**
+     * Aprueba un trámite usando el procedimiento almacenado StatusTramite
      * 
      * @param int $solicitudId ID de la solicitud
-     * @param int $adminId ID del administrador que valida
-     * @param int $nuevoEstatusId ID del nuevo estatus (aprobado/rechazado)
-     * @param string $observaciones Observaciones de la validación
-     * @param string $numeroCredencial Número de credencial (opcional)
-     * @param string $vigenciaCredencial Fecha de vigencia (opcional)
      * @return array Resultado con 'success' y 'message'
      */
-    public function validarSolicitudTramite($solicitudId, $adminId, $nuevoEstatusId, $observaciones = null, $numeroCredencial = null, $vigenciaCredencial = null)
-    {
-        try {
-            $sql = "EXEC sp_ValidarSolicitudTramite 
-                    @SolicitudID = :solicitudId,
-                    @AdminID = :adminId,
-                    @NuevoEstatusSolicitudID = :nuevoEstatusId,
-                    @Observaciones = :observaciones,
-                    @NumeroCredencial = :numeroCredencial,
-                    @VigenciaCredencial = :vigenciaCredencial";
-            
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bindParam(':solicitudId', $solicitudId, PDO::PARAM_INT);
-            $stmt->bindParam(':adminId', $adminId, PDO::PARAM_INT);
-            $stmt->bindParam(':nuevoEstatusId', $nuevoEstatusId, PDO::PARAM_INT);
-            $stmt->bindParam(':observaciones', $observaciones, PDO::PARAM_STR);
-            $stmt->bindParam(':numeroCredencial', $numeroCredencial, PDO::PARAM_STR);
-            $stmt->bindParam(':vigenciaCredencial', $vigenciaCredencial, PDO::PARAM_STR);
-            
-            $stmt->execute();
-            
-            return [
-                'success' => true,
-                'message' => 'Trámite validado exitosamente'
-            ];
-        } catch (PDOException $e) {
-            error_log("Error en validarSolicitudTramite: " . $e->getMessage());
-            $errorMessage = $e->getMessage();
-            
-            if (strpos($errorMessage, 'no existe o ya no se encuentra en estado') !== false) {
-                return [
-                    'success' => false,
-                    'message' => 'La solicitud no existe o ya fue procesada anteriormente'
-                ];
-            }
-            
-            if (strpos($errorMessage, 'no tiene permisos') !== false) {
-                return [
-                    'success' => false,
-                    'message' => 'No tienes permisos para validar trámites'
-                ];
-            }
-            
-            return [
-                'success' => false,
-                'message' => 'Error al validar el trámite. Por favor, intente nuevamente.'
-            ];
-        }
+public function aprobarTramite($solicitudId)
+{
+    try {
+        error_log("Intentando aprobar trámite ID: $solicitudId");
+        
+        $sql = "EXEC StatusTramite @solicitudId = :solicitudId, @TipoStatus = 'Aprobar'";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':solicitudId', $solicitudId, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        
+        error_log("Resultado de ejecución: " . ($result ? 'true' : 'false'));
+        
+        return [
+            'success' => true,
+            'message' => 'Trámite aprobado exitosamente'
+        ];
+    } catch (PDOException $e) {
+        error_log("Error en aprobarTramite: " . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Error al aprobar el trámite: ' . $e->getMessage()
+        ];
     }
+}
 
-    /**
-     * Obtiene los IDs de los estatus de solicitud
-     * 
-     * @return array Array asociativo con los nombres y IDs de estatus
-     */
-    public function getEstatusSolicitudIds()
-    {
-        try {
-            $sql = "SELECT EstatusSolicitudID, Nombre FROM dbo.EstatusSolicitud";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-            $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            $estatus = [];
-            foreach ($resultados as $row) {
-                $estatus[$row['Nombre']] = $row['EstatusSolicitudID'];
-            }
-            
-            return $estatus;
-        } catch (PDOException $e) {
-            error_log("Error en getEstatusSolicitudIds: " . $e->getMessage());
-            return [];
-        }
+public function rechazarTramite($solicitudId)
+{
+    try {
+        error_log("Intentando rechazar trámite ID: $solicitudId");
+        
+        $sql = "EXEC StatusTramite @solicitudId = :solicitudId, @TipoStatus = 'Rechazado'";
+        
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':solicitudId', $solicitudId, PDO::PARAM_INT);
+        $result = $stmt->execute();
+        
+        error_log("Resultado de ejecución: " . ($result ? 'true' : 'false'));
+        
+        return [
+            'success' => true,
+            'message' => 'Trámite rechazado exitosamente'
+        ];
+    } catch (PDOException $e) {
+        error_log("Error en rechazarTramite: " . $e->getMessage());
+        return [
+            'success' => false,
+            'message' => 'Error al rechazar el trámite: ' . $e->getMessage()
+        ];
     }
+}
 
-    /**
+
+   /**
      * Cuenta el número total de trámites solicitados
+     * usando el procedimiento almacenado voluntariosSinAprobar
      * 
      * @return int Número de trámites pendientes
      */
     public function contarTramitesSolicitados()
     {
         try {
-            $sql = "SELECT COUNT(*) as total 
-                    FROM dbo.SolicitudesTramites st
-                    INNER JOIN dbo.EstatusSolicitud es ON st.EstatusSolicitudID = es.EstatusSolicitudID
-                    WHERE es.Nombre = 'Solicitado'";
-            
+            $sql = "EXEC voluntariosSinAprobar @TipoNotify = 'Tramites'";
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
-            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            $tramites = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            return (int) $resultado['total'];
+            return is_array($tramites) ? count($tramites) : 0;
         } catch (PDOException $e) {
             error_log("Error en contarTramitesSolicitados: " . $e->getMessage());
             return 0;
