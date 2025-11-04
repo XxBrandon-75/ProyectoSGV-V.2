@@ -62,20 +62,6 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
   <div id="lista-tramites-completados" class="lista-tramites">
     <p class="sin-tramites">No tienes trámites completados.</p>
   </div>
-
-  <h2 style="margin-top: 3rem; margin-bottom: 1rem;">
-    <i class="fa-solid fa-circle-check"></i> Trámites completados
-  </h2>
-  <div id="lista-tramites-completados" class="lista-tramites">
-    <p class="sin-tramites">No tienes trámites completados.</p>
-  </div>
-
-  <h2 style="margin-top: 3rem; margin-bottom: 1rem;">
-    <i class="fa-solid fa-circle-check"></i> Trámites completados
-  </h2>
-  <div id="lista-tramites-completados" class="lista-tramites">
-    <p class="sin-tramites">No tienes trámites completados.</p>
-  </div>
 </section>
 
 <script>
