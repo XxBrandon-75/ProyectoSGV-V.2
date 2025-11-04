@@ -343,6 +343,56 @@ class HomeController
         exit();
     }
 
+    public function reactivarVoluntario()
+    {
+        // Solo administradores o superiores pueden reactivar
+        if (!$this->tienePermiso(3)) {
+            header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+            exit();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['voluntario_id'], $_POST['csrf_token'])) {
+            require_once 'config/database.php';
+            require_once 'helpers/SecurityHelper.php';
+
+            if (!SecurityHelper::validarTokenCSRF($_POST['csrf_token'])) {
+                $_SESSION['error'] = 'Token de seguridad inválido.';
+                header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil&id=' . (int)$_POST['voluntario_id']);
+                exit();
+            }
+
+            $voluntarioID = (int)$_POST['voluntario_id'];
+            try {
+                $db = Database::getInstance()->getConnection();
+                // Obtener el ID del estatus "Activo" (asumiendo que es 1, pero mejor obtenerlo dinámicamente)
+                $stmtEstatus = $db->query("SELECT EstatusID FROM dbo.EstatusVoluntario WHERE Nombre = 'Activo'");
+                $estatusActivo = $stmtEstatus->fetch(PDO::FETCH_ASSOC);
+
+                if ($estatusActivo) {
+                    $estatusID = $estatusActivo['EstatusID'];
+                    $stmt = $db->prepare("UPDATE dbo.Voluntarios SET EstatusID = :estatusID WHERE VoluntarioID = :voluntarioID");
+                    $stmt->bindParam(':estatusID', $estatusID, PDO::PARAM_INT);
+                    $stmt->bindParam(':voluntarioID', $voluntarioID, PDO::PARAM_INT);
+                    $success = $stmt->execute();
+
+                    if ($success) {
+                        $_SESSION['success'] = 'El voluntario ha sido reactivado correctamente.';
+                    } else {
+                        $_SESSION['error'] = 'No se pudo reactivar al voluntario.';
+                    }
+                } else {
+                    $_SESSION['error'] = 'No se encontró el estatus "Activo" en la base de datos.';
+                }
+            } catch (Exception $e) {
+                $_SESSION['error'] = 'Error en la base de datos: ' . $e->getMessage();
+            }
+            header('Location: ' . $this->base_url . 'index.php?controller=home&action=personal');
+            exit();
+        }
+        header('Location: ' . $this->base_url . 'index.php?controller=home&action=perfil');
+        exit();
+    }
+
     public function cambiarFotoPerfil()
     {
         header('Content-Type: application/json');
