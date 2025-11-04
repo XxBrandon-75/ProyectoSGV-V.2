@@ -1,5 +1,3 @@
-<?php $base_url = '/ProyectoSGV/'; ?>
-
 <!-- HERO PRINCIPAL -->
 <section class="hero-inicio">
   <div class="hero-contenido">
