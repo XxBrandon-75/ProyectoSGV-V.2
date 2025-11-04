@@ -400,6 +400,10 @@
   transform: translateY(-2px);
 }
 
+footer {
+  display: none;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .documentos-voluntario {

@@ -2,424 +2,431 @@
   display: flex;
   min-height: calc(100vh - 100px);
   background: var(--light-bg);
-  padding-top: 10rem; 
+  padding-top: 10rem;
 }
 
 .especialidades-voluntario {
-    flex: 1;
-    margin: 3rem auto;
-    padding: 0 3rem;
-    max-width: 1200px;
+  flex: 1;
+  margin: 3rem auto;
+  padding: 0 3rem;
+  max-width: 1200px;
 }
 
 .especialidades-voluntario h1 {
-    color: var(--color);
-    font-size: 2.8rem;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
+  color: var(--color);
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
 }
 
 .especialidades-voluntario .descripcion-pagina {
-    font-size: 1.5rem;
-    color: #555;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 1rem;
+  font-size: 1.5rem;
+  color: #555;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
 }
 
 /* Botón principal */
 .btn-agregar-nueva {
-    background: var(--cuartiary-color);
-    color: #333;
-    border: none;
-    padding: 1.2rem 2.5rem;
-    border-radius: 0.6rem;
-    font-size: 1.6rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 3rem;
-    transition: all 0.3s;
-    font-weight: 600;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background: var(--cuartiary-color);
+  color: #333;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  border-radius: 0.6rem;
+  font-size: 1.6rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  transition: all 0.3s;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-agregar-nueva:hover {
-    background: #db8d07;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  background: #db8d07;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Grid de especialidades - más compacto */
 .lista-especialidades {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
 }
 
-.sin-cursos, .cargando-especialidades {
-    color: #777;
-    text-align: center;
-    font-size: 1.6rem;
-    grid-column: 1 / -1;
-    padding: 3rem;
+.sin-cursos,
+.cargando-especialidades {
+  color: #777;
+  text-align: center;
+  font-size: 1.6rem;
+  grid-column: 1 / -1;
+  padding: 3rem;
 }
 
 .cargando-especialidades i {
-    font-size: 2.5rem;
-    color: var(--color);
-    display: block;
-    margin-bottom: 1rem;
+  font-size: 2.5rem;
+  color: var(--color);
+  display: block;
+  margin-bottom: 1rem;
 }
 
 /* === TARJETAS DE ESPECIALIDAD === */
 .especialidad-card {
-    background: var(--white);
-    border: 1px solid #ddd;
-    border-left: 6px solid var(--color);
-    border-radius: 1rem;
-    padding: 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
-    overflow: hidden;
+  background: var(--white);
+  border: 1px solid #ddd;
+  border-left: 6px solid var(--color);
+  border-radius: 1rem;
+  padding: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  overflow: hidden;
 }
 
 .especialidad-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
 }
 
 .especialidad-header {
-    background: linear-gradient(135deg, var(--color) 0%, #a00 100%);
-    padding: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
+  background: linear-gradient(135deg, var(--color) 0%, #a00 100%);
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
 }
 
 .especialidad-header h3 {
-    color: white;
-    font-size: 1.9rem;
-    margin: 0;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+  color: white;
+  font-size: 1.9rem;
+  margin: 0;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 /* Badges de estatus */
 .estatus-badge {
-    padding: 0.6rem 1.2rem;
-    border-radius: 2rem;
-    font-size: 1.3rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    white-space: nowrap;
+  padding: 0.6rem 1.2rem;
+  border-radius: 2rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
 .estatus-pendiente {
-    background: #fff3cd;
-    color: #856404;
+  background: #fff3cd;
+  color: #856404;
 }
 
 .estatus-aprobado {
-    background: #d4edda;
-    color: #155724;
+  background: #d4edda;
+  color: #155724;
 }
 
 .estatus-rechazado {
-    background: #f8d7da;
-    color: #721c24;
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .especialidad-body {
-    padding: 1.8rem;
+  padding: 1.8rem;
 }
 
 .info-item {
-    margin-bottom: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .info-item strong {
-    color: var(--color);
-    font-size: 1.4rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+  color: var(--color);
+  font-size: 1.4rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.info-item span, .info-item p {
-    font-size: 1.4rem;
-    color: #444;
-    line-height: 1.6;
-    margin: 0;
+.info-item span,
+.info-item p {
+  font-size: 1.4rem;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
 }
 
 .notas-item p {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border-left: 3px solid var(--secondary-color);
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 3px solid var(--secondary-color);
 }
 
 /* === FORMULARIO MODAL === */
 .formulario-panel {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 90%; 
-    max-width: 550px; 
-    height: 100vh;
-    background: var(--white);
-    box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
-    transition: right 0.4s ease;
-    padding: 2.5rem;
-    overflow-y: auto;
-    z-index: 9999;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 90%;
+  max-width: 550px;
+  height: 100vh;
+  background: var(--white);
+  box-shadow: -4px 0 10px rgba(0, 0, 0, 0.2);
+  transition: right 0.4s ease;
+  padding: 2.5rem;
+  overflow-y: auto;
+  z-index: 9999;
 }
 
 .formulario-panel.active {
-    right: 0;
+  right: 0;
 }
 
 .formulario h2 {
-    font-size: 2.2rem;
-    margin-bottom: 2rem;
-    color: var(--color);
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+  font-size: 2.2rem;
+  margin-bottom: 2rem;
+  color: var(--color);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .formulario label {
-    display: block;
-    font-size: 1.5rem;
-    margin-bottom: 0.6rem;
-    color: var(--color);
-    font-weight: 600;
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+  color: var(--color);
+  font-weight: 600;
 }
 
 .formulario input,
 .formulario textarea,
-.formulario select { 
-    width: 100%;
-    padding: 1.1rem;
-    border: 2px solid #ddd;
-    border-radius: 0.6rem;
-    margin-bottom: 1.8rem;
-    font-size: 1.5rem;
-    transition: border-color 0.3s;
+.formulario select {
+  width: 100%;
+  padding: 1.1rem;
+  border: 2px solid #ddd;
+  border-radius: 0.6rem;
+  margin-bottom: 1.8rem;
+  font-size: 1.5rem;
+  transition: border-color 0.3s;
 }
 
 .formulario input:focus,
 .formulario textarea:focus,
 .formulario select:focus {
-    outline: none;
-    border-color: var(--color);
+  outline: none;
+  border-color: var(--color);
 }
 
 .formulario textarea {
-    resize: vertical;
-    min-height: 100px;
+  resize: vertical;
+  min-height: 100px;
 }
 
 .formulario input[type="file"] {
-    padding: 0.8rem;
-    cursor: pointer;
+  padding: 0.8rem;
+  cursor: pointer;
 }
 
 .formulario small {
-    font-size: 1.3rem;
+  font-size: 1.3rem;
 }
 
 .requerimientos-admin {
-    background: #fff8e1;
-    border: 2px dashed var(--cuartiary-color);
-    padding: 1.8rem;
-    border-radius: 0.8rem;
-    margin-bottom: 2rem;
+  background: #fff8e1;
+  border: 2px dashed var(--cuartiary-color);
+  padding: 1.8rem;
+  border-radius: 0.8rem;
+  margin-bottom: 2rem;
 }
 
 .requerimientos-admin h3 {
-    font-size: 1.8rem;
-    margin-bottom: 0.8rem;
-    color: var(--color);
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
+  font-size: 1.8rem;
+  margin-bottom: 0.8rem;
+  color: var(--color);
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
 
 .requerimientos-admin .instruccion-req {
-    font-size: 1.4rem;
-    color: #666;
-    margin-bottom: 1.2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #ddd;
+  font-size: 1.4rem;
+  color: #666;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ddd;
 }
 
 .form-buttons {
-    display: flex;
-    gap: 1rem;
-    padding-top: 1.5rem;
-    border-top: 2px solid #eee;
+  display: flex;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #eee;
 }
 
-.btn-guardar, .btn-cancelar {
-    flex: 1;
-    padding: 1.2rem 2rem;
-    border: none;
-    border-radius: 0.6rem;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 1.5rem;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
+.btn-guardar,
+.btn-cancelar {
+  flex: 1;
+  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.5rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
 }
 
 .btn-guardar {
-    background: var(--color);
-    color: white;
+  background: var(--color);
+  color: white;
 }
 
 .btn-guardar:hover:not(:disabled) {
-    background: #a00;
-    transform: translateY(-2px);
+  background: #a00;
+  transform: translateY(-2px);
 }
 
 .btn-guardar:disabled {
-    background: #ccc;
-    cursor: not-allowed;
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .btn-cancelar {
-    background: #6c757d;
-    color: white;
+  background: #6c757d;
+  color: white;
 }
 
 .btn-cancelar:hover {
-    background: #5a6268;
+  background: #5a6268;
 }
 
 /* === NOTIFICACIONES === */
 .notificacion {
-    position: fixed;
-    top: 11rem;
-    right: -400px;
-    background: white;
-    padding: 1.5rem 2rem;
-    border-radius: 0.8rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 1.5rem;
-    z-index: 10000;
-    transition: right 0.3s ease;
-    min-width: 300px;
-    max-width: 400px;
+  position: fixed;
+  top: 11rem;
+  right: -400px;
+  background: white;
+  padding: 1.5rem 2rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+  z-index: 10000;
+  transition: right 0.3s ease;
+  min-width: 300px;
+  max-width: 400px;
 }
 
 .notificacion.show {
-    right: 2rem;
+  right: 2rem;
 }
 
 .notificacion i {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 .notif-success {
-    border-left: 5px solid #28a745;
-    color: #155724;
+  border-left: 5px solid #28a745;
+  color: #155724;
 }
 
 .notif-success i {
-    color: #28a745;
+  color: #28a745;
 }
 
 .notif-error {
-    border-left: 5px solid #dc3545;
-    color: #721c24;
+  border-left: 5px solid #dc3545;
+  color: #721c24;
 }
 
 .notif-error i {
-    color: #dc3545;
+  color: #dc3545;
 }
 
 .notif-info {
-    border-left: 5px solid #17a2b8;
-    color: #0c5460;
+  border-left: 5px solid #17a2b8;
+  color: #0c5460;
 }
 
 .notif-info i {
-    color: #17a2b8;
+  color: #17a2b8;
+}
+
+footer {
+  display: none;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
-    .especialidades-voluntario {
-        padding: 0 2rem;
-    }
-    
-    .lista-especialidades {
-        grid-template-columns: 1fr;
-    }
+  .especialidades-voluntario {
+    padding: 0 2rem;
+  }
+
+  .lista-especialidades {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 600px) {
-    .especialidades-voluntario h1 {
-        font-size: 2.2rem;
-        text-align: center;
-    }
-    
-    .especialidades-voluntario .descripcion-pagina {
-        text-align: center;
-        font-size: 1.4rem;
-    }
+  .especialidades-voluntario h1 {
+    font-size: 2.2rem;
+    text-align: center;
+  }
 
-    .btn-agregar-nueva {
-        width: 100%;
-        justify-content: center;
-    }
+  .especialidades-voluntario .descripcion-pagina {
+    text-align: center;
+    font-size: 1.4rem;
+  }
 
-    .especialidad-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+  .btn-agregar-nueva {
+    width: 100%;
+    justify-content: center;
+  }
 
-    .especialidad-header h3 {
-        font-size: 1.7rem;
-    }
+  .especialidad-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-    .estatus-badge {
-        font-size: 1.2rem;
-        padding: 0.5rem 1rem;
-    }
+  .especialidad-header h3 {
+    font-size: 1.7rem;
+  }
 
-    .formulario-panel {
-        width: 100%;
-        max-width: none;
-        padding: 2rem 1.5rem;
-    }
-    
-    .form-buttons {
-        flex-direction: column;
-    }
+  .estatus-badge {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+  }
 
-    .notificacion {
-        max-width: calc(100% - 4rem);
-        font-size: 1.4rem;
-    }
+  .formulario-panel {
+    width: 100%;
+    max-width: none;
+    padding: 2rem 1.5rem;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+  }
+
+  .notificacion {
+    max-width: calc(100% - 4rem);
+    font-size: 1.4rem;
+  }
 }
