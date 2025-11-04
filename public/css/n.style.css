@@ -637,7 +637,88 @@ footer {
     min-width: 0;
   }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+}
+
+@media (max-width: 480px) {
+  .notificaciones-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .filtro-btn {
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .badge-contador {
+    font-size: 1rem;
+    min-width: 2rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .notificacion-header h4 {
+    font-size: 1.5rem;
+  }
+
+  .notificacion-mensaje {
+    font-size: 1.3rem;
+  }
+
+  .btn-accion {
+    font-size: 1.3rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+/* Estilos para requerimientos en el modal */
+.requerimientos-lista {
+    margin-top: 1rem;
+}
+
+.requerimiento-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.requerimiento-item strong {
+    display: block;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+}
+
+.requerimiento-dato {
+    font-size: 1.4rem;
+    color: #666;
+}
+
+.requerimiento-dato a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.requerimiento-dato a:hover {
+    text-decoration: underline;
+}
+/* ========================================== */
+/* ESPECIALIDADES PENDIENTES */
+/* ========================================== */
+.especialidad-pendiente {
+  border-left: 4px solid #9b59b6;
+}
+
+.especialidad-icono {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.badge-especialidades {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 }
 
 @media (max-width: 480px) {

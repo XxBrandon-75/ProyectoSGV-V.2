@@ -50,7 +50,11 @@ class NotificacionesController
 
         // Cargar el modelo de notificaciones
 <<<<<<< HEAD
+<<<<<<< HEAD
         require_once 'models/Notificacion.php'; 
+=======
+        require_once 'models/Notificacion.php';
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         require_once 'models/Notificacion.php';
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -62,11 +66,17 @@ class NotificacionesController
         $tramitesSolicitados = [];
         $totalTramites = 0;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         $expedientesPendientes = [];
         $totalExpedientes = 0;
         $especialidadesPendientes = [];
         $totalEspecialidades = 0;
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
         // Si es coordinador o superior, obtener voluntarios pendientes y trámites
@@ -74,7 +84,11 @@ class NotificacionesController
             // VOLUNTARIOS PENDIENTES
             $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
 <<<<<<< HEAD
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
 
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -94,6 +108,7 @@ class NotificacionesController
 
             // TRÁMITES SOLICITADOS
 <<<<<<< HEAD
+<<<<<<< HEAD
         $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
 
         foreach ($tramitesPendientes as $tramite) {
@@ -111,6 +126,8 @@ class NotificacionesController
 
         $totalTramites = count($tramitesSolicitados);
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
             $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
 
             foreach ($tramitesPendientes as $tramite) {
@@ -172,6 +189,9 @@ class NotificacionesController
                 ];
             }
             $totalEspecialidades = count($especialidadesPendientes);
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         }
 
@@ -195,7 +215,11 @@ class NotificacionesController
 
         // Total general de notificaciones
 <<<<<<< HEAD
+<<<<<<< HEAD
         $totalNotificacionesGeneral = $totalPendientes + $totalTramites;
+=======
+        $totalNotificacionesGeneral = $totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades;
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         $totalNotificacionesGeneral = $totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades;
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612

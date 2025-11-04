@@ -3,12 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const voluntariosSeccion = document.querySelector(".voluntarios-seccion");
   const tramitesSeccion = document.querySelector(".tramites-seccion");
 <<<<<<< HEAD
+<<<<<<< HEAD
   const generalesSeccion = document.querySelector(".generales-seccion");
   
   // Mostrar todas las secciones al inicio
   if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
   if (tramitesSeccion) tramitesSeccion.style.display = "block";
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   const expedientesSeccion = document.querySelector(".expedientes-seccion");
   const especialidadesSeccion = document.querySelector(
     ".especialidades-seccion"
@@ -20,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (tramitesSeccion) tramitesSeccion.style.display = "block";
   if (expedientesSeccion) expedientesSeccion.style.display = "block";
   if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   if (generalesSeccion) generalesSeccion.style.display = "block";
 
@@ -41,6 +47,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
     if (tramitesSeccion) tramitesSeccion.style.display = "block";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    if (expedientesSeccion) expedientesSeccion.style.display = "block";
+    if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     if (expedientesSeccion) expedientesSeccion.style.display = "block";
     if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
@@ -55,6 +66,11 @@ document.addEventListener("DOMContentLoaded", () => {
       case "voluntarios":
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
         if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
@@ -64,7 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
       case "tramites":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
         if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
         if (generalesSeccion) generalesSeccion.style.display = "none";
@@ -79,6 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
@@ -86,6 +108,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
         if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
@@ -110,8 +137,11 @@ function aprobarVoluntario(id) {
       .then((data) => {
         if (data.success) {
 <<<<<<< HEAD
+<<<<<<< HEAD
           const card = document.querySelector(`.notificacion-card.pendiente[data-id="${id}"]`);
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
           const card = document.querySelector(
             `.notificacion-card.pendiente[data-id="${id}"]`
           );
@@ -147,8 +177,13 @@ function rechazarVoluntario(id) {
 
   if (motivo === null) return;
 <<<<<<< HEAD
+<<<<<<< HEAD
   
   if (motivo.trim() === '') {
+=======
+
+  if (motivo.trim() === "") {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
 
   if (motivo.trim() === "") {
@@ -166,7 +201,13 @@ function rechazarVoluntario(id) {
     .then((data) => {
       if (data.success) {
 <<<<<<< HEAD
+<<<<<<< HEAD
         const card = document.querySelector(`.notificacion-card.pendiente[data-id="${id}"]`);
+=======
+        const card = document.querySelector(
+          `.notificacion-card.pendiente[data-id="${id}"]`
+        );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         const card = document.querySelector(
           `.notificacion-card.pendiente[data-id="${id}"]`
@@ -277,12 +318,15 @@ function mostrarModalDetalles(voluntario) {
 function aprobarTramite(id) {
   if (confirm("¿Estás seguro de aprobar este trámite?")) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     fetch("controllers/NotificacionesAjaxController.php?action=aprobar-tramite", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ solicitudId: id }),
     })
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     fetch(
       "controllers/NotificacionesAjaxController.php?action=aprobar-tramite",
       {
@@ -291,6 +335,9 @@ function aprobarTramite(id) {
         body: JSON.stringify({ solicitudId: id }),
       }
     )
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
       .then((response) => response.json())
       .then((data) => {
@@ -324,10 +371,13 @@ function aprobarTramite(id) {
 
 function confirmarAprobacionTramite(id) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const observaciones = document.getElementById("observaciones-aprobacion").value || "Trámite aprobado";
   const numeroCredencial = document.getElementById("numero-credencial").value || null;
   const vigenciaCredencial = document.getElementById("vigencia-credencial").value || null;
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   const observaciones =
     document.getElementById("observaciones-aprobacion").value ||
     "Trámite aprobado";
@@ -335,11 +385,15 @@ function confirmarAprobacionTramite(id) {
     document.getElementById("numero-credencial").value || null;
   const vigenciaCredencial =
     document.getElementById("vigencia-credencial").value || null;
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
   fetch("controllers/NotificacionesAjaxController.php?action=aprobar-tramite", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
 <<<<<<< HEAD
     body: JSON.stringify({ 
       solicitudId: id, 
@@ -347,11 +401,16 @@ function confirmarAprobacionTramite(id) {
       numeroCredencial: numeroCredencial,
       vigenciaCredencial: vigenciaCredencial
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     body: JSON.stringify({
       solicitudId: id,
       observaciones: observaciones,
       numeroCredencial: numeroCredencial,
       vigenciaCredencial: vigenciaCredencial,
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     }),
   })
@@ -387,6 +446,7 @@ function confirmarAprobacionTramite(id) {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   function rechazarTramite(id) {
   if (confirm("¿Estás seguro de rechazar este trámite?")) {
     fetch("controllers/NotificacionesAjaxController.php?action=rechazar-tramite", {
@@ -395,6 +455,8 @@ function confirmarAprobacionTramite(id) {
       body: JSON.stringify({ solicitudId: id }),
     })
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 function rechazarTramite(id) {
   if (confirm("¿Estás seguro de rechazar este trámite?")) {
     fetch(
@@ -405,6 +467,9 @@ function rechazarTramite(id) {
         body: JSON.stringify({ solicitudId: id }),
       }
     )
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
       .then((response) => response.json())
       .then((data) => {
@@ -438,7 +503,13 @@ function rechazarTramite(id) {
 
 function verDetallesTramite(id) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   fetch(`controllers/NotificacionesAjaxController.php?action=detalles-tramite&id=${id}`)
+=======
+  fetch(
+    `controllers/NotificacionesAjaxController.php?action=detalles-tramite&id=${id}`
+  )
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
   fetch(
     `controllers/NotificacionesAjaxController.php?action=detalles-tramite&id=${id}`
@@ -452,17 +523,23 @@ function verDetallesTramite(id) {
         mostrarMensaje(data.message || "Error al obtener detalles", "error");
       }
 <<<<<<< HEAD
+<<<<<<< HEAD
     })
 }
 
   function mostrarModalDetallesTramite(tramite) {
       let modalHTML = `
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     });
 }
 
 function mostrarModalDetallesTramite(tramite) {
   let modalHTML = `
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
           <div class="modal-overlay" id="modal-detalles">
               <div class="modal-contenido">
@@ -473,6 +550,7 @@ function mostrarModalDetallesTramite(tramite) {
                       </button>
                   </div>
                   <div class="modal-body">
+<<<<<<< HEAD
 <<<<<<< HEAD
                       <h4>Requerimientos</h4>
                       <div class="requerimientos-lista">
@@ -507,6 +585,8 @@ function mostrarModalDetallesTramite(tramite) {
 
       modalHTML += `
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
                       <h4>Requerimientos del Trámite</h4>
                       <div class="requerimientos-lista">
       `;
@@ -558,6 +638,9 @@ function mostrarModalDetallesTramite(tramite) {
   });
 
   modalHTML += `
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
                       </div>
                   </div>
@@ -577,17 +660,23 @@ function mostrarModalDetallesTramite(tramite) {
       `;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
       document.body.insertAdjacentHTML("beforeend", modalHTML);
       document.getElementById("modal-detalles").addEventListener("click", (e) => {
           if (e.target.id === "modal-detalles") cerrarModal();
       });
   }
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   document.body.insertAdjacentHTML("beforeend", modalHTML);
   document.getElementById("modal-detalles").addEventListener("click", (e) => {
     if (e.target.id === "modal-detalles") cerrarModal();
   });
 }
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 // ====================================================================
 // FUNCIONES COMPARTIDAS
@@ -596,7 +685,11 @@ function mostrarModalDetallesTramite(tramite) {
 function cerrarModal() {
   const modals = document.querySelectorAll(".modal-overlay");
 <<<<<<< HEAD
+<<<<<<< HEAD
   modals.forEach(modal => {
+=======
+  modals.forEach((modal) => {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
   modals.forEach((modal) => {
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -607,12 +700,15 @@ function cerrarModal() {
 
 function actualizarContadores(totalPendientes, totalTramites) {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const filtroBtnTodas = document.querySelector('[data-filtro="todas"] .badge-contador');
   const filtroBtnVoluntarios = document.querySelector('[data-filtro="voluntarios"] .badge-contador');
   const filtroBtnTramites = document.querySelector('[data-filtro="tramites"] .badge-contador');
   
   const badgePendientes = document.querySelector(".badge-pendientes:not(.badge-tramites)");
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   const filtroBtnTodas = document.querySelector(
     '[data-filtro="todas"] .badge-contador'
   );
@@ -626,6 +722,9 @@ function actualizarContadores(totalPendientes, totalTramites) {
   const badgePendientes = document.querySelector(
     ".badge-pendientes:not(.badge-tramites)"
   );
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   const badgeTramites = document.querySelector(".badge-tramites");
 
@@ -644,7 +743,11 @@ function actualizarContadores(totalPendientes, totalTramites) {
   if (filtroBtnTodas) {
     filtroBtnTodas.textContent = totalGeneral;
 <<<<<<< HEAD
+<<<<<<< HEAD
     filtroBtnTodas.style.display = totalGeneral > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnTodas.style.display = totalGeneral > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     filtroBtnTodas.style.display = totalGeneral > 0 ? "inline-block" : "none";
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -653,7 +756,12 @@ function actualizarContadores(totalPendientes, totalTramites) {
   if (filtroBtnVoluntarios && voluntariosPendientes !== null) {
     filtroBtnVoluntarios.textContent = voluntariosPendientes;
 <<<<<<< HEAD
+<<<<<<< HEAD
     filtroBtnVoluntarios.style.display = voluntariosPendientes > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnVoluntarios.style.display =
+      voluntariosPendientes > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     filtroBtnVoluntarios.style.display =
       voluntariosPendientes > 0 ? "inline-block" : "none";
@@ -663,7 +771,12 @@ function actualizarContadores(totalPendientes, totalTramites) {
   if (filtroBtnTramites && tramitesPendientes !== null) {
     filtroBtnTramites.textContent = tramitesPendientes;
 <<<<<<< HEAD
+<<<<<<< HEAD
     filtroBtnTramites.style.display = tramitesPendientes > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnTramites.style.display =
+      tramitesPendientes > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     filtroBtnTramites.style.display =
       tramitesPendientes > 0 ? "inline-block" : "none";
@@ -683,7 +796,13 @@ function actualizarContadores(totalPendientes, totalTramites) {
 
 function verificarSeccionesVacias() {
 <<<<<<< HEAD
+<<<<<<< HEAD
   const voluntariosCards = document.querySelectorAll(".notificacion-card.pendiente");
+=======
+  const voluntariosCards = document.querySelectorAll(
+    ".notificacion-card.pendiente"
+  );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
   const voluntariosCards = document.querySelectorAll(
     ".notificacion-card.pendiente"
@@ -725,7 +844,11 @@ function verificarSeccionesVacias() {
 
 function actualizarBadgeHeaderExterno() {
 <<<<<<< HEAD
+<<<<<<< HEAD
   if (typeof window.refrescarContadorNotificaciones === 'function') {
+=======
+  if (typeof window.refrescarContadorNotificaciones === "function") {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
   if (typeof window.refrescarContadorNotificaciones === "function") {
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612

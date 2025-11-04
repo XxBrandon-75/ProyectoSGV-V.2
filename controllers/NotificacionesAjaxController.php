@@ -50,7 +50,10 @@ switch ($action) {
         break;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     // NUEVOS CASOS PARA ESPECIALIDADES
     case 'aprobar_especialidad':
         aprobarEspecialidad($notificacionModel);
@@ -60,6 +63,9 @@ switch ($action) {
         rechazarEspecialidad($notificacionModel);
         break;
 
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     default:
         http_response_code(400);
@@ -220,6 +226,10 @@ function obtenerContadorNotificaciones($voluntarioModel)
             'totalPendientes' => 0,
             'totalTramites' => 0,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+            'totalExpedientes' => 0,
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
             'totalExpedientes' => 0,
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -232,10 +242,19 @@ function obtenerContadorNotificaciones($voluntarioModel)
     $totalPendientes = $voluntarioModel->contarVoluntariosPendientes();
     $totalTramites = $voluntarioModel->contarTramitesSolicitados();
 <<<<<<< HEAD
+<<<<<<< HEAD
     $totalGeneral = $totalPendientes + $totalTramites;
 
     error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
     error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+=======
+    $totalExpedientes = $voluntarioModel->contarExpedientesPendientes();
+    $totalGeneral = $totalPendientes + $totalTramites + $totalExpedientes;
+
+    error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
+    error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+    error_log("NotificacionesAjax - Total expedientes pendientes: $totalExpedientes");
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     $totalExpedientes = $voluntarioModel->contarExpedientesPendientes();
     $totalGeneral = $totalPendientes + $totalTramites + $totalExpedientes;
@@ -250,6 +269,10 @@ function obtenerContadorNotificaciones($voluntarioModel)
         'totalPendientes' => $totalPendientes,
         'totalTramites' => $totalTramites,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+        'totalExpedientes' => $totalExpedientes,
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
         'totalExpedientes' => $totalExpedientes,
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -373,8 +396,11 @@ function rechazarTramite($notificacionModel)
         ]);
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 }
 
 // ====================================================================
@@ -485,4 +511,7 @@ function rechazarEspecialidad($notificacionModel)
         ]);
     }
 }
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612

@@ -17,13 +17,19 @@ if (!isset($totalTramites)) {
     $totalTramites = 0;
 }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 if (!isset($expedientesPendientes)) {
     $expedientesPendientes = [];
 }
 if (!isset($totalExpedientes)) {
     $totalExpedientes = 0;
 }
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 if (!isset($notificacionesGenerales)) {
     $notificacionesGenerales = [];
@@ -39,8 +45,13 @@ if (!isset($notificacionesGenerales)) {
             <button class="filtro-btn activo" data-filtro="todas">
                 <i class="fa-solid fa-list"></i> Todas
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <?php if ($esCoordinadorOMas && ($totalPendientes + $totalTramites) > 0): ?>
                     <span class="badge-contador"><?= ($totalPendientes + $totalTramites) ?></span>
+=======
+                <?php if ($esCoordinadorOMas && ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) > 0): ?>
+                    <span class="badge-contador"><?= ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) ?></span>
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
                 <?php if ($esCoordinadorOMas && ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) > 0): ?>
                     <span class="badge-contador"><?= ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) ?></span>
@@ -61,7 +72,10 @@ if (!isset($notificacionesGenerales)) {
                     <?php endif; ?>
                 </button>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
                 <button class="filtro-btn" data-filtro="documentos">
                     <i class="fa-solid fa-file-invoice"></i> Documentos
                     <?php if ($totalExpedientes > 0): ?>
@@ -74,6 +88,9 @@ if (!isset($notificacionesGenerales)) {
                         <span class="badge-contador"><?= $totalEspecialidades ?></span>
                     <?php endif; ?>
                 </button>
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
             <?php endif; ?>
             <button class="filtro-btn" data-filtro="leidas">
@@ -161,6 +178,7 @@ if (!isset($notificacionesGenerales)) {
         <!-- SECCIÓN DE TRÁMITES SOLICITADOS -->
         <!-- ============================================================ -->
 <<<<<<< HEAD
+<<<<<<< HEAD
  <?php if ($esCoordinadorOMas && $totalTramites > 0): ?>
     <div class="notificaciones-seccion tramites-seccion">
         <h3 class="seccion-titulo">
@@ -226,6 +244,8 @@ if (!isset($notificacionesGenerales)) {
     </div>
 <?php endif; ?>
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         <?php if ($esCoordinadorOMas && $totalTramites > 0): ?>
             <div class="notificaciones-seccion tramites-seccion">
                 <h3 class="seccion-titulo">
@@ -449,6 +469,9 @@ if (!isset($notificacionesGenerales)) {
                 </div>
             </div>
         <?php endif; ?>
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
         <!-- ============================================================ -->

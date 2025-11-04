@@ -149,7 +149,11 @@ class Notificacion
                 return ['success' => false, 'message' => 'El voluntario no existe o ya fue procesado anteriormente'];
             }
 <<<<<<< HEAD
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
 
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -222,19 +226,26 @@ class Notificacion
     /**
      * Obtiene la información básica de una solicitud de trámite
 <<<<<<< HEAD
+<<<<<<< HEAD
      * 
      * @param int $solicitudId ID de la solicitud
      * @return array|null Datos básicos de la solicitud
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
      * usando el procedimiento almacenado voluntariosSinAprobar con @TipoNotify = 'TramitesDetallado'
      * 
      * @param int $solicitudId ID de la solicitud
      * @return array|null Datos básicos de la solicitud con requerimientos
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
      */
     public function getSolicitudTramiteById($solicitudId)
     {
         try {
+<<<<<<< HEAD
 <<<<<<< HEAD
             // Primero obtenemos la información básica de la solicitud
             $sql = "SELECT 
@@ -272,6 +283,8 @@ class Notificacion
 
             return $solicitud;
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
             // Obtener información detallada usando el SP
             $requerimientos = $this->getDetallesTramiteCompleto($solicitudId);
 
@@ -284,6 +297,9 @@ class Notificacion
                 'SolicitudID' => $solicitudId,
                 'requerimientos' => $requerimientos
             ];
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         } catch (PDOException $e) {
             error_log("Error en getSolicitudTramiteById: " . $e->getMessage());
@@ -292,7 +308,11 @@ class Notificacion
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
    /**
+=======
+    /**
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
     /**
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -301,6 +321,7 @@ class Notificacion
      * @param int $solicitudId ID de la solicitud
      * @return array Resultado con 'success' y 'message'
      */
+<<<<<<< HEAD
 <<<<<<< HEAD
 public function aprobarTramite($solicitudId)
 {
@@ -357,6 +378,8 @@ public function rechazarTramite($solicitudId)
 
    /**
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     public function aprobarTramite($solicitudId)
     {
         try {
@@ -411,6 +434,9 @@ public function rechazarTramite($solicitudId)
 
 
     /**
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
      * Cuenta el número total de trámites solicitados
      * usando el procedimiento almacenado voluntariosSinAprobar
@@ -425,7 +451,11 @@ public function rechazarTramite($solicitudId)
             $stmt->execute();
             $tramites = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <<<<<<< HEAD
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 =======
 
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
@@ -436,8 +466,11 @@ public function rechazarTramite($solicitudId)
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
+=======
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
     // ====================================================================
     // MÉTODOS PARA EXPEDIENTES/DOCUMENTOS
@@ -612,4 +645,7 @@ public function rechazarTramite($solicitudId)
         }
     }
 }
+<<<<<<< HEAD
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
+=======
 >>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
