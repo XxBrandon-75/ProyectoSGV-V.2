@@ -1,5 +1,6 @@
 <?php if (isset($ver_cont_gest) && $ver_cont_gest): ?>
-  <!--PARA EL PANEL DE ADMINISTRADOR LUEGO LE PONGO UN BOTON PARA QUE SOLO APAREZCA SI ES ADMIN-->
+
+
   <aside class="admin-panel">
     <h3>Panel de administración</h3>
     <button id="btn-agregar" class="btn-agregar">
@@ -31,12 +32,13 @@
           <input type="text" id="nuevo-label" placeholder="Campo (ej. CURP)">
           <select id="nuevo-tipo">
             <option value="text">Texto</option>
+            <option value="number">Número</option>
             <option value="file">Archivo</option>
           </select>
           <button type="button" id="btn-add-requerimiento">+</button>
         </div>
       </div>
-<!--CONFIESO QUE ME CUESTA TRABAJO DORMIR YA TIENE RATO QUE DUERMO TARDE-->
+
       <div class="form-buttons">
         <button type="submit" class="btn-guardar">Guardar</button>
         <button type="button" id="btn-cerrar" class="btn-cancelar">Cancelar</button>
@@ -51,14 +53,22 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
 <section class="tramites" <?php echo $tramites_style; ?>>
   <h1>Trámites disponibles</h1>
   <div id="lista-tramites" class="lista-tramites">
-    <!-- Los trámites se cargarán dinámicamente desde la BD -->
+    <p class="sin-tramites">No hay trámites registrados.</p>
   </div>
 </section>
 
-<script>
+<div id="modal-solicitud" class="modal">
+  <div class="modal-contenido">
+    <span class="cerrar-modal" style="display: none;" id="cerrar-modal">&times;</span>
+    <h2 id="titulo-solicitud"></h2>
+    <p id="descripcion-solicitud"></p>
+  <!-- Fechas del trámite: ocultas por defecto (se usan desde JS al abrir el modal) -->
+  <p class="modal-fecha" style="display: none;"><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
+  <p class="modal-fecha" style="display: none;"><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
+    <form id="form-solicitud" class="form-solicitud"></form>
+  </div>
+</div>
 
+<script>
   const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
-  const VOLUNTARIO_ID = <?php echo isset($voluntarioID) ? (int)$voluntarioID : 0; ?>;
-  
-  const TRAMITES_INICIALES = <?php echo json_encode($tramites ?? []); ?>;
 </script>

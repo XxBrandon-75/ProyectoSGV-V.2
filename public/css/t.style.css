@@ -1,10 +1,11 @@
 .contenido-pagina {
   display: flex;
   min-height: calc(100vh - 100px);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: var(--light-bg);
   padding-top: 6rem; 
 }
 
+/* Panel de administración mejorado */
 .admin-panel {
   background: linear-gradient(180deg, var(--color) 0%, rgba(127, 0, 0, 0.95) 100%);
   color: var(--white);
@@ -95,6 +96,7 @@
   font-size: 1.6rem;
 }
 
+/* Botón toggle para móvil */
 .admin-toggle {
   display: none;
   position: fixed;
@@ -123,6 +125,7 @@
   background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
 }
 
+/* Overlay para panel móvil */
 .admin-overlay {
   position: fixed;
   top: 0;
@@ -142,6 +145,7 @@
   visibility: visible;
 }
 
+/* Panel de formulario mejorado */
 .formulario-panel {
   position: fixed;
   top: 0;
@@ -174,7 +178,7 @@
   padding: 2.5rem;
 }
 
-.formulario h2 {
+.formulario h2{
   font-size: 2.2rem;
   margin-bottom: 2rem;
   color: var(--color);
@@ -265,13 +269,14 @@
   transform: translateY(-2px);
 }
 
+/* Requerimientos mejorados */
 .requerimientos-admin {
-  background: linear-gradient(135deg, #fff8f0, #ffe8cc);
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
   border: 2px solid var(--secondary-color);
   padding: 1.5rem;
   border-radius: 1rem;
   margin: 2rem 0;
-  box-shadow: 0 2px 8px rgba(219, 141, 7, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .requerimientos-admin h3 {
@@ -367,7 +372,7 @@
 }
 
 .requerimiento-display:hover {
-  background: #fff8f0;
+  background: #f8f9fa;
 }
 
 .req-input-edit, .req-select-edit {
@@ -403,6 +408,7 @@
   box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
 }
 
+/* Sección de trámites */
 .tramites { 
   flex: 1;
   margin-left: 300px;
@@ -417,7 +423,6 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .tramites h1::before {
@@ -433,57 +438,28 @@
   gap: 2rem;
 }
 
+/* Tarjetas de trámites mejoradas */
 .tramite-card { 
-  background: linear-gradient(135deg, #ffffff 0%, #fff5f5 100%);
+  background: var(--white);
   border-radius: 1.5rem;
-  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.12);
-  border-left: 8px solid var(--color);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border-left: 6px solid var(--secondary-color);
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-}
-
-.tramite-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s ease;
-  pointer-events: none;
-}
-
-.tramite-card:hover::before {
-  left: 150%;
 }
 
 .tramite-card:hover {
-  box-shadow: 0 12px 35px rgba(127, 0, 0, 0.18);
-  transform: translateX(8px) translateY(-4px);
-  border-left-width: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  transform: translateX(5px);
 }
 
 .tramite-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2.5rem;
+  padding: 2rem 2.5rem;
   gap: 2rem;
-  background: linear-gradient(135deg, #fff8f0 0%, #ffe8cc 50%, #fff0e0 100%);
-  border-bottom: 3px solid var(--secondary-color);
-  position: relative;
-}
-
-.tramite-header::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 80px;
-  height: 3px;
-  background: var(--color);
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
 }
 
 .tramite-info {
@@ -493,35 +469,23 @@
 
 .tramite-info h3 {
   color: var(--color);
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
   font-weight: 700;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.tramite-info h3 i {
-  color: var(--secondary-color);
-  filter: drop-shadow(1px 1px 2px rgba(219, 141, 7, 0.3));
 }
 
 .tramite-info p {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0.6rem 0;
-  line-height: 1.7;
-}
-
-.tramite-info p strong {
-  color: var(--color);
-  font-weight: 700;
+  font-size: 1.4rem;
+  color: #555;
+  margin: 0.5rem 0;
+  line-height: 1.6;
 }
 
 .tramite-info i {
   color: var(--secondary-color);
-  margin-right: 0.3rem;
 }
 
 .tramite-actions {
@@ -539,184 +503,152 @@
 .btn-editar, .btn-eliminar {
   border: none;
   cursor: pointer;
-  padding: 1.1rem 1.8rem;
+  padding: 1rem 1.5rem;
   border-radius: 0.8rem;
   font-size: 1.4rem;
   font-weight: 600;
   color: white;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.6rem;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .btn-editar { 
-  background: linear-gradient(135deg, #db8d07 0%, #e6a620 100%);
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
 }
 
 .btn-editar:hover {
-  background: linear-gradient(135deg, #e6a620 0%, #f5b840 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(219, 141, 7, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
 .btn-eliminar { 
-  background: linear-gradient(135deg, #9a0000 0%, #c00000 100%);
+  background: linear-gradient(135deg, #dc3545, #c82333);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
 
 .btn-eliminar:hover {
-  background: linear-gradient(135deg, #b00000 0%, #d40000 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(154, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
 }
 
 .btn-solicitar {
   border: none;
   cursor: pointer;
-  padding: 1.2rem 2.5rem;
+  padding: 1rem 2rem;
   border-radius: 0.8rem;
-  font-size: 1.6rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, var(--color) 0%, rgba(127, 0, 0, 0.9) 100%);
+  background: linear-gradient(135deg, var(--tertiary-color), rgba(14, 7, 37, 0.9));
   display: flex;
   align-items: center;
   gap: 0.8rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(127, 0, 0, 0.3);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(14, 7, 37, 0.3);
 }
 
 .btn-solicitar:hover {
-  background: linear-gradient(135deg, rgba(127, 0, 0, 0.9) 0%, #9a0000 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 25px rgba(127, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(14, 7, 37, 0.4);
 }
 
 .btn-solicitar.active {
-  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--cuartiary-color) 100%);
-  box-shadow: 0 6px 25px rgba(219, 141, 7, 0.4);
+  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
 }
 
+/* Formulario de solicitud desplegable */
 .form-solicitud-wrapper {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%);
+  background: #f9f9f9;
 }
 
 .form-solicitud-wrapper.active {
   max-height: 1500px;
-  border-top: 4px solid var(--secondary-color);
-  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.05);
+  border-top: 3px solid var(--secondary-color);
 }
 
 .form-solicitud-content {
-  padding: 3rem;
+  padding: 2.5rem;
 }
 
 .form-solicitud-content h3 {
   color: var(--color);
-  font-size: 2.2rem;
-  margin-bottom: 2.5rem;
+  font-size: 2rem;
+  margin-bottom: 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.8rem;
   font-weight: 700;
-  padding-bottom: 1rem;
-  border-bottom: 3px solid var(--secondary-color);
-}
-
-.form-solicitud-content h3 i {
-  color: var(--secondary-color);
 }
 
 .form-solicitud {
   display: flex;
   flex-direction: column;
-  gap: 1.8rem;
+  gap: 1.5rem;
 }
 
 .form-solicitud label {
-  display: flex;
-  align-items: center;
-  font-size: 1.6rem;
-  margin-bottom: 0.6rem;
-  color: var(--color);
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: #333;
   font-weight: 600;
-}
-
-.form-solicitud label i {
-  margin-right: 0.8rem;
-  color: var(--secondary-color);
-  font-size: 1.3rem;
 }
 
 .form-solicitud input,
 .form-solicitud textarea {
   width: 100%;
-  padding: 1.3rem;
+  padding: 1.2rem;
   border: 2px solid #e0e0e0;
-  border-radius: 0.8rem;
-  font-size: 1.5rem;
+  border-radius: 0.6rem;
+  font-size: 1.4rem;
   transition: all 0.3s ease;
   font-family: inherit;
-  background: white;
 }
 
 .form-solicitud input:focus,
 .form-solicitud textarea:focus {
   outline: none;
   border-color: var(--secondary-color);
-  box-shadow: 0 0 0 4px rgba(219, 141, 7, 0.15);
-  background: #fff8f0;
+  box-shadow: 0 0 0 3px rgba(219, 141, 7, 0.1);
 }
 
 .form-solicitud button[type="submit"] {
-  background: linear-gradient(135deg, var(--color) 0%, rgba(127, 0, 0, 0.95) 100%);
+  background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
   border: none;
-  padding: 1.6rem 3rem;
+  padding: 1.4rem 2.5rem;
   border-radius: 0.8rem;
-  font-size: 1.7rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  gap: 0.8rem;
 }
 
 .form-solicitud button[type="submit"]:hover {
-  background: linear-gradient(135deg, rgba(127, 0, 0, 0.95) 0%, #9a0000 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(127, 0, 0, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
 .sin-tramites { 
   color: #999;
   text-align: center;
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   padding: 5rem;
-  background: linear-gradient(135deg, #ffffff, #fff5f5);
+  background: white;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 2px dashed #ccc;
-}
-
-.sin-tramites i {
-  color: var(--color);
-  opacity: 0.3;
-  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 @media (max-width: 1024px) {
@@ -774,15 +706,15 @@
   }
 
   .tramite-card {
-    border-left-width: 6px;
+    border-left-width: 4px;
   }
 
   .tramite-header {
-    padding: 1.8rem;
+    padding: 1.5rem;
   }
 
   .tramite-info h3 {
-    font-size: 2rem;
+    font-size: 1.9rem;
   }
 
   .tramite-actions {
@@ -809,7 +741,7 @@
     width: 55px;
     height: 55px;
     font-size: 2rem;
-    top: 15rem;
+    bottom: 1.5rem;
     right: 1.5rem;
   }
 
@@ -818,8 +750,7 @@
   }
 
   .tramite-card {
-    border-radius: 1.2rem;
-    border-left-width: 5px;
+    border-radius: 1rem;
   }
 
   .btn-agregar {
