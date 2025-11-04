@@ -13,10 +13,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const nuevoTipo = document.getElementById("nuevo-tipo");
   const btnAddReq = document.getElementById("btn-add-requerimiento");
 
-  let tramites = JSON.parse(localStorage.getItem("tramites")) || [];
+  let tramites = [];
   let requerimientosTemp = [];
   let formAbierto = null;
 
+  // ⚠️ ELIMINADO EL USO DE LOCALSTORAGE - Ahora todo viene de la BD
+  
   // Crear botón toggle y overlay para móvil
   if (adminPanel) {
     const toggleBtn = document.createElement("button");
@@ -77,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const spanContainer = document.createElement("span"); 
     spanContainer.classList.add("requerimiento-display");
     
-    const tipoTexto = {text: 'Texto', number: 'Número', file: 'Archivo'}[req.tipo] || req.tipo;
+    // ✅ CORREGIDO: Solo Texto y Archivo (sin Número)
+    const tipoTexto = {text: 'Texto', file: 'Archivo'}[req.tipo] || req.tipo;
     spanContainer.innerHTML = `<i class="fa-solid fa-grip-vertical" style="color: #999; margin-right: 0.5rem;"></i> ${req.label} <span style="color: var(--secondary-color); font-size: 1.2rem;">(${tipoTexto})</span>`;
     
     const btnEliminarReq = document.createElement("button");
@@ -95,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
     div.append(spanContainer, btnEliminarReq);
     listaRequerimientos.appendChild(div);
 
-    // Animación de entrada
     div.style.opacity = "0";
     div.style.transform = "translateX(-10px)";
     setTimeout(() => {
@@ -113,9 +115,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const selectTipo = document.createElement('select');
       selectTipo.classList.add('req-select-edit');
+      
       const tipos = [
         {val: 'text', text: 'Texto'}, 
-        {val: 'number', text: 'Número'}, 
         {val: 'file', text: 'Archivo'}
       ];
       tipos.forEach(t => {
@@ -225,8 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ✅ NUEVO: Guardar trámite en la base de datos
   if (form) {
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       if (requerimientosTemp.length === 0) {
@@ -234,28 +237,90 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const data = {
-        nombre: form.nombre.value,
-        descripcion: form.descripcion.value,
-        inicio: form.fecha_inicio.value,
-        corte: form.fecha_corte.value,
-        requerimientos: requerimientosTemp
-      };
+      // Determinar si es edición o creación
+      const esEdicion = indexEditar.value !== '';
+      const accion = esEdicion ? 'modificar_tramite' : 'guardar_tramite';
 
-      const index = indexEditar.value;
-      if (index === "") {
-        tramites.push(data);
-        mostrarNotificacion("Trámite agregado exitosamente", "success");
-      } else {
-        tramites[index] = data;
-        mostrarNotificacion("Trámite actualizado exitosamente", "success");
+      // Preparar los datos para enviar al backend
+      const formData = new FormData();
+      formData.append('nombre_tramite', form.nombre.value);
+      formData.append('descripcion_tramite', form.descripcion.value);
+      
+      // Si es edición, agregar el ID del trámite
+      if (esEdicion) {
+        formData.append('tipo_tramite_id', indexEditar.value);
       }
+      
+      // Agregar requerimientos como arrays
+      requerimientosTemp.forEach((req, i) => {
+        formData.append(`req_nombre[]`, req.label);
+        
+        // ✅ MAPEAR: text -> texto, file -> Archivo
+        const tipoDato = req.tipo === 'file' ? 'Archivo' : 'texto';
+        formData.append(`req_tipodato[]`, tipoDato);
+        
+        // Por ahora, NombreDocumento y TipoDocumento pueden ser null
+        formData.append(`req_docnombre[]`, '');
+        formData.append(`req_tipodoc[]`, '');
+      });
 
-      localStorage.setItem("tramites", JSON.stringify(tramites));
-      renderTramites();
-      panel.classList.remove("active");
-      form.reset();
+      try {
+        // ✅ Enviar al controlador PHP
+        const response = await fetch(`?action=${accion}`, {
+          method: 'POST',
+          body: formData
+        });
+
+        // ✅ Verificar si la respuesta es JSON válido
+        const textResponse = await response.text();
+        console.log('Respuesta del servidor:', textResponse);
+        
+        let resultado;
+        try {
+          resultado = JSON.parse(textResponse);
+        } catch (e) {
+          console.error('Error al parsear JSON:', e);
+          throw new Error('La respuesta del servidor no es JSON válida: ' + textResponse.substring(0, 200));
+        }
+
+        if (resultado.Estatus === 'Éxito') {
+          const mensaje = esEdicion ? "Trámite actualizado exitosamente" : "Trámite guardado exitosamente";
+          mostrarNotificacion(mensaje, "success");
+          panel.classList.remove("active");
+          form.reset();
+          requerimientosTemp = [];
+          indexEditar.value = ''; // Limpiar el índice de edición
+          // Recargar trámites desde la BD
+          await cargarTramites();
+        } else {
+          mostrarNotificacion(`Error: ${resultado.Mensaje}`, "error");
+        }
+
+      } catch (error) {
+        console.error('Error completo:', error);
+        mostrarNotificacion(`Error al guardar el trámite: ${error.message}`, "error");
+      }
     });
+  }
+
+  // ✅ NUEVO: Cargar trámites desde la base de datos
+  async function cargarTramites() {
+    try {
+      // Si ya tenemos trámites iniciales, usarlos
+      if (typeof TRAMITES_INICIALES !== 'undefined' && TRAMITES_INICIALES.length > 0) {
+        tramites = TRAMITES_INICIALES;
+        renderTramites();
+        return;
+      }
+      
+      // Si no, cargar desde la API
+      const response = await fetch('?action=ver_tramites');
+      tramites = await response.json();
+      renderTramites();
+    } catch (error) {
+      console.error('Error al cargar trámites:', error);
+      mostrarNotificacion("Error al cargar trámites", "error");
+    }
   }
 
   function renderTramites() {
@@ -278,26 +343,30 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof CAN_EDIT_CARDS !== 'undefined' && CAN_EDIT_CARDS) {
         adminButtons = `
           <div class="acciones-admin">
-            <button class="btn-editar" data-i="${i}" title="Editar trámite">
+            <button class="btn-editar" data-id="${t.Id || t.TipoTramiteID}" title="Editar trámite">
               <i class="fa-solid fa-pen"></i> Editar
             </button>
-            <button class="btn-eliminar" data-i="${i}" title="Eliminar trámite">
+            <button class="btn-eliminar" data-id="${t.Id || t.TipoTramiteID}" title="Eliminar trámite">
               <i class="fa-solid fa-trash"></i> Eliminar
             </button>
           </div>
         `;
       }
 
+      // ✅ CORREGIDO: Usar nombres de columnas correctos de la BD
+      const nombre = t['Nombre del tramite'] || t.Nombre || '';
+      const descripcion = t.Descripcion || '';
+      const tramiteID = t.Id || t.TipoTramiteID;
+
       card.innerHTML = `
         <div class="tramite-header">
           <div class="tramite-info">
-            <h3><i class="fa-solid fa-file-pen"></i> ${t.nombre}</h3>
-            <p><i class="fa-solid fa-align-left"></i> <strong>Descripción:</strong> ${t.descripcion}</p>
-            <p><i class="fa-solid fa-calendar-check"></i> <strong>Inicio:</strong> ${t.inicio} | <i class="fa-solid fa-calendar-xmark"></i> <strong>Corte:</strong> ${t.corte}</p>
+            <h3><i class="fa-solid fa-file-pen"></i> ${nombre}</h3>
+            <p><i class="fa-solid fa-align-left"></i> <strong>Descripción:</strong> ${descripcion}</p>
           </div>
           <div class="tramite-actions">
             ${adminButtons}
-            <button class="btn-solicitar" data-i="${i}" title="Solicitar trámite">
+            <button class="btn-solicitar" data-id="${tramiteID}" title="Solicitar trámite">
               <i class="fa-solid fa-file-signature"></i> Solicitar
             </button>
           </div>
@@ -305,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="form-solicitud-wrapper" id="form-wrapper-${i}">
           <div class="form-solicitud-content">
             <h3><i class="fa-solid fa-clipboard-list"></i> Completar solicitud</h3>
-            <form class="form-solicitud" id="form-solicitud-${i}">
+            <form class="form-solicitud" id="form-solicitud-${i}" data-tramite-id="${tramiteID}">
             </form>
           </div>
         </div>
@@ -330,16 +399,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  function toggleFormulario(e) {
+  // ✅ NUEVO: Cargar requerimientos y mostrar formulario
+  async function toggleFormulario(e) {
     const btn = e.target.closest("button");
-    const i = btn.dataset.i;
-    const t = tramites[i];
+    const tramiteID = btn.dataset.id;
+    const i = Array.from(document.querySelectorAll(".btn-solicitar")).indexOf(btn);
     const wrapper = document.getElementById(`form-wrapper-${i}`);
     const formSolicitud = document.getElementById(`form-solicitud-${i}`);
 
     if (formAbierto !== null && formAbierto !== i) {
       const prevWrapper = document.getElementById(`form-wrapper-${formAbierto}`);
-      const prevBtn = document.querySelector(`.btn-solicitar[data-i="${formAbierto}"]`);
+      const prevBtn = document.querySelector(`.btn-solicitar[data-id="${formAbierto}"]`);
       if (prevWrapper) prevWrapper.classList.remove("active");
       if (prevBtn) prevBtn.classList.remove("active");
     }
@@ -350,60 +420,164 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isActive) {
       formAbierto = i;
       
-      formSolicitud.innerHTML = "";
-      
-      t.requerimientos.forEach((req, idx) => {
-        const fieldGroup = document.createElement("div");
-        fieldGroup.style.opacity = "0";
-        fieldGroup.style.transform = "translateY(10px)";
+      try {
+        // Cargar requerimientos desde la BD
+        const response = await fetch(`?action=ver_requerimientos&id=${tramiteID}`);
+        const textResponse = await response.text();
         
-        const label = document.createElement("label");
-        label.innerHTML = `<i class="fa-solid fa-chevron-right" style="font-size: 1.2rem; color: var(--secondary-color);"></i> ${req.label}`;
+        console.log('Requerimientos raw:', textResponse);
         
-        let input;
-        if (req.tipo === "file") {
-          input = document.createElement("input");
-          input.type = "file";
-        } else if (req.tipo === "number") {
-          input = document.createElement("input");
-          input.type = "number";
-        } else {
-          input = document.createElement("input");
-          input.type = "text";
+        let requerimientos;
+        try {
+          requerimientos = JSON.parse(textResponse);
+        } catch (e) {
+          console.error('Error al parsear requerimientos:', e);
+          throw new Error('No se pudieron cargar los requerimientos');
         }
         
-        input.required = true;
-        input.name = req.label.toLowerCase().replace(/\s+/g, '_');
-        input.placeholder = `Ingresa ${req.label.toLowerCase()}`;
+        if (!requerimientos || requerimientos.length === 0) {
+          throw new Error('Este trámite no tiene requerimientos configurados');
+        }
+
+        formSolicitud.innerHTML = "";
         
-        fieldGroup.appendChild(label);
-        fieldGroup.appendChild(input);
-        formSolicitud.appendChild(fieldGroup);
-        
+        requerimientos.forEach((req, idx) => {
+          const fieldGroup = document.createElement("div");
+          fieldGroup.style.opacity = "0";
+          fieldGroup.style.transform = "translateY(10px)";
+          
+          // ✅ CORREGIDO: Mapeo correcto de nombres de columnas
+          const nombreReq = req['Nombre de los requerimientos'] || req['Nombre'] || req['NombreRequerimiento'] || '';
+          const tipoDato = req['Tipos de datos'] || req['TipoDato'] || 'text';
+          
+          const label = document.createElement("label");
+          label.innerHTML = `<i class="fa-solid fa-chevron-right" style="font-size: 1.2rem; color: var(--secondary-color);"></i> ${nombreReq}`;
+          
+          let input;
+          
+          // Normalizar el tipo de dato
+          const tipoNormalizado = tipoDato.toLowerCase();
+          
+          if (tipoNormalizado === 'archivo' || tipoNormalizado === 'file') {
+            input = document.createElement("input");
+            input.type = "file";
+          } else {
+            input = document.createElement("input");
+            input.type = "text";
+          }
+          
+          input.required = true;
+          input.name = nombreReq.toLowerCase().replace(/\s+/g, '_');
+          input.placeholder = `Ingresa ${nombreReq.toLowerCase()}`;
+          input.dataset.nombreOriginal = nombreReq; // Guardar nombre original
+          
+          fieldGroup.appendChild(label);
+          fieldGroup.appendChild(input);
+          formSolicitud.appendChild(fieldGroup);
+          
+          setTimeout(() => {
+            fieldGroup.style.transition = "all 0.3s ease";
+            fieldGroup.style.opacity = "1";
+            fieldGroup.style.transform = "translateY(0)";
+          }, idx * 50);
+        });
+
+        const btnEnviar = document.createElement("button");
+        btnEnviar.type = "submit";
+        btnEnviar.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar solicitud';
+        formSolicitud.appendChild(btnEnviar);
+
+        formSolicitud.onsubmit = async (e) => {
+          e.preventDefault();
+          
+          try {
+            const formDataInicio = new FormData();
+            
+            if (typeof VOLUNTARIO_ID === 'undefined' || VOLUNTARIO_ID === 0) {
+              throw new Error('No se pudo identificar al usuario. Por favor, recarga la página.');
+            }
+            
+            formDataInicio.append('voluntarioID', VOLUNTARIO_ID);
+            formDataInicio.append('tipoTramiteID', tramiteID);
+            formDataInicio.append('observaciones', 'Solicitud desde el formulario web');
+            
+            const responseInicio = await fetch('?action=iniciar_solicitud', {
+              method: 'POST',
+              body: formDataInicio
+            });
+            
+            const resultadoInicio = await responseInicio.json();
+            
+            if (resultadoInicio.Estatus !== 'Éxito') {
+              throw new Error(resultadoInicio.Mensaje);
+            }
+            
+            const solicitudID = resultadoInicio.SolicitudID;
+            
+            // PASO 2: Guardar los datos del formulario
+            const responseDetalles = await fetch(`?action=obtener_datos_solicitud&solicitudID=${solicitudID}`);
+            const datosSolicitud = await responseDetalles.json();
+            
+            const formDataGuardar = new FormData();
+            
+            datosSolicitud.forEach((dato, idx) => {
+              const nombreReq = dato.NombreRequerimiento || dato['Nombre de los requerimientos'] || dato.Nombre || '';
+              const inputName = nombreReq.toLowerCase().replace(/\s+/g, '_');
+              const input = formSolicitud.querySelector(`[name="${inputName}"]`);
+              
+              if (input) {
+                formDataGuardar.append(`DatoSolicitudID[]`, dato.DatoSolicitudID);
+                
+                if (input.type === 'file' && input.files.length > 0) {
+                  // TODO: Implementar subida de archivos
+                  formDataGuardar.append(`DatoTexto[]`, '');
+                  formDataGuardar.append(`DatoNumero[]`, '');
+                  formDataGuardar.append(`DatoFecha[]`, '');
+                  formDataGuardar.append(`NombreArchivo[]`, input.files[0].name);
+                  formDataGuardar.append(`RutaArchivo[]`, '/uploads/' + input.files[0].name);
+                } else {
+                  formDataGuardar.append(`DatoTexto[]`, input.value || '');
+                  formDataGuardar.append(`DatoNumero[]`, '');
+                  formDataGuardar.append(`DatoFecha[]`, '');
+                  formDataGuardar.append(`NombreArchivo[]`, '');
+                  formDataGuardar.append(`RutaArchivo[]`, '');
+                }
+              }
+            });
+            
+            formDataGuardar.append('nuevoEstatus', 'En Revisión');
+            
+            const responseGuardar = await fetch('?action=guardar_solicitud', {
+              method: 'POST',
+              body: formDataGuardar
+            });
+            
+            const resultadoGuardar = await responseGuardar.json();
+            
+            if (resultadoGuardar.Estatus === 'Éxito') {
+              mostrarNotificacion(`Solicitud enviada correctamente`, "success");
+              wrapper.classList.remove("active");
+              btn.classList.remove("active");
+              formAbierto = null;
+              formSolicitud.reset();
+            } else {
+              throw new Error(resultadoGuardar.Mensaje);
+            }
+            
+          } catch (error) {
+            console.error('Error al guardar solicitud:', error);
+            mostrarNotificacion(`Error al enviar solicitud: ${error.message}`, "error");
+          }
+        };
+
         setTimeout(() => {
-          fieldGroup.style.transition = "all 0.3s ease";
-          fieldGroup.style.opacity = "1";
-          fieldGroup.style.transform = "translateY(0)";
-        }, idx * 50);
-      });
+          wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
 
-      const btnEnviar = document.createElement("button");
-      btnEnviar.type = "submit";
-      btnEnviar.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar solicitud';
-      formSolicitud.appendChild(btnEnviar);
-
-      formSolicitud.onsubmit = (e) => {
-        e.preventDefault();
-        mostrarNotificacion(`Solicitud enviada correctamente para: ${t.nombre}`, "success");
-        wrapper.classList.remove("active");
-        btn.classList.remove("active");
-        formAbierto = null;
-        formSolicitud.reset();
-      };
-
-      setTimeout(() => {
-        wrapper.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 100);
+      } catch (error) {
+        console.error('Error al cargar requerimientos:', error);
+        mostrarNotificacion("Error al cargar el formulario", "error");
+      }
     } else {
       formAbierto = null;
     }
@@ -412,37 +586,105 @@ document.addEventListener("DOMContentLoaded", () => {
   function editar(e) {
     if (!form || !panel || !formTitulo || !listaRequerimientos) return;
 
-    const i = e.target.closest("button").dataset.i;
-    const t = tramites[i];
-    indexEditar.value = i;
-    formTitulo.textContent = "Editar trámite";
-    form.nombre.value = t.nombre;
-    form.descripcion.value = t.descripcion;
-    form.fecha_inicio.value = t.inicio;
-    form.fecha_corte.value = t.corte;
-
-    requerimientosTemp = [...t.requerimientos];
-    renderRequerimientosTemp();
-    panel.classList.add("active");
+    const tramiteID = e.target.closest("button").dataset.id;
     
-    if (adminPanel && adminPanel.classList.contains("active")) {
-      adminPanel.classList.remove("active");
-      document.querySelector(".admin-toggle")?.classList.remove("active");
-      document.querySelector(".admin-overlay")?.classList.remove("active");
-      document.body.style.overflow = "";
+    // Buscar el trámite en el array
+    const tramite = tramites.find(t => {
+      const id = t.Id || t.TipoTramiteID;
+      return id == tramiteID;
+    });
+    
+    if (!tramite) {
+      mostrarNotificacion("No se encontró el trámite", "error");
+      return;
     }
+
+    // Llenar el formulario con los datos del trámite
+    indexEditar.value = tramiteID; // Guardar el ID para edición
+    formTitulo.textContent = "Editar trámite";
+    form.nombre.value = tramite['Nombre del tramite'] || tramite.Nombre || '';
+    form.descripcion.value = tramite.Descripcion || '';
+    
+    // Las fechas no están en el SP actual, así que las dejamos vacías
+    form.fecha_inicio.value = '';
+    form.fecha_corte.value = '';
+
+    // Cargar requerimientos existentes
+    requerimientosTemp = [];
+    
+    // Hacer petición para obtener los requerimientos
+    fetch(`?action=ver_requerimientos&id=${tramiteID}`)
+      .then(response => response.json())
+      .then(requerimientos => {
+        requerimientos.forEach(req => {
+          const nombreReq = req['Nombre de los requerimientos'] || req['Nombre'] || req['NombreRequerimiento'] || '';
+          const tipoDato = req['Tipos de datos'] || req['TipoDato'] || 'texto';
+          
+          // Mapear el tipo de dato
+          let tipoMapeado = 'text';
+          if (tipoDato.toLowerCase() === 'archivo' || tipoDato.toLowerCase() === 'file') {
+            tipoMapeado = 'file';
+          }
+          
+          requerimientosTemp.push({
+            label: nombreReq,
+            tipo: tipoMapeado
+          });
+        });
+        
+        renderRequerimientosTemp();
+        panel.classList.add("active");
+        
+        if (adminPanel && adminPanel.classList.contains("active")) {
+          adminPanel.classList.remove("active");
+          document.querySelector(".admin-toggle")?.classList.remove("active");
+          document.querySelector(".admin-overlay")?.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      })
+      .catch(error => {
+        console.error('Error al cargar requerimientos:', error);
+        mostrarNotificacion("Error al cargar los datos del trámite", "error");
+      });
   }
 
   function eliminar(e) {
-    const i = e.target.closest("button").dataset.i;
-    const t = tramites[i];
+    const tramiteID = e.target.closest("button").dataset.id;
     
-    if (confirm(`¿Eliminar el trámite "${t.nombre}"?`)) {
-      tramites.splice(i, 1);
-      localStorage.setItem("tramites", JSON.stringify(tramites));
-      renderTramites();
-      mostrarNotificacion("Trámite eliminado correctamente", "error");
+    // Buscar el trámite para mostrar su nombre en la confirmación
+    const tramite = tramites.find(t => {
+      const id = t.Id || t.TipoTramiteID;
+      return id == tramiteID;
+    });
+    
+    const nombreTramite = tramite ? (tramite['Nombre del tramite'] || tramite.Nombre) : 'este trámite';
+    
+    if (!confirm(`¿Estás seguro de dar de baja "${nombreTramite}"?\n\nEsto lo marcará como inactivo y no será visible para los usuarios.`)) {
+      return;
     }
+
+    // Enviar petición para eliminar
+    const formData = new FormData();
+    formData.append('tipo_tramite_id', tramiteID);
+
+    fetch('?action=eliminar_tramite', {
+      method: 'POST',
+      body: formData
+    })
+      .then(response => response.json())
+      .then(resultado => {
+        if (resultado.Estatus === 'Éxito') {
+          mostrarNotificacion("Trámite dado de baja correctamente", "success");
+          // Recargar trámites
+          cargarTramites();
+        } else {
+          mostrarNotificacion(`Error: ${resultado.Mensaje}`, "error");
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        mostrarNotificacion("Error al dar de baja el trámite", "error");
+      });
   }
 
   function mostrarNotificacion(mensaje, tipo = "success") {
@@ -487,7 +729,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 3000);
   }
 
-  renderTramites();
+  // ✅ CARGAR TRÁMITES AL INICIAR
+  cargarTramites();
 });
 
 const style = document.createElement('style');

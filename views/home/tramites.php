@@ -62,13 +62,16 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
     <span class="cerrar-modal" style="display: none;" id="cerrar-modal">&times;</span>
     <h2 id="titulo-solicitud"></h2>
     <p id="descripcion-solicitud"></p>
-  <!-- Fechas del trámite: ocultas por defecto (se usan desde JS al abrir el modal) -->
-  <p class="modal-fecha" style="display: none;"><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
-  <p class="modal-fecha" style="display: none;"><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
+    <!-- Fechas del trámite: ocultas por defecto (se usan desde JS al abrir el modal) -->
+    <p class="modal-fecha" style="display: none;"><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
+    <p class="modal-fecha" style="display: none;"><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
     <form id="form-solicitud" class="form-solicitud"></form>
   </div>
 </div>
 
 <script>
   const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
+  const VOLUNTARIO_ID = <?php echo isset($voluntarioID) ? (int)$voluntarioID : 0; ?>;
+
+  const TRAMITES_INICIALES = <?php echo json_encode($tramites ?? []); ?>;
 </script>
