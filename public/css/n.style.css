@@ -701,3 +701,17 @@ footer {
 .requerimiento-dato a:hover {
     text-decoration: underline;
 }
+/* ========================================== */
+/* ESPECIALIDADES PENDIENTES */
+/* ========================================== */
+.especialidad-pendiente {
+  border-left: 4px solid #9b59b6;
+}
+
+.especialidad-icono {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}
+
+.badge-especialidades {
+  background: linear-gradient(135deg, #9b59b6, #8e44ad);
+}

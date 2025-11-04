@@ -361,4 +361,138 @@ class Notificacion
             return 0;
         }
     }
+
+    /**
+     * Obtiene las especialidades pendientes de aprobación
+     * utilizando el procedimiento almacenado voluntariosSinAprobar con @TipoNotify = 'Especialidades'
+     * 
+     * @return array Lista de especialidades pendientes
+     */
+    public function getEspecialidadesPendientes()
+    {
+        try {
+            $sql = "EXEC voluntariosSinAprobar @TipoNotify = 'Especialidades'";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $especialidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $especialidades;
+        } catch (PDOException $e) {
+            error_log("Error en getEspecialidadesPendientes: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Obtiene el VoluntarioDocumentoID basándose en CURP y nombre del documento
+     * 
+     * @param string $curp CURP del voluntario
+     * @param string $nombreDocumento Nombre del documento de especialidad
+     * @return int|null ID del documento o null si no se encuentra
+     */
+    public function getVoluntarioDocumentoID($curp, $nombreDocumento)
+    {
+        try {
+            $sql = "SELECT TOP 1 vd.VoluntarioDocumentoID 
+                    FROM VoluntarioDocumento vd
+                    INNER JOIN Voluntarios v ON v.VoluntarioID = vd.VoluntarioID
+                    INNER JOIN CatDocumentos cd ON cd.DocumentoID = vd.DocumentoID
+                    WHERE v.curp = :curp 
+                    AND cd.Nombre = :nombreDocumento
+                    AND vd.EstatusValidacion = 'Pendiente'
+                    AND cd.TipoDocumento = 'Especialidad'";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':curp', $curp, PDO::PARAM_STR);
+            $stmt->bindParam(':nombreDocumento', $nombreDocumento, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $result ? (int)$result['VoluntarioDocumentoID'] : null;
+        } catch (PDOException $e) {
+            error_log("Error en getVoluntarioDocumentoID: " . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Cuenta el número de especialidades pendientes
+     *
+     * @return int Número de especialidades pendientes
+     */
+    public function contarEspecialidadesPendientes()
+    {
+        try {
+            $especialidades = $this->getEspecialidadesPendientes();
+            return is_array($especialidades) ? count($especialidades) : 0;
+        } catch (Exception $e) {
+            error_log("Error en contarEspecialidadesPendientes: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Aprueba una especialidad usando el procedimiento almacenado AprobarEspecialidad
+     * 
+     * @param int $voluntarioDocumentoID ID del documento del voluntario
+     * @param int $adminValidadorID ID del administrador que valida
+     * @return array Resultado con 'success' y 'message'
+     */
+    public function aprobarEspecialidad($voluntarioDocumentoID, $adminValidadorID)
+    {
+        try {
+            $sql = "EXEC AprobarEspecialidad 
+                    @adminvalidador = :adminValidador,
+                    @voluntariodocumentoid = :voluntarioDocumentoID,
+                    @tipo = 'Validar'";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':adminValidador', $adminValidadorID, PDO::PARAM_INT);
+            $stmt->bindParam(':voluntarioDocumentoID', $voluntarioDocumentoID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return [
+                'success' => true,
+                'message' => 'Especialidad aprobada exitosamente'
+            ];
+        } catch (PDOException $e) {
+            error_log("Error en aprobarEspecialidad: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al aprobar la especialidad: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    /**
+     * Rechaza una especialidad usando el procedimiento almacenado AprobarEspecialidad
+     * 
+     * @param int $voluntarioDocumentoID ID del documento del voluntario
+     * @param int $adminValidadorID ID del administrador que rechaza
+     * @return array Resultado con 'success' y 'message'
+     */
+    public function rechazarEspecialidad($voluntarioDocumentoID, $adminValidadorID)
+    {
+        try {
+            $sql = "EXEC AprobarEspecialidad 
+                    @adminvalidador = :adminValidador,
+                    @voluntariodocumentoid = :voluntarioDocumentoID,
+                    @tipo = 'Rechazado'";
+
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindParam(':adminValidador', $adminValidadorID, PDO::PARAM_INT);
+            $stmt->bindParam(':voluntarioDocumentoID', $voluntarioDocumentoID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return [
+                'success' => true,
+                'message' => 'Especialidad rechazada exitosamente'
+            ];
+        } catch (PDOException $e) {
+            error_log("Error en rechazarEspecialidad: " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al rechazar la especialidad: ' . $e->getMessage()
+            ];
+        }
+    }
 }

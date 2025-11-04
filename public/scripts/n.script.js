@@ -3,12 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const voluntariosSeccion = document.querySelector(".voluntarios-seccion");
   const tramitesSeccion = document.querySelector(".tramites-seccion");
   const expedientesSeccion = document.querySelector(".expedientes-seccion");
+  const especialidadesSeccion = document.querySelector(
+    ".especialidades-seccion"
+  );
   const generalesSeccion = document.querySelector(".generales-seccion");
 
   // Mostrar todas las secciones al inicio
   if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
   if (tramitesSeccion) tramitesSeccion.style.display = "block";
   if (expedientesSeccion) expedientesSeccion.style.display = "block";
+  if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
   if (generalesSeccion) generalesSeccion.style.display = "block";
 
   // Funcionalidad de filtros
@@ -29,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
     if (tramitesSeccion) tramitesSeccion.style.display = "block";
     if (expedientesSeccion) expedientesSeccion.style.display = "block";
+    if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
     if (generalesSeccion) generalesSeccion.style.display = "block";
 
     // SEGUNDO: Ocultar según el filtro seleccionado
@@ -39,22 +44,32 @@ document.addEventListener("DOMContentLoaded", () => {
       case "voluntarios":
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
       case "tramites":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
       case "documentos":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+        if (generalesSeccion) generalesSeccion.style.display = "none";
+        break;
+      case "especialidades":
+        if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
+        if (tramitesSeccion) tramitesSeccion.style.display = "none";
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
       case "leidas":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
         if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
         break;
     }
   }
@@ -699,5 +714,88 @@ function rechazarDocumento(documentoId) {
       });
   } else if (motivo !== null) {
     mostrarMensajeFlotante("El motivo es obligatorio", "error");
+  }
+}
+
+// ====================================================================
+// FUNCIONES PARA ESPECIALIDADES
+// ====================================================================
+
+function aprobarEspecialidad(voluntarioDocumentoId) {
+  if (confirm("¿Estás seguro de aprobar esta especialidad?")) {
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=aprobar_especialidad",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voluntarioDocumentoId: voluntarioDocumentoId }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          mostrarMensaje("Especialidad aprobada correctamente", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          mostrarMensaje(
+            data.message || "Error al aprobar la especialidad",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error completo:", error);
+        mostrarMensaje("Error de conexión: " + error.message, "error");
+      });
+  }
+}
+
+function rechazarEspecialidad(voluntarioDocumentoId) {
+  const motivo = prompt("Motivo del rechazo de esta especialidad:");
+
+  if (motivo && motivo.trim()) {
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=rechazar_especialidad",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          voluntarioDocumentoId: voluntarioDocumentoId,
+          motivo: motivo.trim(),
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          mostrarMensaje("Especialidad rechazada correctamente", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          mostrarMensaje(
+            data.message || "Error al rechazar la especialidad",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error completo:", error);
+        mostrarMensaje("Error de conexión: " + error.message, "error");
+      });
+  } else if (motivo !== null) {
+    mostrarMensaje("El motivo es obligatorio", "error");
   }
 }

@@ -35,8 +35,8 @@ if (!isset($notificacionesGenerales)) {
         <div class="notificaciones-filtros">
             <button class="filtro-btn activo" data-filtro="todas">
                 <i class="fa-solid fa-list"></i> Todas
-                <?php if ($esCoordinadorOMas && ($totalPendientes + $totalTramites + $totalExpedientes) > 0): ?>
-                    <span class="badge-contador"><?= ($totalPendientes + $totalTramites + $totalExpedientes) ?></span>
+                <?php if ($esCoordinadorOMas && ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) > 0): ?>
+                    <span class="badge-contador"><?= ($totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades) ?></span>
                 <?php endif; ?>
             </button>
             <?php if ($esCoordinadorOMas): ?>
@@ -56,6 +56,12 @@ if (!isset($notificacionesGenerales)) {
                     <i class="fa-solid fa-file-invoice"></i> Documentos
                     <?php if ($totalExpedientes > 0): ?>
                         <span class="badge-contador"><?= $totalExpedientes ?></span>
+                    <?php endif; ?>
+                </button>
+                <button class="filtro-btn" data-filtro="especialidades">
+                    <i class="fa-solid fa-user-graduate"></i> Especialidades
+                    <?php if ($totalEspecialidades > 0): ?>
+                        <span class="badge-contador"><?= $totalEspecialidades ?></span>
                     <?php endif; ?>
                 </button>
             <?php endif; ?>
@@ -281,6 +287,88 @@ if (!isset($notificacionesGenerales)) {
                 <div class="mensaje-vacio">
                     <i class="fa-solid fa-file-check"></i>
                     <p>Todos los documentos han sido revisados.</p>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <!-- ============================================================ -->
+        <!-- SECCIÓN DE ESPECIALIDADES PENDIENTES -->
+        <!-- ============================================================ -->
+        <?php if ($esCoordinadorOMas && $totalEspecialidades > 0): ?>
+            <div class="notificaciones-seccion especialidades-seccion">
+                <h3 class="seccion-titulo">
+                    <i class="fa-solid fa-user-graduate"></i> Especialidades Pendientes de Validación
+                    <span class="badge-pendientes badge-especialidades"><?= $totalEspecialidades ?></span>
+                </h3>
+
+                <div class="notificaciones-lista">
+                    <?php foreach ($especialidadesPendientes as $esp): ?>
+                        <div class="notificacion-card especialidad-pendiente">
+                            <div class="notificacion-icono especialidad-icono">
+                                <i class="fa-solid fa-certificate"></i>
+                            </div>
+                            <div class="notificacion-contenido">
+                                <div class="notificacion-header">
+                                    <h4><?= htmlspecialchars($esp['nombre']) ?></h4>
+                                    <span class="notificacion-tiempo">
+                                        <i class="fa-regular fa-clock"></i> Pendiente
+                                    </span>
+                                </div>
+                                <p class="notificacion-mensaje">
+                                    <strong>Especialidad:</strong> <?= htmlspecialchars($esp['documento']) ?>
+                                </p>
+                                <div class="notificacion-detalles">
+                                    <?php if (!empty($esp['curp'])): ?>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-id-card"></i>
+                                            <?= htmlspecialchars($esp['curp']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($esp['area'])): ?>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-briefcase"></i>
+                                            <?= htmlspecialchars($esp['area']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($esp['fecha'])): ?>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-calendar"></i>
+                                            <?= date('d/m/Y', strtotime($esp['fecha'])) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($esp['archivo'])): ?>
+                                        <span class="detalle-item">
+                                            <i class="fa-solid fa-file"></i>
+                                            <?= htmlspecialchars($esp['archivo']) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="notificacion-acciones">
+                                    <button class="btn-accion btn-aprobar" onclick="aprobarEspecialidad(<?= $esp['voluntario_documento_id'] ?>)">
+                                        <i class="fa-solid fa-check"></i> Aprobar
+                                    </button>
+                                    <button class="btn-accion btn-rechazar" onclick="rechazarEspecialidad(<?= $esp['voluntario_documento_id'] ?>)">
+                                        <i class="fa-solid fa-times"></i> Rechazar
+                                    </button>
+                                    <a href="index.php?controller=home&action=especialidades&curp=<?= urlencode($esp['curp']) ?>"
+                                        class="btn-accion btn-ver">
+                                        <i class="fa-solid fa-graduation-cap"></i> Ir a Especialidades
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        <?php elseif ($esCoordinadorOMas): ?>
+            <div class="notificaciones-seccion especialidades-seccion">
+                <h3 class="seccion-titulo">
+                    <i class="fa-solid fa-check-circle"></i>
+                    No hay especialidades pendientes de validación
+                </h3>
+                <div class="mensaje-vacio">
+                    <i class="fa-solid fa-user-check"></i>
+                    <p>Todas las especialidades han sido revisadas.</p>
                 </div>
             </div>
         <?php endif; ?>

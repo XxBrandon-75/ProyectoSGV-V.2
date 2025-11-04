@@ -59,6 +59,8 @@ class NotificacionesController
         $totalTramites = 0;
         $expedientesPendientes = [];
         $totalExpedientes = 0;
+        $especialidadesPendientes = [];
+        $totalEspecialidades = 0;
 
         // Si es coordinador o superior, obtener voluntarios pendientes y trámites
         if ($esCoordinadorOMas) {
@@ -125,6 +127,22 @@ class NotificacionesController
                 ];
             }
             $totalExpedientes = count($expedientesPendientes);
+
+            // ESPECIALIDADES PENDIENTES
+            $especialidadesPendientesData = $notificacionModel->getEspecialidadesPendientes();
+
+            foreach ($especialidadesPendientesData as $especialidad) {
+                $especialidadesPendientes[] = [
+                    'voluntario_documento_id' => $especialidad['VoluntarioDocumentoID'] ?? null,
+                    'nombre' => $especialidad['NombreVoluntario'] ?? 'Sin nombre',
+                    'curp' => $especialidad['curp'] ?? '',
+                    'area' => $especialidad['Area'] ?? 'Sin área',
+                    'documento' => $especialidad['NombreDocumentoEspecialidad'] ?? 'Documento de especialidad',
+                    'archivo' => $especialidad['NombreArchivo'] ?? '',
+                    'fecha' => $especialidad['FechaSubida'] ?? null,
+                ];
+            }
+            $totalEspecialidades = count($especialidadesPendientes);
         }
 
         // Notificaciones generales del sistema
@@ -146,7 +164,7 @@ class NotificacionesController
         ];
 
         // Total general de notificaciones
-        $totalNotificacionesGeneral = $totalPendientes + $totalTramites + $totalExpedientes;
+        $totalNotificacionesGeneral = $totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades;
 
         // Configuración para el layout
         $titulo_pagina = "Notificaciones | Red de Voluntarios";

@@ -9,7 +9,7 @@ class Especialidad
         $this->db = Database::getInstance()->getConnection();
     }
 
-     public function tieneEspecialidad($voluntarioID, $nombreEspecialidad)
+    public function tieneEspecialidad($voluntarioID, $nombreEspecialidad)
     {
         try {
             $stmt = $this->db->prepare("
@@ -19,11 +19,11 @@ class Especialidad
                 WHERE ve.VoluntarioID = :voluntarioID 
                 AND e.Nombre = :nombreEspecialidad
             ");
-            
+
             $stmt->bindParam(':voluntarioID', $voluntarioID, PDO::PARAM_INT);
             $stmt->bindParam(':nombreEspecialidad', $nombreEspecialidad, PDO::PARAM_STR);
             $stmt->execute();
-            
+
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
             return $resultado['total'] > 0;
         } catch (PDOException $e) {
@@ -31,7 +31,7 @@ class Especialidad
             return false;
         }
     }
-    
+
     /**
      * Agregar una nueva especialidad para un voluntario
      * Ejecuta el procedimiento almacenado AgregarEspecialidad
@@ -54,7 +54,7 @@ class Especialidad
             $stmt->bindParam(':archivoRuta', $archivoRuta, PDO::PARAM_STR);
 
             $result = $stmt->execute();
-            
+
             return $result;
         } catch (PDOException $e) {
             error_log("Error en agregarEspecialidad: " . $e->getMessage());
@@ -74,10 +74,43 @@ class Especialidad
             $stmt->execute();
 
             $especialidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             return $especialidades;
         } catch (PDOException $e) {
             error_log("Error en verEspecialidades: " . $e->getMessage());
+            throw new Exception("Error al obtener las especialidades: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Obtener las especialidades de un voluntario por su CURP
+     * Ejecuta el procedimiento almacenado VerEspecialidades
+     */
+    public function verEspecialidadesPorCurp($curp)
+    {
+        try {
+            // Primero obtener el VoluntarioID a partir del CURP
+            $stmtVoluntario = $this->db->prepare("SELECT VoluntarioID FROM Voluntarios WHERE curp = :curp");
+            $stmtVoluntario->bindParam(':curp', $curp, PDO::PARAM_STR);
+            $stmtVoluntario->execute();
+            $voluntario = $stmtVoluntario->fetch(PDO::FETCH_ASSOC);
+
+            if (!$voluntario) {
+                throw new Exception("No se encontró un voluntario con el CURP proporcionado");
+            }
+
+            $voluntarioID = (int)$voluntario['VoluntarioID'];
+
+            // Ahora obtener las especialidades de ese voluntario
+            $stmt = $this->db->prepare("EXEC VerEspecialidades @VoluntarioID = :voluntarioID");
+            $stmt->bindParam(':voluntarioID', $voluntarioID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $especialidades = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $especialidades;
+        } catch (PDOException $e) {
+            error_log("Error en verEspecialidadesPorCurp: " . $e->getMessage());
             throw new Exception("Error al obtener las especialidades: " . $e->getMessage());
         }
     }
