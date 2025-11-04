@@ -44,27 +44,31 @@ class NotificacionesController
 
     public function index()
     {
+        // Implementación de la lógica de notificaciones
+
         // Obtener el rol del usuario desde la sesión
         $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
         $esCoordinadorOMas = $this->tienePermiso(2);
 
-        // Cargar el modelo de notificaciones
-        require_once 'models/Notificacion.php'; 
+        // Cargar el modelo de voluntarios
+        // Asumiendo que VoluntarioModel.php está en models/
+        require_once 'models/Notificacion.php';
         $notificacionModel = new Notificacion();
 
-        // Variables para la vista
-        $notificacionesPendientes = [];
-        $totalPendientes = 0;
-        $tramitesSolicitados = [];
-        $totalTramites = 0;
+        // Variables para la vista - Separadas por tipo
+        $voluntariosPendientesArray = [];
+        $expedientesPendientesArray = [];
+        $totalVoluntariosPendientes = 0;
+        $totalExpedientesPendientes = 0;
 
         // Si es coordinador o superior, obtener voluntarios pendientes y trámites
         if ($esCoordinadorOMas) {
             // VOLUNTARIOS PENDIENTES
             $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
-            
+
+            // Formatear los datos para la vista
             foreach ($voluntariosPendientes as $voluntario) {
-                $notificacionesPendientes[] = [
+                $voluntariosPendientesArray[] = [
                     'id' => $voluntario['VoluntarioID'],
                     'nombre' => trim($voluntario['Nombres'] . ' ' . $voluntario['ApellidoPaterno']),
                     'email' => $voluntario['Email'],
@@ -74,26 +78,25 @@ class NotificacionesController
                     'fecha_registro' => $voluntario['FechaRegistro'] ?? null,
                 ];
             }
-            
-            $totalPendientes = count($notificacionesPendientes);
 
-            // TRÁMITES SOLICITADOS
-        $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
+            // Obtener expedientes pendientes
+            $expedientesPendientes = $notificacionModel->getExpedientesPendientes();
 
-        foreach ($tramitesPendientes as $tramite) {
-            $tramitesSolicitados[] = [
-                'SolicitudID' => $tramite['SolicitudID'],
-                'VoluntarioID' => $tramite['VoluntarioID'],
-                'Nombres' => $tramite['Nombres'],
-                'email' => $tramite['email'],
-                'curp' => $tramite['curp'],
-                'FechaSolicitud' => $tramite['FechaSolicitud'],
-                'Estatus' => $tramite['Estatus'],
-                'NombreTramite' => $tramite['NombreTramite'],
-            ];
-        }
+            // Formatear los expedientes para la vista
+            foreach ($expedientesPendientes as $expediente) {
+                $expedientesPendientesArray[] = [
+                    'voluntario_id' => $expediente['VoluntarioID'] ?? null,
+                    'nombre' => $expediente['NombreVoluntario'],
+                    'curp' => $expediente['curp'] ?? '',
+                    'rol' => $expediente['Rol'] ?? '',
+                    'documento' => $expediente['NombreSubido'] ?? 'Documento',
+                    'fecha' => $expediente['FechaSubida'] ?? null,
+                    'ruta' => $expediente['RutaArchivo'] ?? '',
+                ];
+            }
 
-        $totalTramites = count($tramitesSolicitados);
+            $totalVoluntariosPendientes = count($voluntariosPendientesArray);
+            $totalExpedientesPendientes = count($expedientesPendientesArray);
         }
 
         // Notificaciones generales del sistema

@@ -105,21 +105,24 @@ class HomeController
 
     public function documentacion()
     {
-        // Variables de permisos
-        $ver_cont_gest = $this->tienePermiso(2); // Coordinador o superior puede agregar documentos
-        $ver_card_edit = $this->tienePermiso(2); // Coordinador o superior puede editar/eliminar
+        // Redirigir al controlador dedicado de documentación
+        $documentacionController = __DIR__ . '/DocumentacionController.php';
 
-        $titulo_pagina = "Documentación | Red de Voluntarios";
+        if (file_exists($documentacionController)) {
+            require_once $documentacionController;
 
-        $styles = [$this->base_url . 'public/css/d.style.css'];
+            if (class_exists('DocumentacionController')) {
+                $ctrl = new DocumentacionController();
+                if (method_exists($ctrl, 'index')) {
+                    $ctrl->index();
+                    return;
+                }
+            }
+        }
 
-        $scripts = [$this->base_url . 'public/scripts/d.script.js'];
-
-        require_once "views/layout/header.php";
-
-        require_once "views/home/documentacion.php";
-
-        require_once "views/layout/footer.php";
+        // Si no existe el controlador, mostrar error
+        echo "Error: No se pudo cargar el controlador de documentación.";
+        exit();
     }
 
     public function perfil()

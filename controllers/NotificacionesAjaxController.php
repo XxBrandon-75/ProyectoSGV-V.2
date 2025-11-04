@@ -78,6 +78,8 @@ function aprobarVoluntario($voluntarioModel)
 
     $data = json_decode(file_get_contents('php://input'), true);
     $voluntarioId = $data['voluntarioId'] ?? null;
+
+    // Obtener el ID del usuario logueado (quien aprueba)
     $adminId = $_SESSION['user']['id'] ?? null;
 
     if (!$voluntarioId) {
@@ -106,7 +108,7 @@ function aprobarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -132,6 +134,8 @@ function rechazarVoluntario($voluntarioModel)
     $data = json_decode(file_get_contents('php://input'), true);
     $voluntarioId = $data['voluntarioId'] ?? null;
     $motivo = $data['motivo'] ?? '';
+
+    // Obtener el ID del usuario logueado
     $adminId = $_SESSION['user']['id'] ?? null;
 
     if (!$voluntarioId) {
@@ -165,7 +169,7 @@ function rechazarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -206,8 +210,7 @@ function obtenerContadorNotificaciones($voluntarioModel)
         echo json_encode([
             'success' => true,
             'totalPendientes' => 0,
-            'totalTramites' => 0,
-            'totalGeneral' => 0,
+            'expedientesPendientes' => 0,
             'rolUsuario' => $rolUsuario
         ]);
         return;
@@ -217,130 +220,17 @@ function obtenerContadorNotificaciones($voluntarioModel)
     $totalTramites = $voluntarioModel->contarTramitesSolicitados();
     $totalGeneral = $totalPendientes + $totalTramites;
 
-    error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
-    error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+    // Obtener el contador de expedientes pendientes
+    $expedientesPendientes = $voluntarioModel->contarExpedientesPendientes();
+
+    // Log para debugging
+    error_log("NotificacionesAjax - Total pendientes: $totalPendientes");
+    error_log("NotificacionesAjax - Expedientes pendientes: $expedientesPendientes");
 
     echo json_encode([
         'success' => true,
         'totalPendientes' => $totalPendientes,
-        'totalTramites' => $totalTramites,
-        'totalGeneral' => $totalGeneral,
+        'expedientesPendientes' => $expedientesPendientes,
         'rolUsuario' => $rolUsuario
     ]);
-}
-
-// ====================================================================
-// NUEVAS FUNCIONES PARA TRÁMITES
-// ====================================================================
-
-function obtenerDetallesTramite($notificacionModel)
-{
-    $solicitudID = $_GET['id'] ?? 0;
-
-    if (!$solicitudID) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'ID no proporcionado']);
-        return;
-    }
-
-    error_log("NotificacionesAjax - Obteniendo detalles del trámite ID: $solicitudID");
-
-    $tramite = $notificacionModel->getSolicitudTramiteById($solicitudID);
-
-    if ($tramite) {
-        echo json_encode(['success' => true, 'data' => $tramite]);
-    } else {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Trámite no encontrado']);
-    }
-}
-
-function aprobarTramite($notificacionModel)
-{
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405);
-        echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-        exit();
-    }
-
-    $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
-    $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
-
-    if (!$esCoordinadorOMas) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'No tienes permisos para realizar esta acción']);
-        exit();
-    }
-
-    $data = json_decode(file_get_contents('php://input'), true);
-    $solicitudId = $data['solicitudId'] ?? null;
-
-    if (!$solicitudId) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'ID de solicitud no proporcionado']);
-        exit();
-    }
-
-    error_log("NotificacionesAjax - Aprobando trámite ID: $solicitudId");
-
-    $resultado = $notificacionModel->aprobarTramite($solicitudId);
-
-    if ($resultado['success']) {
-        echo json_encode([
-            'success' => true,
-            'message' => $resultado['message'],
-            'totalTramites' => $notificacionModel->contarTramitesSolicitados()
-        ]);
-    } else {
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'message' => $resultado['message']
-        ]);
-    }
-}
-
-function rechazarTramite($notificacionModel)
-{
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        http_response_code(405);
-        echo json_encode(['success' => false, 'message' => 'Método no permitido']);
-        exit();
-    }
-
-    $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
-    $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
-
-    if (!$esCoordinadorOMas) {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'message' => 'No tienes permisos para realizar esta acción']);
-        exit();
-    }
-
-    $data = json_decode(file_get_contents('php://input'), true);
-    $solicitudId = $data['solicitudId'] ?? null;
-
-    if (!$solicitudId) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'ID de solicitud no proporcionado']);
-        exit();
-    }
-
-    error_log("NotificacionesAjax - Rechazando trámite ID: $solicitudId");
-
-    $resultado = $notificacionModel->rechazarTramite($solicitudId);
-
-    if ($resultado['success']) {
-        echo json_encode([
-            'success' => true,
-            'message' => $resultado['message'],
-            'totalTramites' => $notificacionModel->contarTramitesSolicitados()
-        ]);
-    } else {
-        http_response_code(400);
-        echo json_encode([
-            'success' => false,
-            'message' => $resultado['message']
-        ]);
-    }
 }

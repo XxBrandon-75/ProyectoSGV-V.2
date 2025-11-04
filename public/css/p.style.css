@@ -1,12 +1,12 @@
 /* Estructura principal del perfil */
 main.contenido-pagina {
- display: flex;
+  display: flex;
   flex-direction: row !important;
   gap: 20px;
   max-width: 1600px;
   margin: 0 auto;
   padding: 20px;
-  padding-top: 15rem; 
+  padding-top: 15rem;
   min-height: calc(100vh - 100px);
   position: relative;
 }
@@ -161,6 +161,82 @@ main.contenido-pagina {
 
 .btn-solicitar i {
   font-size: 1.4rem;
+}
+
+/* Alerta de aprobación de voluntario pendiente */
+.alerta-aprobacion {
+  background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(255, 193, 7, 0.2);
+}
+
+.alerta-aprobacion .alerta-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.alerta-aprobacion .alerta-header i {
+  color: #f39c12;
+  font-size: 2.4rem;
+}
+
+.alerta-aprobacion .alerta-header h3 {
+  color: #856404;
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 600;
+}
+
+.alerta-aprobacion p {
+  color: #856404;
+  font-size: 1.4rem;
+  margin: 0 0 15px 0;
+  line-height: 1.6;
+}
+
+.alerta-aprobacion .alerta-acciones {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.alerta-aprobacion .btn-accion {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.alerta-aprobacion .btn-aprobar {
+  background: #28a745;
+  color: white;
+}
+
+.alerta-aprobacion .btn-aprobar:hover {
+  background: #218838;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.alerta-aprobacion .btn-rechazar {
+  background: #dc3545;
+  color: white;
+}
+
+.alerta-aprobacion .btn-rechazar:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
 }
 
 .btn-baja {

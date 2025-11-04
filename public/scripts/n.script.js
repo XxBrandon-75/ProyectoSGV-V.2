@@ -93,9 +93,12 @@ function aprobarVoluntario(id) {
 function rechazarVoluntario(id) {
   const motivo = prompt("¿Por qué rechazas esta solicitud? (obligatorio)");
 
-  if (motivo === null) return;
-  
-  if (motivo.trim() === '') {
+  // Validar que el motivo no esté vacío
+  if (motivo === null) {
+    return; // Usuario canceló
+  }
+
+  if (motivo.trim() === "") {
     mostrarMensaje("El motivo del rechazo es obligatorio", "error");
     return;
   }
@@ -171,7 +174,7 @@ function mostrarModalDetalles(voluntario) {
           </div>
           <div class="detalle-row">
             <strong>Teléfono:</strong>
-            <span>${voluntario.Telefono || "No proporcionado"}</span>
+            <span>${voluntario.TelefonoCelular || "No proporcionado"}</span>
           </div>
           <div class="detalle-row">
             <strong>Delegación:</strong>
@@ -187,7 +190,14 @@ function mostrarModalDetalles(voluntario) {
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn-accion btn-aprobar" onclick="aprobarVoluntario(${voluntario.VoluntarioID}); cerrarModal();">
+          <a href="index.php?controller=home&action=perfil&id=${
+            voluntario.VoluntarioID
+          }" class="btn-accion btn-perfil">
+            <i class="fa-solid fa-user"></i> Ver Perfil Completo
+          </a>
+          <button class="btn-accion btn-aprobar" onclick="aprobarVoluntario(${
+            voluntario.VoluntarioID
+          }); cerrarModal();">
             <i class="fa-solid fa-check"></i> Aprobar
           </button>
           <button class="btn-accion btn-rechazar" onclick="rechazarVoluntario(${voluntario.VoluntarioID}); cerrarModal();">
@@ -484,20 +494,21 @@ function verificarSeccionesVacias() {
     }
   }
 
-  const tramitesCards = document.querySelectorAll(".tramite-card");
-  if (tramitesCards.length === 0) {
-    const seccionTramites = document.querySelector(".tramites-seccion");
-    if (seccionTramites) {
-      seccionTramites.innerHTML = `
-        <h3 class="seccion-titulo">
-          <i class="fa-solid fa-check-circle"></i> 
-          No hay trámites pendientes de validación
-        </h3>
-        <div class="mensaje-vacio">
-          <i class="fa-solid fa-file-check"></i>
-          <p>Todos los trámites han sido procesados.</p>
-        </div>
-      `;
+// Función para actualizar el badge del header desde esta página
+function actualizarBadgeHeaderExterno(count) {
+  // Verificar si existe la función en el header
+  if (typeof window.actualizarBadgeHeader === "function") {
+    window.actualizarBadgeHeader(count);
+  } else {
+    // Si no existe, actualizar directamente
+    const badge = document.getElementById("notification-count");
+    if (badge) {
+      if (count > 0) {
+        badge.textContent = count;
+        badge.style.display = "flex";
+      } else {
+        badge.style.display = "none";
+      }
     }
   }
 }
@@ -534,5 +545,5 @@ function mostrarMensaje(mensaje, tipo) {
   setTimeout(() => {
     mensajeDiv.style.animation = "slideOut 0.3s ease";
     setTimeout(() => mensajeDiv.remove(), 300);
-  }, 3000);
+  }, 3000);}
 }
