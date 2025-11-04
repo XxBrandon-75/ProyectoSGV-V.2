@@ -827,3 +827,75 @@
     font-size: 1.4rem;
   }
 }
+/* ========================================== */
+/* BADGES DE ESTATUS DE TRÁMITES */
+/* ========================================== */
+.badge-estatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.badge-estatus i {
+  font-size: 1.3rem;
+}
+
+.estatus-disponible {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(40, 167, 69, 0.4);
+}
+
+.estatus-aprobado {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(0, 123, 255, 0.4);
+}
+
+.estatus-pendiente {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #1a1a1a;
+  font-weight: 800;
+  box-shadow: 0 3px 12px rgba(255, 193, 7, 0.4);
+}
+
+.estatus-rechazado {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(220, 53, 69, 0.4);
+}
+
+.badge-estatus:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================== */
+/* TRÁMITES COMPLETADOS */
+/* ========================================== */
+.tramite-completado {
+  opacity: 0.85;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-left: 4px solid #007bff;
+}
+
+.tramite-completado:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.tramite-completado .tramite-info h3 {
+  color: #495057;
+}
+
+.tramite-completado .tramite-info p {
+  color: #6c757d;
+}

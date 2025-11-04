@@ -36,7 +36,7 @@
           <button type="button" id="btn-add-requerimiento">+</button>
         </div>
       </div>
-<!--CONFIESO QUE ME CUESTA TRABAJO DORMIR YA TIENE RATO QUE DUERMO TARDE-->
+      <!--CONFIESO QUE ME CUESTA TRABAJO DORMIR YA TIENE RATO QUE DUERMO TARDE-->
       <div class="form-buttons">
         <button type="submit" class="btn-guardar">Guardar</button>
         <button type="button" id="btn-cerrar" class="btn-cancelar">Cancelar</button>
@@ -53,12 +53,18 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
   <div id="lista-tramites" class="lista-tramites">
     <!-- Los trámites se cargarán dinámicamente desde la BD -->
   </div>
+
+  <h2 style="margin-top: 3rem; margin-bottom: 1rem;">
+    <i class="fa-solid fa-circle-check"></i> Trámites completados
+  </h2>
+  <div id="lista-tramites-completados" class="lista-tramites">
+    <p class="sin-tramites">No tienes trámites completados.</p>
+  </div>
 </section>
 
 <script>
-
   const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;
   const VOLUNTARIO_ID = <?php echo isset($voluntarioID) ? (int)$voluntarioID : 0; ?>;
-  
+
   const TRAMITES_INICIALES = <?php echo json_encode($tramites ?? []); ?>;
 </script>
