@@ -667,3 +667,103 @@ function mostrarNotificacion(mensaje, tipo) {
     setTimeout(() => notif.remove(), 300);
   }, 3000);
 }
+
+// Funciones para aprobar/rechazar voluntarios desde el perfil
+function aprobarVoluntarioDesdeModal(id) {
+  if (confirm("¿Estás seguro de aprobar este voluntario?")) {
+    fetch("controllers/NotificacionesAjaxController.php?action=aprobar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ voluntarioId: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          mostrarNotificacion(
+            data.message || "Voluntario aprobado correctamente",
+            "success"
+          );
+
+          // Ocultar la alerta de aprobación
+          const alerta = document.querySelector(".alerta-aprobacion");
+          if (alerta) {
+            alerta.style.transition = "all 0.3s ease";
+            alerta.style.opacity = "0";
+            alerta.style.transform = "translateY(-20px)";
+            setTimeout(() => alerta.remove(), 300);
+          }
+
+          // Recargar página después de 2 segundos para reflejar cambios
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          mostrarNotificacion(
+            data.message || "Error al aprobar voluntario",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarNotificacion("Error de conexión con el servidor", "error");
+      });
+  }
+}
+
+function rechazarVoluntarioDesdeModal(id) {
+  const motivo = prompt("¿Por qué rechazas esta solicitud? (obligatorio)");
+
+  if (motivo === null) {
+    return; // Usuario canceló
+  }
+
+  if (motivo.trim() === "") {
+    mostrarNotificacion("El motivo del rechazo es obligatorio", "error");
+    return;
+  }
+
+  if (motivo) {
+    fetch("controllers/NotificacionesAjaxController.php?action=rechazar", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ voluntarioId: id, motivo: motivo }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          mostrarNotificacion(
+            data.message || "Voluntario rechazado correctamente",
+            "error"
+          );
+
+          // Ocultar la alerta de aprobación
+          const alerta = document.querySelector(".alerta-aprobacion");
+          if (alerta) {
+            alerta.style.transition = "all 0.3s ease";
+            alerta.style.opacity = "0";
+            alerta.style.transform = "translateY(-20px)";
+            setTimeout(() => alerta.remove(), 300);
+          }
+
+          // Recargar página después de 2 segundos
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        } else {
+          mostrarNotificacion(
+            data.message || "Error al rechazar voluntario",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarNotificacion("Error de conexión con el servidor", "error");
+      });
+  }
+}

@@ -49,6 +49,18 @@ switch ($action) {
         rechazarTramite($notificacionModel);
         break;
 
+<<<<<<< HEAD
+=======
+    // NUEVOS CASOS PARA ESPECIALIDADES
+    case 'aprobar_especialidad':
+        aprobarEspecialidad($notificacionModel);
+        break;
+
+    case 'rechazar_especialidad':
+        rechazarEspecialidad($notificacionModel);
+        break;
+
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     default:
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Acción no válida']);
@@ -106,7 +118,7 @@ function aprobarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -165,7 +177,7 @@ function rechazarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -207,6 +219,10 @@ function obtenerContadorNotificaciones($voluntarioModel)
             'success' => true,
             'totalPendientes' => 0,
             'totalTramites' => 0,
+<<<<<<< HEAD
+=======
+            'totalExpedientes' => 0,
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
             'totalGeneral' => 0,
             'rolUsuario' => $rolUsuario
         ]);
@@ -215,15 +231,28 @@ function obtenerContadorNotificaciones($voluntarioModel)
 
     $totalPendientes = $voluntarioModel->contarVoluntariosPendientes();
     $totalTramites = $voluntarioModel->contarTramitesSolicitados();
+<<<<<<< HEAD
     $totalGeneral = $totalPendientes + $totalTramites;
 
     error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
     error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+=======
+    $totalExpedientes = $voluntarioModel->contarExpedientesPendientes();
+    $totalGeneral = $totalPendientes + $totalTramites + $totalExpedientes;
+
+    error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
+    error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+    error_log("NotificacionesAjax - Total expedientes pendientes: $totalExpedientes");
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
     echo json_encode([
         'success' => true,
         'totalPendientes' => $totalPendientes,
         'totalTramites' => $totalTramites,
+<<<<<<< HEAD
+=======
+        'totalExpedientes' => $totalExpedientes,
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         'totalGeneral' => $totalGeneral,
         'rolUsuario' => $rolUsuario
     ]);
@@ -343,4 +372,117 @@ function rechazarTramite($notificacionModel)
             'message' => $resultado['message']
         ]);
     }
+<<<<<<< HEAD
 }
+=======
+}
+
+// ====================================================================
+// FUNCIONES PARA ESPECIALIDADES
+// ====================================================================
+
+function aprobarEspecialidad($notificacionModel)
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+        exit();
+    }
+
+    $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
+    $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
+
+    if (!$esCoordinadorOMas) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'No tienes permisos para realizar esta acción']);
+        exit();
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $voluntarioDocumentoId = $data['voluntarioDocumentoId'] ?? null;
+
+    if (!$voluntarioDocumentoId) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'ID de documento es requerido']);
+        exit();
+    }
+
+    try {
+        $adminId = $_SESSION['user']['id'];
+        $resultado = $notificacionModel->aprobarEspecialidad($voluntarioDocumentoId, $adminId);
+
+        if ($resultado['success']) {
+            echo json_encode([
+                'success' => true,
+                'message' => $resultado['message'],
+                'totalEspecialidades' => $notificacionModel->contarEspecialidadesPendientes()
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $resultado['message']]);
+        }
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al aprobar la especialidad: ' . $e->getMessage()
+        ]);
+    }
+}
+
+function rechazarEspecialidad($notificacionModel)
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+        exit();
+    }
+
+    $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
+    $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
+
+    if (!$esCoordinadorOMas) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'No tienes permisos para realizar esta acción']);
+        exit();
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true);
+    $voluntarioDocumentoId = $data['voluntarioDocumentoId'] ?? null;
+    $motivo = $data['motivo'] ?? '';
+
+    if (!$voluntarioDocumentoId) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'ID de documento es requerido']);
+        exit();
+    }
+
+    if (empty($motivo)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'El motivo es obligatorio']);
+        exit();
+    }
+
+    try {
+        $adminId = $_SESSION['user']['id'];
+        $resultado = $notificacionModel->rechazarEspecialidad($voluntarioDocumentoId, $adminId);
+
+        if ($resultado['success']) {
+            echo json_encode([
+                'success' => true,
+                'message' => $resultado['message'],
+                'totalEspecialidades' => $notificacionModel->contarEspecialidadesPendientes()
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'message' => $resultado['message']]);
+        }
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error al rechazar la especialidad: ' . $e->getMessage()
+        ]);
+    }
+}
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612

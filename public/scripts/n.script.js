@@ -2,11 +2,25 @@ document.addEventListener("DOMContentLoaded", () => {
   // IMPORTANTE: Al cargar, asegurarse que todas las secciones estén visibles
   const voluntariosSeccion = document.querySelector(".voluntarios-seccion");
   const tramitesSeccion = document.querySelector(".tramites-seccion");
+<<<<<<< HEAD
   const generalesSeccion = document.querySelector(".generales-seccion");
   
   // Mostrar todas las secciones al inicio
   if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
   if (tramitesSeccion) tramitesSeccion.style.display = "block";
+=======
+  const expedientesSeccion = document.querySelector(".expedientes-seccion");
+  const especialidadesSeccion = document.querySelector(
+    ".especialidades-seccion"
+  );
+  const generalesSeccion = document.querySelector(".generales-seccion");
+
+  // Mostrar todas las secciones al inicio
+  if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
+  if (tramitesSeccion) tramitesSeccion.style.display = "block";
+  if (expedientesSeccion) expedientesSeccion.style.display = "block";
+  if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   if (generalesSeccion) generalesSeccion.style.display = "block";
 
   // Funcionalidad de filtros
@@ -26,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // PRIMERO: Mostrar todas las secciones
     if (voluntariosSeccion) voluntariosSeccion.style.display = "block";
     if (tramitesSeccion) tramitesSeccion.style.display = "block";
+<<<<<<< HEAD
+=======
+    if (expedientesSeccion) expedientesSeccion.style.display = "block";
+    if (especialidadesSeccion) especialidadesSeccion.style.display = "block";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     if (generalesSeccion) generalesSeccion.style.display = "block";
 
     // SEGUNDO: Ocultar según el filtro seleccionado
@@ -35,15 +54,42 @@ document.addEventListener("DOMContentLoaded", () => {
         break;
       case "voluntarios":
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
+<<<<<<< HEAD
+=======
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
       case "tramites":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
+<<<<<<< HEAD
+=======
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+        if (generalesSeccion) generalesSeccion.style.display = "none";
+        break;
+      case "documentos":
+        if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
+        if (tramitesSeccion) tramitesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+        if (generalesSeccion) generalesSeccion.style.display = "none";
+        break;
+      case "especialidades":
+        if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
+        if (tramitesSeccion) tramitesSeccion.style.display = "none";
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         if (generalesSeccion) generalesSeccion.style.display = "none";
         break;
       case "leidas":
         if (voluntariosSeccion) voluntariosSeccion.style.display = "none";
         if (tramitesSeccion) tramitesSeccion.style.display = "none";
+<<<<<<< HEAD
+=======
+        if (expedientesSeccion) expedientesSeccion.style.display = "none";
+        if (especialidadesSeccion) especialidadesSeccion.style.display = "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         break;
     }
   }
@@ -63,7 +109,13 @@ function aprobarVoluntario(id) {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
+<<<<<<< HEAD
           const card = document.querySelector(`.notificacion-card.pendiente[data-id="${id}"]`);
+=======
+          const card = document.querySelector(
+            `.notificacion-card.pendiente[data-id="${id}"]`
+          );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
           if (card) {
             card.style.background = "#d4edda";
             card.style.borderLeftColor = "#28a745";
@@ -94,8 +146,13 @@ function rechazarVoluntario(id) {
   const motivo = prompt("¿Por qué rechazas esta solicitud? (obligatorio)");
 
   if (motivo === null) return;
+<<<<<<< HEAD
   
   if (motivo.trim() === '') {
+=======
+
+  if (motivo.trim() === "") {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     mostrarMensaje("El motivo del rechazo es obligatorio", "error");
     return;
   }
@@ -108,7 +165,13 @@ function rechazarVoluntario(id) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
+<<<<<<< HEAD
         const card = document.querySelector(`.notificacion-card.pendiente[data-id="${id}"]`);
+=======
+        const card = document.querySelector(
+          `.notificacion-card.pendiente[data-id="${id}"]`
+        );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         if (card) {
           card.style.background = "#f8d7da";
           card.style.borderLeftColor = "#dc3545";
@@ -213,11 +276,22 @@ function mostrarModalDetalles(voluntario) {
 
 function aprobarTramite(id) {
   if (confirm("¿Estás seguro de aprobar este trámite?")) {
+<<<<<<< HEAD
     fetch("controllers/NotificacionesAjaxController.php?action=aprobar-tramite", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ solicitudId: id }),
     })
+=======
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=aprobar-tramite",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ solicitudId: id }),
+      }
+    )
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
@@ -249,18 +323,36 @@ function aprobarTramite(id) {
 }
 
 function confirmarAprobacionTramite(id) {
+<<<<<<< HEAD
   const observaciones = document.getElementById("observaciones-aprobacion").value || "Trámite aprobado";
   const numeroCredencial = document.getElementById("numero-credencial").value || null;
   const vigenciaCredencial = document.getElementById("vigencia-credencial").value || null;
+=======
+  const observaciones =
+    document.getElementById("observaciones-aprobacion").value ||
+    "Trámite aprobado";
+  const numeroCredencial =
+    document.getElementById("numero-credencial").value || null;
+  const vigenciaCredencial =
+    document.getElementById("vigencia-credencial").value || null;
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
   fetch("controllers/NotificacionesAjaxController.php?action=aprobar-tramite", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+<<<<<<< HEAD
     body: JSON.stringify({ 
       solicitudId: id, 
       observaciones: observaciones,
       numeroCredencial: numeroCredencial,
       vigenciaCredencial: vigenciaCredencial
+=======
+    body: JSON.stringify({
+      solicitudId: id,
+      observaciones: observaciones,
+      numeroCredencial: numeroCredencial,
+      vigenciaCredencial: vigenciaCredencial,
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     }),
   })
     .then((response) => response.json())
@@ -294,6 +386,7 @@ function confirmarAprobacionTramite(id) {
     });
 }
 
+<<<<<<< HEAD
   function rechazarTramite(id) {
   if (confirm("¿Estás seguro de rechazar este trámite?")) {
     fetch("controllers/NotificacionesAjaxController.php?action=rechazar-tramite", {
@@ -301,6 +394,18 @@ function confirmarAprobacionTramite(id) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ solicitudId: id }),
     })
+=======
+function rechazarTramite(id) {
+  if (confirm("¿Estás seguro de rechazar este trámite?")) {
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=rechazar-tramite",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ solicitudId: id }),
+      }
+    )
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
@@ -332,7 +437,13 @@ function confirmarAprobacionTramite(id) {
 }
 
 function verDetallesTramite(id) {
+<<<<<<< HEAD
   fetch(`controllers/NotificacionesAjaxController.php?action=detalles-tramite&id=${id}`)
+=======
+  fetch(
+    `controllers/NotificacionesAjaxController.php?action=detalles-tramite&id=${id}`
+  )
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
@@ -340,11 +451,19 @@ function verDetallesTramite(id) {
       } else {
         mostrarMensaje(data.message || "Error al obtener detalles", "error");
       }
+<<<<<<< HEAD
     })
 }
 
   function mostrarModalDetallesTramite(tramite) {
       let modalHTML = `
+=======
+    });
+}
+
+function mostrarModalDetallesTramite(tramite) {
+  let modalHTML = `
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
           <div class="modal-overlay" id="modal-detalles">
               <div class="modal-contenido">
                   <div class="modal-header">
@@ -354,6 +473,7 @@ function verDetallesTramite(id) {
                       </button>
                   </div>
                   <div class="modal-body">
+<<<<<<< HEAD
                       <h4>Requerimientos</h4>
                       <div class="requerimientos-lista">
       `;
@@ -386,6 +506,59 @@ function verDetallesTramite(id) {
       });
 
       modalHTML += `
+=======
+                      <h4>Requerimientos del Trámite</h4>
+                      <div class="requerimientos-lista">
+      `;
+
+  tramite.requerimientos.forEach((req) => {
+    const tipoDato = req.TipoDato ? req.TipoDato.toLowerCase() : "";
+
+    modalHTML += `
+              <div class="requerimiento-item">
+                  <strong><i class="fa-solid fa-file-alt"></i> ${
+                    req.Requerimiento || req.NombreRequerimiento || "Sin nombre"
+                  }</strong>
+                  <div class="requerimiento-dato">
+          `;
+
+    if (tipoDato === "texto") {
+      modalHTML += `<span><i class="fa-solid fa-quote-left"></i> ${
+        req.DatoTexto || "No proporcionado"
+      }</span>`;
+    } else if (tipoDato === "número" || tipoDato === "numero") {
+      modalHTML += `<span><i class="fa-solid fa-hashtag"></i> ${
+        req.DatoNumero || "No proporcionado"
+      }</span>`;
+    } else if (tipoDato === "fecha") {
+      modalHTML += `<span><i class="fa-solid fa-calendar"></i> ${
+        req.DatoFecha || "No proporcionado"
+      }</span>`;
+    } else if (tipoDato === "archivo") {
+      if (req.RutaArchivo && req.NombreArchivo) {
+        // Corregir ruta del archivo igual que en documentos
+        let rutaCorregida = req.RutaArchivo;
+        if (rutaCorregida.startsWith("/public/")) {
+          rutaCorregida = rutaCorregida.substring(1); // Remover el / inicial
+        }
+        modalHTML += `<a href="${rutaCorregida}" target="_blank" class="archivo-link">
+                        <i class="fa-solid fa-download"></i> ${req.NombreArchivo}
+                      </a>`;
+      } else {
+        modalHTML += `<span class="sin-archivo"><i class="fa-solid fa-times"></i> No se ha subido archivo</span>`;
+      }
+    } else {
+      modalHTML += `<span class="tipo-desconocido">Tipo de dato desconocido: ${req.TipoDato}</span>`;
+    }
+
+    modalHTML += `
+                  </div>
+              </div>
+          `;
+  });
+
+  modalHTML += `
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
                       </div>
                   </div>
                   <div class="modal-footer">
@@ -403,29 +576,57 @@ function verDetallesTramite(id) {
           </div>
       `;
 
+<<<<<<< HEAD
       document.body.insertAdjacentHTML("beforeend", modalHTML);
       document.getElementById("modal-detalles").addEventListener("click", (e) => {
           if (e.target.id === "modal-detalles") cerrarModal();
       });
   }
+=======
+  document.body.insertAdjacentHTML("beforeend", modalHTML);
+  document.getElementById("modal-detalles").addEventListener("click", (e) => {
+    if (e.target.id === "modal-detalles") cerrarModal();
+  });
+}
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 // ====================================================================
 // FUNCIONES COMPARTIDAS
 // ====================================================================
 
 function cerrarModal() {
   const modals = document.querySelectorAll(".modal-overlay");
+<<<<<<< HEAD
   modals.forEach(modal => {
+=======
+  modals.forEach((modal) => {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     modal.style.opacity = "0";
     setTimeout(() => modal.remove(), 300);
   });
 }
 
 function actualizarContadores(totalPendientes, totalTramites) {
+<<<<<<< HEAD
   const filtroBtnTodas = document.querySelector('[data-filtro="todas"] .badge-contador');
   const filtroBtnVoluntarios = document.querySelector('[data-filtro="voluntarios"] .badge-contador');
   const filtroBtnTramites = document.querySelector('[data-filtro="tramites"] .badge-contador');
   
   const badgePendientes = document.querySelector(".badge-pendientes:not(.badge-tramites)");
+=======
+  const filtroBtnTodas = document.querySelector(
+    '[data-filtro="todas"] .badge-contador'
+  );
+  const filtroBtnVoluntarios = document.querySelector(
+    '[data-filtro="voluntarios"] .badge-contador'
+  );
+  const filtroBtnTramites = document.querySelector(
+    '[data-filtro="tramites"] .badge-contador'
+  );
+
+  const badgePendientes = document.querySelector(
+    ".badge-pendientes:not(.badge-tramites)"
+  );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   const badgeTramites = document.querySelector(".badge-tramites");
 
   let voluntariosPendientes = totalPendientes;
@@ -442,17 +643,31 @@ function actualizarContadores(totalPendientes, totalTramites) {
 
   if (filtroBtnTodas) {
     filtroBtnTodas.textContent = totalGeneral;
+<<<<<<< HEAD
     filtroBtnTodas.style.display = totalGeneral > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnTodas.style.display = totalGeneral > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   }
 
   if (filtroBtnVoluntarios && voluntariosPendientes !== null) {
     filtroBtnVoluntarios.textContent = voluntariosPendientes;
+<<<<<<< HEAD
     filtroBtnVoluntarios.style.display = voluntariosPendientes > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnVoluntarios.style.display =
+      voluntariosPendientes > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   }
 
   if (filtroBtnTramites && tramitesPendientes !== null) {
     filtroBtnTramites.textContent = tramitesPendientes;
+<<<<<<< HEAD
     filtroBtnTramites.style.display = tramitesPendientes > 0 ? 'inline-block' : 'none';
+=======
+    filtroBtnTramites.style.display =
+      tramitesPendientes > 0 ? "inline-block" : "none";
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   }
 
   if (badgePendientes && voluntariosPendientes !== null) {
@@ -467,7 +682,13 @@ function actualizarContadores(totalPendientes, totalTramites) {
 }
 
 function verificarSeccionesVacias() {
+<<<<<<< HEAD
   const voluntariosCards = document.querySelectorAll(".notificacion-card.pendiente");
+=======
+  const voluntariosCards = document.querySelectorAll(
+    ".notificacion-card.pendiente"
+  );
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
   if (voluntariosCards.length === 0) {
     const seccionVoluntarios = document.querySelector(".voluntarios-seccion");
     if (seccionVoluntarios) {
@@ -503,7 +724,11 @@ function verificarSeccionesVacias() {
 }
 
 function actualizarBadgeHeaderExterno() {
+<<<<<<< HEAD
   if (typeof window.refrescarContadorNotificaciones === 'function') {
+=======
+  if (typeof window.refrescarContadorNotificaciones === "function") {
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
     window.refrescarContadorNotificaciones();
   }
 }
@@ -535,4 +760,186 @@ function mostrarMensaje(mensaje, tipo) {
     mensajeDiv.style.animation = "slideOut 0.3s ease";
     setTimeout(() => mensajeDiv.remove(), 300);
   }, 3000);
+}
+
+// ====================================================================
+// FUNCIONES PARA DOCUMENTOS/EXPEDIENTES
+// ====================================================================
+
+function aprobarDocumento(documentoId) {
+  if (confirm("¿Estás seguro de aprobar este documento?")) {
+    fetch("controllers/DocumentacionController.php?action=aprobar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ voluntarioDocId: documentoId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const card = document.querySelector(
+            `.documento-pendiente[data-documento-id="${documentoId}"]`
+          );
+          if (card) {
+            card.style.background = "#d4edda";
+            card.style.borderLeftColor = "#28a745";
+
+            setTimeout(() => {
+              card.style.opacity = "0";
+              card.style.transform = "translateX(100%)";
+              setTimeout(() => {
+                card.remove();
+                actualizarBadgeHeaderExterno();
+                mostrarMensajeFlotante(
+                  "Documento aprobado exitosamente",
+                  "success"
+                );
+              }, 300);
+            }, 500);
+          }
+        } else {
+          mostrarMensajeFlotante(
+            data.message || "Error al aprobar el documento",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarMensajeFlotante("Error de conexión", "error");
+      });
+  }
+}
+
+function rechazarDocumento(documentoId) {
+  const motivo = prompt("Por favor, ingresa el motivo del rechazo:");
+
+  if (motivo && motivo.trim() !== "") {
+    fetch("controllers/DocumentacionController.php?action=rechazar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        voluntarioDocId: documentoId,
+        motivo: motivo.trim(),
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          const card = document.querySelector(
+            `.documento-pendiente[data-documento-id="${documentoId}"]`
+          );
+          if (card) {
+            card.style.background = "#f8d7da";
+            card.style.borderLeftColor = "#dc3545";
+
+            setTimeout(() => {
+              card.style.opacity = "0";
+              card.style.transform = "translateX(-100%)";
+              setTimeout(() => {
+                card.remove();
+                actualizarBadgeHeaderExterno();
+                mostrarMensajeFlotante(
+                  "Documento rechazado correctamente",
+                  "success"
+                );
+              }, 300);
+            }, 500);
+          }
+        } else {
+          mostrarMensajeFlotante(
+            data.message || "Error al rechazar el documento",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        mostrarMensajeFlotante("Error de conexión", "error");
+      });
+  } else if (motivo !== null) {
+    mostrarMensajeFlotante("El motivo es obligatorio", "error");
+  }
+}
+
+// ====================================================================
+// FUNCIONES PARA ESPECIALIDADES
+// ====================================================================
+
+function aprobarEspecialidad(voluntarioDocumentoId) {
+  if (confirm("¿Estás seguro de aprobar esta especialidad?")) {
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=aprobar_especialidad",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ voluntarioDocumentoId: voluntarioDocumentoId }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          mostrarMensaje("Especialidad aprobada correctamente", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          mostrarMensaje(
+            data.message || "Error al aprobar la especialidad",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error completo:", error);
+        mostrarMensaje("Error de conexión: " + error.message, "error");
+      });
+  }
+}
+
+function rechazarEspecialidad(voluntarioDocumentoId) {
+  const motivo = prompt("Motivo del rechazo de esta especialidad:");
+
+  if (motivo && motivo.trim()) {
+    fetch(
+      "controllers/NotificacionesAjaxController.php?action=rechazar_especialidad",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          voluntarioDocumentoId: voluntarioDocumentoId,
+          motivo: motivo.trim(),
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          mostrarMensaje("Especialidad rechazada correctamente", "success");
+          setTimeout(() => {
+            location.reload();
+          }, 1500);
+        } else {
+          mostrarMensaje(
+            data.message || "Error al rechazar la especialidad",
+            "error"
+          );
+        }
+      })
+      .catch((error) => {
+        console.error("Error completo:", error);
+        mostrarMensaje("Error de conexión: " + error.message, "error");
+      });
+  } else if (motivo !== null) {
+    mostrarMensaje("El motivo es obligatorio", "error");
+  }
 }

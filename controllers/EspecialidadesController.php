@@ -66,7 +66,7 @@ class EspecialidadesController
     public function obtenerEspecialidades()
     {
         header('Content-Type: application/json');
-        
+
         if (!isset($_SESSION['user']['id'])) {
             echo json_encode(['success' => false, 'message' => 'No autenticado.']);
             exit();
@@ -75,17 +75,35 @@ class EspecialidadesController
         try {
             require_once 'models/especialidad.php';
             $especialidadModel = new Especialidad();
-            
-            $voluntarioID = (int)$_SESSION['user']['id'];
-            $especialidades = $especialidadModel->verEspecialidades($voluntarioID);
-            
+
+            // Si hay un CURP en el parámetro, buscar ese voluntario (modo administrador)
+            $curpBuscar = $_GET['curp'] ?? null;
+
+            if ($curpBuscar) {
+                // Verificar que el usuario actual sea administrador o coordinador
+                $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
+                $esCoordinadorOMas = in_array($rolUsuario, ['Coordinador de Area', 'Administrador', 'Superadministrador']);
+
+                if (!$esCoordinadorOMas) {
+                    echo json_encode(['success' => false, 'message' => 'No tienes permisos para ver especialidades de otros voluntarios.']);
+                    exit();
+                }
+
+                // Obtener ID del voluntario por CURP
+                $especialidades = $especialidadModel->verEspecialidadesPorCurp($curpBuscar);
+            } else {
+                // Modo normal: obtener especialidades del usuario actual
+                $voluntarioID = (int)$_SESSION['user']['id'];
+                $especialidades = $especialidadModel->verEspecialidades($voluntarioID);
+            }
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'data' => $especialidades
             ]);
         } catch (Exception $e) {
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Error al obtener especialidades: ' . $e->getMessage()
             ]);
         }
@@ -98,7 +116,7 @@ class EspecialidadesController
     public function agregarEspecialidad()
     {
         header('Content-Type: application/json');
-        
+
         if (!isset($_SESSION['user']['id'])) {
             echo json_encode(['success' => false, 'message' => 'No autenticado.']);
             exit();
@@ -129,7 +147,7 @@ class EspecialidadesController
             // Validar que no tenga ya esta especialidad
             require_once 'models/especialidad.php';
             $especialidadModel = new Especialidad();
-            
+
             if ($especialidadModel->tieneEspecialidad($voluntarioID, $nombreEspecialidad)) {
                 echo json_encode(['success' => false, 'message' => 'Ya tienes esta especialidad registrada.']);
                 exit();
@@ -139,7 +157,7 @@ class EspecialidadesController
             $archivo = $_FILES['archivo'];
             $extensionesPermitidas = ['pdf'];
             $extension = strtolower(pathinfo($archivo['name'], PATHINFO_EXTENSION));
-            
+
             if (!in_array($extension, $extensionesPermitidas)) {
                 echo json_encode(['success' => false, 'message' => 'Solo se permiten archivos en formato PDF.']);
                 exit();
@@ -179,7 +197,7 @@ class EspecialidadesController
 
             if ($resultado) {
                 echo json_encode([
-                    'success' => true, 
+                    'success' => true,
                     'message' => 'Especialidad agregada correctamente. Está pendiente de validación.'
                 ]);
             } else {
@@ -189,14 +207,13 @@ class EspecialidadesController
                 }
                 echo json_encode(['success' => false, 'message' => 'Error al guardar en la base de datos.']);
             }
-
         } catch (Exception $e) {
             // Si hay error, eliminar el archivo si se subió
             if (isset($rutaCompleta) && file_exists($rutaCompleta)) {
                 @unlink($rutaCompleta);
             }
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Error: ' . $e->getMessage()
             ]);
         }
@@ -209,7 +226,7 @@ class EspecialidadesController
     public function obtenerCatalogo()
     {
         header('Content-Type: application/json');
-        
+
         if (!isset($_SESSION['user']['id'])) {
             echo json_encode(['success' => false, 'message' => 'No autenticado.']);
             exit();
@@ -218,16 +235,16 @@ class EspecialidadesController
         try {
             require_once 'models/especialidad.php';
             $especialidadModel = new Especialidad();
-            
+
             $especialidades = $especialidadModel->obtenerEspecialidadesDisponibles();
-            
+
             echo json_encode([
-                'success' => true, 
+                'success' => true,
                 'data' => $especialidades
             ]);
         } catch (Exception $e) {
             echo json_encode([
-                'success' => false, 
+                'success' => false,
                 'message' => 'Error al obtener catálogo: ' . $e->getMessage()
             ]);
         }

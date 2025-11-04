@@ -54,6 +54,31 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
   <div class="seccion-contenido activa" id="seccion-mi-perfil">
     <h2><?php echo $esPropioUsuario ? 'Mi Perfil' : 'Perfil de ' . htmlspecialchars($datosUsuario['Nombres']); ?></h2>
 
+    <?php
+    // Mostrar alertas de aprobación si el voluntario está pendiente y el usuario tiene permisos
+    // Usar RolHelper para verificar permisos (coordinador o superior)
+    $esCoordinadorOMas = RolHelper::puedeVerCoordinadores(); // Coordinador, Admin o Superadmin
+    $voluntarioPendiente = isset($datosUsuario['EstatusNombre']) && $datosUsuario['EstatusNombre'] === 'Pendiente';
+
+    if (!$esPropioUsuario && $esCoordinadorOMas && $voluntarioPendiente): ?>
+      <!-- Alerta de voluntario pendiente de aprobación -->
+      <div class="alerta-aprobacion">
+        <div class="alerta-header">
+          <i class="fa-solid fa-exclamation-triangle"></i>
+          <h3>Este voluntario está pendiente de aprobación</h3>
+        </div>
+        <p>Este voluntario requiere tu aprobación para poder acceder al sistema y participar activamente en la red de voluntarios.</p>
+        <div class="alerta-acciones">
+          <button class="btn-accion btn-aprobar" onclick="aprobarVoluntarioDesdeModal(<?= $datosUsuario['VoluntarioID'] ?>)">
+            <i class="fa-solid fa-check"></i> Aprobar Voluntario
+          </button>
+          <button class="btn-accion btn-rechazar" onclick="rechazarVoluntarioDesdeModal(<?= $datosUsuario['VoluntarioID'] ?>)">
+            <i class="fa-solid fa-times"></i> Rechazar Voluntario
+          </button>
+        </div>
+      </div>
+    <?php endif; ?>
+
     <!-- Información Personal -->
     <div class="perfil-card">
       <div class="card-header">
@@ -69,14 +94,14 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <button class="btn-editar" onclick="editarSeccion('personal', event)">
               <i class="fa-solid fa-pen"></i> Editar
             </button>
-            <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php elseif ($esPropioUsuario): ?>
             <!-- Sin permisos de edición en su propio perfil: Solo Solicitar -->
-            <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('personal')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php endif; ?>
         </div>
       </div>
@@ -120,9 +145,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
               <i class="fa-solid fa-pen"></i> Editar
             </button>
           <?php elseif ($esPropioUsuario): ?>
-            <button class="btn-solicitar" onclick="solicitarActualizacion('tutor')">
+            <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('tutor')">
               <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-            </button>
+            </button> -->
           <?php endif; ?>
         </div>
         <div class="card-body">
@@ -153,9 +178,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('contacto')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('contacto')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -189,9 +214,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('emergencia')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('emergencia')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -221,9 +246,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('direccion')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('direccion')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -269,9 +294,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('profesional')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('profesional')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -305,9 +330,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('medica')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('medica')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -337,9 +362,9 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
             <i class="fa-solid fa-pen"></i> Editar
           </button>
         <?php elseif ($esPropioUsuario): ?>
-          <button class="btn-solicitar" onclick="solicitarActualizacion('voluntariado')">
+          <!-- <button class="btn-solicitar" onclick="solicitarActualizacion('voluntariado')">
             <i class="fa-solid fa-paper-plane"></i> Solicitar actualización
-          </button>
+          </button> -->
         <?php endif; ?>
       </div>
       <div class="card-body">
@@ -366,7 +391,19 @@ require_once __DIR__ . '/../layout/perfil-menu.php';
 
     <?php if ($puedeEditarRoles && !$esPropioUsuario): ?>
       <div class="baja-voluntario-container">
-        <form action="<?php echo $base_url; ?>index.php?controller=home&action=bajaVoluntario" method="post" onsubmit="return confirm('¿Estás seguro de que deseas dar de baja a este voluntario? Esta acción no se puede deshacer.');">
+        <?php if (isset($datosUsuario['EstatusNombre']) && $datosUsuario['EstatusNombre'] === 'Inactivo'): ?>
+          <!-- Botón para reactivar voluntario -->
+          <form action="<?php echo $base_url; ?>index.php?controller=home&action=reactivarVoluntario" method="post" onsubmit="return confirm('¿Estás seguro de que deseas reactivar a este voluntario?');" style="display: inline-block; margin-right: 10px;">
+            <input type="hidden" name="voluntario_id" value="<?php echo htmlspecialchars($datosUsuario['VoluntarioID']); ?>">
+            <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
+            <button type="submit" class="btn-reactivar">
+              <i class="fa-solid fa-user-check"></i> Reactivar voluntario
+            </button>
+          </form>
+        <?php endif; ?>
+
+        <!-- Botón para dar de baja -->
+        <form action="<?php echo $base_url; ?>index.php?controller=home&action=bajaVoluntario" method="post" onsubmit="return confirm('¿Estás seguro de que deseas dar de baja a este voluntario? Esta acción no se puede deshacer.');" style="display: inline-block;">
           <input type="hidden" name="voluntario_id" value="<?php echo htmlspecialchars($datosUsuario['VoluntarioID']); ?>">
           <input type="hidden" name="csrf_token" value="<?php echo $csrfToken; ?>">
           <button type="submit" class="btn-baja" <?php echo (isset($datosUsuario['EstatusNombre']) && $datosUsuario['EstatusNombre'] !== 'Activo') ? 'disabled style="opacity:0.6;cursor:not-allowed;"' : ''; ?>>

@@ -21,17 +21,21 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
 <html lang="es">
 
 <head>
-    
+
     <meta charset="UTF-8" />
-    
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?php echo $titulo_pagina; ?></title>
 
-    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="<?php echo $base_url; ?>OIP.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $base_url; ?>OIP.ico">
+
+
     <link rel="stylesheet" href="<?php echo $base_url; ?>public/css/g.style.css" />
 
     <?php foreach ($styles as $style_path): ?>
-        
+
         <link rel="stylesheet" href="<?php echo $style_path; ?>" />
     <?php endforeach; ?>
 
@@ -73,13 +77,21 @@ $base_url = $protocol . $host . ($script != '/' ? $script : '') . '/';
                 <a href="<?php echo $base_url; ?>index.php?controller=home&action=especialidades">Especialidades</a>
                 <a href="<?php echo $base_url; ?>index.php?controller=home&action=tramites">Trámites</a>
                 <a href="<?php echo $base_url; ?>index.php?controller=home&action=documentacion">Documentación</a>
+                <?php
+                // Mostrar Personal y Coordinadores solo para Administrador o superior
+                require_once __DIR__ . '/../../helpers/RolHelper.php';
+                if (RolHelper::puedeVerCoordinadores()): // Admin, Coordinador o Superadmin
+                ?>
+                    <a href="<?php echo $base_url; ?>index.php?controller=home&action=personal">Personal</a>
+                    <a href="<?php echo $base_url; ?>index.php?controller=home&action=coordinadores">Coordinadores</a>
+                <?php endif; ?>
             </nav>
 
             <div class="menu-icons">
                 <div id="menu-bar" class="fa-solid fa-bars"></div>
             </div>
         </div>
-        
+
     </header>
 
     <div id="nav-overlay" class="nav-overlay" aria-hidden="true"></div>

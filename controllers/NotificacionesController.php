@@ -49,7 +49,11 @@ class NotificacionesController
         $esCoordinadorOMas = $this->tienePermiso(2);
 
         // Cargar el modelo de notificaciones
+<<<<<<< HEAD
         require_once 'models/Notificacion.php'; 
+=======
+        require_once 'models/Notificacion.php';
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         $notificacionModel = new Notificacion();
 
         // Variables para la vista
@@ -57,12 +61,23 @@ class NotificacionesController
         $totalPendientes = 0;
         $tramitesSolicitados = [];
         $totalTramites = 0;
+<<<<<<< HEAD
+=======
+        $expedientesPendientes = [];
+        $totalExpedientes = 0;
+        $especialidadesPendientes = [];
+        $totalEspecialidades = 0;
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
         // Si es coordinador o superior, obtener voluntarios pendientes y trámites
         if ($esCoordinadorOMas) {
             // VOLUNTARIOS PENDIENTES
             $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
             foreach ($voluntariosPendientes as $voluntario) {
                 $notificacionesPendientes[] = [
                     'id' => $voluntario['VoluntarioID'],
@@ -74,10 +89,11 @@ class NotificacionesController
                     'fecha_registro' => $voluntario['FechaRegistro'] ?? null,
                 ];
             }
-            
+
             $totalPendientes = count($notificacionesPendientes);
 
             // TRÁMITES SOLICITADOS
+<<<<<<< HEAD
         $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
 
         foreach ($tramitesPendientes as $tramite) {
@@ -94,6 +110,69 @@ class NotificacionesController
         }
 
         $totalTramites = count($tramitesSolicitados);
+=======
+            $tramitesPendientes = $notificacionModel->getTramitesSolicitados();
+
+            foreach ($tramitesPendientes as $tramite) {
+                $tramitesSolicitados[] = [
+                    'SolicitudID' => $tramite['SolicitudID'],
+                    'VoluntarioID' => $tramite['VoluntarioID'],
+                    'Nombres' => $tramite['Nombres'],
+                    'email' => $tramite['email'],
+                    'curp' => $tramite['curp'],
+                    'FechaSolicitud' => $tramite['FechaSolicitud'],
+                    'Estatus' => $tramite['Estatus'],
+                    'NombreTramite' => $tramite['NombreTramite'],
+                ];
+            }
+
+            $totalTramites = count($tramitesSolicitados);
+
+            // EXPEDIENTES/DOCUMENTOS PENDIENTES
+            $expedientesPendientesData = $notificacionModel->getExpedientesPendientes();
+
+            foreach ($expedientesPendientesData as $expediente) {
+                // Obtener la ruta del documento desde el SP
+                $rutaOriginal = $expediente['RutaArchivo'] ?? $expediente['rutaarchivo'] ?? '';
+
+                // Convertir ruta absoluta del servidor a ruta relativa para el navegador
+                // De: /public/uploads/documentos/archivo.pdf
+                // A: public/uploads/documentos/archivo.pdf (relativa desde index.php)
+                if (strpos($rutaOriginal, '/public/') === 0) {
+                    $rutaCorregida = substr($rutaOriginal, 1); // Remueve el / inicial
+                } elseif (strpos($rutaOriginal, 'public/') === 0) {
+                    $rutaCorregida = $rutaOriginal; // Ya está en formato correcto
+                } else {
+                    $rutaCorregida = $rutaOriginal; // Mantener como está
+                }
+
+                $expedientesPendientes[] = [
+                    'nombre' => $expediente['NombreVoluntario'] ?? $expediente['nombrevoluntario'] ?? 'Sin nombre',
+                    'curp' => $expediente['curp'] ?? $expediente['CURP'] ?? '',
+                    'rol' => $expediente['Rol'] ?? $expediente['rol'] ?? '',
+                    'documento' => $expediente['NombreSubido'] ?? $expediente['nombresubido'] ?? 'Documento',
+                    'fecha' => $expediente['FechaSubida'] ?? $expediente['fechasubida'] ?? null,
+                    'ruta' => $rutaCorregida,
+                ];
+            }
+            $totalExpedientes = count($expedientesPendientes);
+
+            // ESPECIALIDADES PENDIENTES
+            $especialidadesPendientesData = $notificacionModel->getEspecialidadesPendientes();
+
+            foreach ($especialidadesPendientesData as $especialidad) {
+                $especialidadesPendientes[] = [
+                    'voluntario_documento_id' => $especialidad['VoluntarioDocumentoID'] ?? null,
+                    'nombre' => $especialidad['NombreVoluntario'] ?? 'Sin nombre',
+                    'curp' => $especialidad['curp'] ?? '',
+                    'area' => $especialidad['Area'] ?? 'Sin área',
+                    'documento' => $especialidad['NombreDocumentoEspecialidad'] ?? 'Documento de especialidad',
+                    'archivo' => $especialidad['NombreArchivo'] ?? '',
+                    'fecha' => $especialidad['FechaSubida'] ?? null,
+                ];
+            }
+            $totalEspecialidades = count($especialidadesPendientes);
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
         }
 
         // Notificaciones generales del sistema
@@ -115,7 +194,11 @@ class NotificacionesController
         ];
 
         // Total general de notificaciones
+<<<<<<< HEAD
         $totalNotificacionesGeneral = $totalPendientes + $totalTramites;
+=======
+        $totalNotificacionesGeneral = $totalPendientes + $totalTramites + $totalExpedientes + $totalEspecialidades;
+>>>>>>> c233d19cbec062fb8ce596706d82b95497b92612
 
         // Configuración para el layout
         $titulo_pagina = "Notificaciones | Red de Voluntarios";

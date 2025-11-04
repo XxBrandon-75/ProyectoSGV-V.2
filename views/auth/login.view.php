@@ -5,6 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login_SGV</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="OIP.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="OIP.ico">
+
     <link rel="stylesheet" href="public/css/l.style.css?v=<?php echo time(); ?>" />
 </head>
 
