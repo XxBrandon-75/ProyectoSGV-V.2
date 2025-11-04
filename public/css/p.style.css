@@ -273,14 +273,22 @@ main.contenido-pagina {
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
 .info-item {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.info-item:hover {
+  background: #f0f0f0;
 }
 
 .info-item.full-width {
@@ -1022,4 +1030,360 @@ footer {
 .form-group label i {
   margin-right: 6px;
   color: #e31e24;
+}
+
+/* ====================================================================
+   RESPONSIVE DESIGN - MEDIA QUERIES
+   ==================================================================== */
+
+/* Tablets y pantallas medianas (max-width: 1024px) */
+@media (max-width: 1024px) {
+  main.contenido-pagina {
+    padding-top: 12rem;
+  }
+
+  .perfil-aside {
+    width: 220px;
+    top: 13rem;
+    max-height: calc(100vh - 15rem);
+  }
+
+  .perfil-contenido {
+    margin-left: 240px;
+  }
+
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .info-item {
+    padding: 12px;
+  }
+
+  .coordi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablets pequeñas (max-width: 768px) */
+@media (max-width: 768px) {
+  main.contenido-pagina {
+    flex-direction: column;
+    padding: 15px;
+    padding-top: 12rem;
+  }
+
+  /* OCULTAR panel lateral en tablets y móviles para dar más espacio */
+  .perfil-aside {
+    display: none;
+  }
+
+  .perfil-contenido {
+    margin-left: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .perfil-card {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .info-item {
+    padding: 15px;
+    background: #f5f5f5;
+  }
+
+  .info-item label {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 5px;
+  }
+
+  .info-item p {
+    font-size: 1.5rem;
+    color: #555;
+    word-break: break-word;
+  }
+
+  .coordi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .btn-editar {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .acciones-perfil {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .acciones-perfil .btn-accion {
+    width: 100%;
+  }
+
+  .form-group-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Ajustar foto de perfil */
+  .foto-perfil-container {
+    max-width: 250px;
+    margin: 0 auto;
+  }
+
+  /* Tabs responsive */
+  .tabs-profesional {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabs-profesional button {
+    white-space: nowrap;
+    min-width: auto;
+    padding: 12px 20px;
+  }
+
+  /* Modal responsive */
+  .modal-contenido-perfil {
+    width: 95%;
+    max-width: 95%;
+    margin: 10px;
+    max-height: 90vh;
+  }
+
+  .modal-body {
+    max-height: calc(90vh - 180px);
+  }
+}
+
+/* Móviles (max-width: 480px) */
+@media (max-width: 480px) {
+  main.contenido-pagina {
+    padding: 10px;
+    padding-top: 11rem;
+  }
+
+  /* Panel lateral oculto */
+  .perfil-aside {
+    display: none;
+  }
+
+  .perfil-contenido {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .perfil-card {
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 15px;
+  }
+
+  .card-header h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #e31e24;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .info-item {
+    padding: 16px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    border-left: 3px solid #e31e24;
+  }
+
+  .info-item label {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .info-item p {
+    font-size: 1.6rem;
+    color: #222;
+    font-weight: 500;
+    word-break: break-word;
+    line-height: 1.4;
+  }
+
+  .info-item.full-width {
+    grid-column: 1;
+  }
+
+  /* Botones más grandes y táctiles */
+  .btn-editar,
+  .btn-guardar,
+  .btn-cancelar {
+    padding: 14px 20px;
+    font-size: 1.5rem;
+    width: 100%;
+  }
+
+  /* Inputs más grandes para mejor UX móvil */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 1.6rem;
+    padding: 14px;
+  }
+
+  .form-group label {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+  }
+
+  /* Coordi card responsive */
+  .coordi-card {
+    padding: 15px;
+  }
+
+  .coordi-card h3 {
+    font-size: 1.6rem;
+  }
+
+  .coordi-info p {
+    font-size: 1.3rem;
+  }
+
+  /* Tabs en columna en móviles muy pequeños */
+  .tabs-profesional {
+    flex-direction: column;
+  }
+
+  .tabs-profesional button {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 5px;
+  }
+
+  /* Modal full screen en móvil */
+  .modal-contenido-perfil {
+    width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .modal-body {
+    max-height: calc(100vh - 150px);
+  }
+
+  /* Foto perfil más pequeña */
+  .foto-perfil-container {
+    max-width: 200px;
+  }
+
+  .foto-perfil-preview {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+/* Pantallas muy pequeñas (max-width: 360px) */
+@media (max-width: 360px) {
+  main.contenido-pagina {
+    padding: 8px;
+    padding-top: 10rem;
+  }
+
+  /* Panel lateral oculto */
+  .perfil-aside {
+    display: none;
+  }
+
+  .perfil-contenido {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .perfil-card {
+    padding: 15px;
+    margin-bottom: 12px;
+  }
+
+  .card-header h2 {
+    font-size: 1.7rem;
+  }
+
+  .info-grid {
+    gap: 8px;
+  }
+
+  .info-item {
+    padding: 14px;
+  }
+
+  .info-item label {
+    font-size: 1.1rem;
+  }
+
+  .info-item p {
+    font-size: 1.4rem;
+  }
+
+  .btn-editar,
+  .btn-guardar,
+  .btn-cancelar {
+    padding: 12px 16px;
+    font-size: 1.4rem;
+  }
+
+  .foto-perfil-container {
+    max-width: 160px;
+  }
+
+  .foto-perfil-preview {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* Landscape móvil */
+@media (max-height: 500px) and (orientation: landscape) {
+  main.contenido-pagina {
+    padding-top: 10rem;
+  }
+
+  .perfil-aside {
+    position: relative;
+    top: 0;
+  }
+
+  .modal-contenido-perfil {
+    max-height: 95vh;
+  }
+
+  .modal-body {
+    max-height: calc(95vh - 120px);
+  }
 }
