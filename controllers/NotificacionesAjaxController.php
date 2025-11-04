@@ -106,7 +106,7 @@ function aprobarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -165,7 +165,7 @@ function rechazarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -207,6 +207,7 @@ function obtenerContadorNotificaciones($voluntarioModel)
             'success' => true,
             'totalPendientes' => 0,
             'totalTramites' => 0,
+            'totalExpedientes' => 0,
             'totalGeneral' => 0,
             'rolUsuario' => $rolUsuario
         ]);
@@ -215,15 +216,18 @@ function obtenerContadorNotificaciones($voluntarioModel)
 
     $totalPendientes = $voluntarioModel->contarVoluntariosPendientes();
     $totalTramites = $voluntarioModel->contarTramitesSolicitados();
-    $totalGeneral = $totalPendientes + $totalTramites;
+    $totalExpedientes = $voluntarioModel->contarExpedientesPendientes();
+    $totalGeneral = $totalPendientes + $totalTramites + $totalExpedientes;
 
     error_log("NotificacionesAjax - Total voluntarios pendientes: $totalPendientes");
     error_log("NotificacionesAjax - Total trámites solicitados: $totalTramites");
+    error_log("NotificacionesAjax - Total expedientes pendientes: $totalExpedientes");
 
     echo json_encode([
         'success' => true,
         'totalPendientes' => $totalPendientes,
         'totalTramites' => $totalTramites,
+        'totalExpedientes' => $totalExpedientes,
         'totalGeneral' => $totalGeneral,
         'rolUsuario' => $rolUsuario
     ]);
