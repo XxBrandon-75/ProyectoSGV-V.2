@@ -239,6 +239,22 @@ main.contenido-pagina {
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
 }
 
+.btn-reactivar {
+  background: #28a745;
+  color: #fff;
+  padding: 12px 32px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-reactivar:hover {
+  background: #218838;
+}
+
 .btn-baja {
   background: #dc3545;
   color: #fff;
