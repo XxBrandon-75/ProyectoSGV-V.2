@@ -64,7 +64,7 @@ function aprobarVoluntario($voluntarioModel)
     // Obtener datos del POST
     $data = json_decode(file_get_contents('php://input'), true);
     $voluntarioId = $data['voluntarioId'] ?? null;
-    
+
     // Obtener el ID del usuario logueado (quien aprueba)
     $adminId = $_SESSION['user']['id'] ?? null;
 
@@ -99,7 +99,7 @@ function aprobarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -128,7 +128,7 @@ function rechazarVoluntario($voluntarioModel)
     $data = json_decode(file_get_contents('php://input'), true);
     $voluntarioId = $data['voluntarioId'] ?? null;
     $motivo = $data['motivo'] ?? '';
-    
+
     // Obtener el ID del usuario logueado
     $adminId = $_SESSION['user']['id'] ?? null;
 
@@ -167,7 +167,7 @@ function rechazarVoluntario($voluntarioModel)
     } else {
         http_response_code(400);
         echo json_encode([
-            'success' => false, 
+            'success' => false,
             'message' => $resultado['message']
         ]);
     }
@@ -214,6 +214,7 @@ function obtenerContadorNotificaciones($voluntarioModel)
         echo json_encode([
             'success' => true,
             'totalPendientes' => 0,
+            'expedientesPendientes' => 0,
             'rolUsuario' => $rolUsuario
         ]);
         return;
@@ -222,12 +223,17 @@ function obtenerContadorNotificaciones($voluntarioModel)
     // Obtener el contador de voluntarios pendientes
     $totalPendientes = $voluntarioModel->contarVoluntariosPendientes();
 
+    // Obtener el contador de expedientes pendientes
+    $expedientesPendientes = $voluntarioModel->contarExpedientesPendientes();
+
     // Log para debugging
     error_log("NotificacionesAjax - Total pendientes: $totalPendientes");
+    error_log("NotificacionesAjax - Expedientes pendientes: $expedientesPendientes");
 
     echo json_encode([
         'success' => true,
         'totalPendientes' => $totalPendientes,
+        'expedientesPendientes' => $expedientesPendientes,
         'rolUsuario' => $rolUsuario
     ]);
 }

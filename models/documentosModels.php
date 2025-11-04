@@ -166,14 +166,14 @@ class DocumentoModel
     public function agregarTipoDocumento($nombreDocumento, $tipoVer, $rutaPlantilla = null)
     {
         try {
-            $sql = "EXEC dbo.AgregarExpediente
-                        @VoluntarioID = NULL,
-                        @NombreDocumento = :nombreDocumento,
-                        @Tipo = 'Expediente',
-                        @NombreArchivoSubido = NULL,
-                        @RutaArchivoSubido = NULL,
-                        @TipoVer = :tipoVer,
-                        @RutaPlantilla = :rutaPlantilla";
+            error_log("agregarTipoDocumento - Inicio");
+            error_log("  Nombre: $nombreDocumento");
+            error_log("  TipoVer: $tipoVer");
+            error_log("  RutaPlantilla: " . ($rutaPlantilla ?? 'NULL'));
+
+            // Insertar directamente en CatDocumentos ya que el SP no tiene @TipoVer
+            $sql = "INSERT INTO dbo.CatDocumentos (Nombre, TipoDocumento, TipoVer, RutaPlantilla)
+                    VALUES (:nombreDocumento, 'Expediente', :tipoVer, :rutaPlantilla)";
 
             $stmt = $this->pdo->prepare($sql);
             $stmt->bindParam(':nombreDocumento', $nombreDocumento, PDO::PARAM_STR);
@@ -186,14 +186,14 @@ class DocumentoModel
                 $stmt->bindParam(':rutaPlantilla', $rutaPlantilla, PDO::PARAM_STR);
             }
 
+            error_log("agregarTipoDocumento - Ejecutando INSERT");
             $result = $stmt->execute();
-
-            // Limpiar resultados del stored procedure
-            $stmt->closeCursor();
+            error_log("agregarTipoDocumento - Resultado: " . ($result ? 'true' : 'false'));
 
             return $result;
         } catch (PDOException $e) {
             error_log("Error en agregarTipoDocumento: " . $e->getMessage());
+            error_log("SQL State: " . $e->getCode());
             error_log("SQL: " . ($sql ?? 'N/A'));
             return false;
         }

@@ -23,15 +23,14 @@ class Notificacion
             // Preparar la llamada al procedimiento almacenado
             $sql = "EXEC voluntariosSinAprobar";
             $stmt = $this->conn->prepare($sql);
-            
+
             // Ejecutar el procedimiento
             $stmt->execute();
-            
+
             // Obtener todos los resultados
             $voluntarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             return $voluntarios;
-            
         } catch (PDOException $e) {
             // Registrar el error y retornar array vacío
             error_log("Error en getVoluntariosSinAprobar: " . $e->getMessage());
@@ -57,13 +56,12 @@ class Notificacion
                     LEFT JOIN dbo.Delegaciones AS d ON v.DelegacionID = d.DelegacionID
                     LEFT JOIN dbo.Areas AS a ON v.AreaID = a.AreaID
                     WHERE v.VoluntarioID = :voluntarioId";
-            
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':voluntarioId', $voluntarioId, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             return $stmt->fetch(PDO::FETCH_ASSOC);
-            
         } catch (PDOException $e) {
             error_log("Error en getVoluntarioById: " . $e->getMessage());
             return null;
@@ -86,32 +84,31 @@ class Notificacion
                     @VoluntarioIDaAprobar = :voluntarioId,
                     @AdminIDqueAprueba = :adminId,
                     @MotivoAprobacion = :motivo";
-            
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':voluntarioId', $voluntarioId, PDO::PARAM_INT);
             $stmt->bindParam(':adminId', $adminId, PDO::PARAM_INT);
             $stmt->bindParam(':motivo', $motivo, PDO::PARAM_STR);
-            
+
             $stmt->execute();
-            
+
             return [
                 'success' => true,
                 'message' => 'Voluntario aprobado exitosamente'
             ];
-            
         } catch (PDOException $e) {
             error_log("Error en aprobarVoluntario: " . $e->getMessage());
-            
+
             // Capturar el mensaje de error específico del procedimiento almacenado
             $errorMessage = $e->getMessage();
-            
+
             if (strpos($errorMessage, 'no existe o ya no está pendiente') !== false) {
                 return [
                     'success' => false,
                     'message' => 'El voluntario no existe o ya fue procesado anteriormente'
                 ];
             }
-            
+
             return [
                 'success' => false,
                 'message' => 'Error al aprobar el voluntario. Por favor, intente nuevamente.'
@@ -143,39 +140,38 @@ class Notificacion
                     @VoluntarioIDaRechazar = :voluntarioId,
                     @AdminIDqueRechaza = :adminId,
                     @MotivoRechazo = :motivo";
-            
+
             $stmt = $this->conn->prepare($sql);
             $stmt->bindParam(':voluntarioId', $voluntarioId, PDO::PARAM_INT);
             $stmt->bindParam(':adminId', $adminId, PDO::PARAM_INT);
             $stmt->bindParam(':motivo', $motivo, PDO::PARAM_STR);
-            
+
             $stmt->execute();
-            
+
             return [
                 'success' => true,
                 'message' => 'Solicitud rechazada correctamente'
             ];
-            
         } catch (PDOException $e) {
             error_log("Error en rechazarVoluntario: " . $e->getMessage());
-            
+
             // Capturar mensajes específicos del procedimiento almacenado
             $errorMessage = $e->getMessage();
-            
+
             if (strpos($errorMessage, 'Se requiere un motivo') !== false) {
                 return [
                     'success' => false,
                     'message' => 'El motivo del rechazo es obligatorio'
                 ];
             }
-            
+
             if (strpos($errorMessage, 'no existe o ya no está pendiente') !== false) {
                 return [
                     'success' => false,
                     'message' => 'El voluntario no existe o ya fue procesado anteriormente'
                 ];
             }
-            
+
             return [
                 'success' => false,
                 'message' => 'Error al rechazar el voluntario. Por favor, intente nuevamente.'
@@ -197,9 +193,47 @@ class Notificacion
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return is_array($rows) ? count($rows) : 0;
-
         } catch (PDOException $e) {
             error_log("Error en contarVoluntariosPendientes: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Obtiene los documentos de expediente pendientes de validación
+     * usando el procedimiento almacenado voluntariosSinAprobar con @TipoNotify = 'Expediente'
+     * 
+     * @return array Lista de documentos pendientes con información del voluntario
+     */
+    public function getExpedientesPendientes()
+    {
+        try {
+            // Llamar al procedimiento almacenado con el parámetro TipoNotify
+            $sql = "EXEC [dbo].[voluntariosSinAprobar] @TipoNotify = 'Expediente'";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+
+            $documentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $documentos;
+        } catch (PDOException $e) {
+            error_log("Error en getExpedientesPendientes: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Cuenta el número de documentos de expediente pendientes
+     * 
+     * @return int Número de documentos pendientes
+     */
+    public function contarExpedientesPendientes()
+    {
+        try {
+            $documentos = $this->getExpedientesPendientes();
+            return is_array($documentos) ? count($documentos) : 0;
+        } catch (Exception $e) {
+            error_log("Error en contarExpedientesPendientes: " . $e->getMessage());
             return 0;
         }
     }

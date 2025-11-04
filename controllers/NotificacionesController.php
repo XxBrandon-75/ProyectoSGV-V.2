@@ -47,27 +47,29 @@ class NotificacionesController
     public function index()
     {
         // Implementación de la lógica de notificaciones
-        
+
         // Obtener el rol del usuario desde la sesión
         $rolUsuario = $_SESSION['user']['rol'] ?? 'Voluntario';
         $esCoordinadorOMas = $this->tienePermiso(2); // Usamos el método de la clase
 
         // Cargar el modelo de voluntarios
         // Asumiendo que VoluntarioModel.php está en models/
-        require_once 'models/Notificacion.php'; 
+        require_once 'models/Notificacion.php';
         $notificacionModel = new Notificacion();
 
-        // Variables para la vista
-        $notificacionesPendientes = [];
-        $totalPendientes = 0;
+        // Variables para la vista - Separadas por tipo
+        $voluntariosPendientesArray = [];
+        $expedientesPendientesArray = [];
+        $totalVoluntariosPendientes = 0;
+        $totalExpedientesPendientes = 0;
 
         // Si es coordinador o superior, obtener voluntarios pendientes
         if ($esCoordinadorOMas) {
             $voluntariosPendientes = $notificacionModel->getVoluntariosSinAprobar();
-            
+
             // Formatear los datos para la vista
             foreach ($voluntariosPendientes as $voluntario) {
-                $notificacionesPendientes[] = [
+                $voluntariosPendientesArray[] = [
                     'id' => $voluntario['VoluntarioID'],
                     'nombre' => trim($voluntario['Nombres'] . ' ' . $voluntario['ApellidoPaterno']),
                     'email' => $voluntario['Email'],
@@ -77,8 +79,25 @@ class NotificacionesController
                     'fecha_registro' => $voluntario['FechaRegistro'] ?? null,
                 ];
             }
-            
-            $totalPendientes = count($notificacionesPendientes);
+
+            // Obtener expedientes pendientes
+            $expedientesPendientes = $notificacionModel->getExpedientesPendientes();
+
+            // Formatear los expedientes para la vista
+            foreach ($expedientesPendientes as $expediente) {
+                $expedientesPendientesArray[] = [
+                    'voluntario_id' => $expediente['VoluntarioID'] ?? null,
+                    'nombre' => $expediente['NombreVoluntario'],
+                    'curp' => $expediente['curp'] ?? '',
+                    'rol' => $expediente['Rol'] ?? '',
+                    'documento' => $expediente['NombreSubido'] ?? 'Documento',
+                    'fecha' => $expediente['FechaSubida'] ?? null,
+                    'ruta' => $expediente['RutaArchivo'] ?? '',
+                ];
+            }
+
+            $totalVoluntariosPendientes = count($voluntariosPendientesArray);
+            $totalExpedientesPendientes = count($expedientesPendientesArray);
         }
 
         // Notificaciones generales del sistema
