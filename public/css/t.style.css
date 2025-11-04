@@ -2,12 +2,16 @@
   display: flex;
   min-height: calc(100vh - 100px);
   background: var(--light-bg);
-  padding-top: 6rem; 
+  padding-top: 6rem;
 }
 
 /* Panel de administración mejorado */
 .admin-panel {
-  background: linear-gradient(180deg, var(--color) 0%, rgba(127, 0, 0, 0.95) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color) 0%,
+    rgba(127, 0, 0, 0.95) 100%
+  );
   color: var(--white);
   width: 280px;
   padding: 2.5rem 1.5rem;
@@ -16,21 +20,25 @@
   top: 11.5rem;
   bottom: 0;
   left: 0;
-  display: flex; 
-  flex-direction: column; 
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
   z-index: 900;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .admin-panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, var(--secondary-color), var(--cuartiary-color));
+  background: linear-gradient(
+    90deg,
+    var(--secondary-color),
+    var(--cuartiary-color)
+  );
 }
 
 .admin-panel h3 {
@@ -45,15 +53,19 @@
 }
 
 .admin-panel h3::before {
-  content: '\f013';
-  font-family: 'Font Awesome 6 Free';
+  content: "\f013";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
   color: var(--secondary-color);
   font-size: 2.2rem;
 }
 
 .btn-agregar {
-  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    var(--cuartiary-color)
+  );
   color: var(--white);
   border: none;
   padding: 1.4rem 1.6rem;
@@ -73,13 +85,18 @@
 }
 
 .btn-agregar::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -122,7 +139,11 @@
 
 .admin-toggle.active {
   transform: rotate(45deg);
-  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    var(--cuartiary-color)
+  );
 }
 
 /* Overlay para panel móvil */
@@ -161,7 +182,7 @@
 }
 
 .formulario-panel::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -178,7 +199,7 @@
   padding: 2.5rem;
 }
 
-.formulario h2{
+.formulario h2 {
   font-size: 2.2rem;
   margin-bottom: 2rem;
   color: var(--color);
@@ -190,8 +211,8 @@
 }
 
 .formulario h2::before {
-  content: '\f15b';
-  font-family: 'Font Awesome 6 Free';
+  content: "\f15b";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
   color: var(--secondary-color);
 }
@@ -207,7 +228,7 @@
 
 .formulario input,
 .formulario textarea,
-.formulario select { 
+.formulario select {
   width: 100%;
   padding: 1.2rem;
   border: 2px solid #e0e0e0;
@@ -226,7 +247,7 @@
   box-shadow: 0 0 0 3px rgba(219, 141, 7, 0.1);
 }
 
-.form-buttons { 
+.form-buttons {
   display: flex;
   gap: 1rem;
   margin-top: 2.5rem;
@@ -248,7 +269,7 @@
   gap: 0.5rem;
 }
 
-.btn-guardar { 
+.btn-guardar {
   background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
   box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
@@ -259,7 +280,7 @@
   box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
-.btn-cancelar { 
+.btn-cancelar {
   background: #6c757d;
   color: white;
 }
@@ -291,8 +312,8 @@
 }
 
 .requerimientos-admin h3::before {
-  content: '\f0cb';
-  font-family: 'Font Awesome 6 Free';
+  content: "\f0cb";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
   color: var(--secondary-color);
 }
@@ -304,13 +325,14 @@
   overflow-y: auto;
 }
 
-.nuevo-requerimiento { 
+.nuevo-requerimiento {
   display: flex;
   gap: 0.8rem;
   align-items: center;
 }
 
-#nuevo-label, #nuevo-tipo {
+#nuevo-label,
+#nuevo-tipo {
   flex: 1;
   padding: 1rem;
   border-radius: 0.6rem;
@@ -319,12 +341,13 @@
   transition: border-color 0.3s ease;
 }
 
-#nuevo-label:focus, #nuevo-tipo:focus {
+#nuevo-label:focus,
+#nuevo-tipo:focus {
   border-color: var(--secondary-color);
   outline: none;
 }
 
-#btn-add-requerimiento { 
+#btn-add-requerimiento {
   background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   color: white;
   border: none;
@@ -375,7 +398,8 @@
   background: #f8f9fa;
 }
 
-.req-input-edit, .req-select-edit {
+.req-input-edit,
+.req-select-edit {
   flex: 1;
   padding: 0.6rem;
   border: 2px solid var(--secondary-color);
@@ -409,7 +433,7 @@
 }
 
 /* Sección de trámites */
-.tramites { 
+.tramites {
   flex: 1;
   margin-left: 300px;
   padding: 3rem;
@@ -426,20 +450,20 @@
 }
 
 .tramites h1::before {
-  content: '\f15b';
-  font-family: 'Font Awesome 6 Free';
+  content: "\f15b";
+  font-family: "Font Awesome 6 Free";
   font-weight: 900;
   color: var(--secondary-color);
 }
 
-.lista-tramites { 
+.lista-tramites {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
 /* Tarjetas de trámites mejoradas */
-.tramite-card { 
+.tramite-card {
   background: var(--white);
   border-radius: 1.5rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -500,7 +524,8 @@
   gap: 0.8rem;
 }
 
-.btn-editar, .btn-eliminar {
+.btn-editar,
+.btn-eliminar {
   border: none;
   cursor: pointer;
   padding: 1rem 1.5rem;
@@ -514,7 +539,7 @@
   transition: all 0.3s ease;
 }
 
-.btn-editar { 
+.btn-editar {
   background: linear-gradient(135deg, var(--color), rgba(127, 0, 0, 0.9));
   box-shadow: 0 4px 12px rgba(127, 0, 0, 0.3);
 }
@@ -524,7 +549,7 @@
   box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
-.btn-eliminar { 
+.btn-eliminar {
   background: linear-gradient(135deg, #dc3545, #c82333);
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
 }
@@ -542,7 +567,11 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: white;
-  background: linear-gradient(135deg, var(--tertiary-color), rgba(14, 7, 37, 0.9));
+  background: linear-gradient(
+    135deg,
+    var(--tertiary-color),
+    rgba(14, 7, 37, 0.9)
+  );
   display: flex;
   align-items: center;
   gap: 0.8rem;
@@ -556,7 +585,11 @@
 }
 
 .btn-solicitar.active {
-  background: linear-gradient(135deg, var(--secondary-color), var(--cuartiary-color));
+  background: linear-gradient(
+    135deg,
+    var(--secondary-color),
+    var(--cuartiary-color)
+  );
 }
 
 /* Formulario de solicitud desplegable */
@@ -641,7 +674,7 @@
   box-shadow: 0 6px 20px rgba(127, 0, 0, 0.4);
 }
 
-.sin-tramites { 
+.sin-tramites {
   color: #999;
   text-align: center;
   font-size: 1.8rem;
@@ -692,7 +725,7 @@
     transform: translateX(0);
   }
 
-  .tramites { 
+  .tramites {
     margin-left: 0;
     padding: 2rem;
   }
@@ -725,7 +758,9 @@
     width: 100%;
   }
 
-  .btn-editar, .btn-eliminar, .btn-solicitar {
+  .btn-editar,
+  .btn-eliminar,
+  .btn-solicitar {
     flex: 1;
     justify-content: center;
     width: 100%;
@@ -757,4 +792,77 @@
     padding: 1.2rem;
     font-size: 1.4rem;
   }
+}
+/* ========================================== */
+/* BADGES DE ESTATUS DE TRÁMITES */
+/* ========================================== */
+.badge-estatus {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+}
+
+.badge-estatus i {
+  font-size: 1.3rem;
+}
+
+.estatus-disponible {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(40, 167, 69, 0.4);
+}
+
+.estatus-aprobado {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(0, 123, 255, 0.4);
+}
+
+.estatus-pendiente {
+  background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+  color: #1a1a1a;
+  box-shadow: 0 3px 12px rgba(255, 193, 7, 0.4);
+  font-weight: 800;
+}
+
+.estatus-rechazado {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 3px 12px rgba(220, 53, 69, 0.4);
+}
+
+.badge-estatus:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* ========================================== */
+/* TRÁMITES COMPLETADOS */
+/* ========================================== */
+.tramite-completado {
+  opacity: 0.85;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-left: 4px solid #007bff;
+}
+
+.tramite-completado:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.tramite-completado .tramite-info h3 {
+  color: #495057;
+}
+
+.tramite-completado .tramite-info p {
+  color: #6c757d;
 }

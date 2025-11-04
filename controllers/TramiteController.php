@@ -3,26 +3,32 @@
 require_once __DIR__ . '/../models/Tramite.php';
 require_once __DIR__ . '/../config/database.php';
 
-class TramiteController {
+class TramiteController
+{
     private $tramiteModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->tramiteModel = new Tramite();
     }
 
     /**
      * Muestra la página principal con la lista de trámites disponibles.
      */
-    public function mostrarTramitesDisponibles() {
-        $tramites = $this->tramiteModel->obtenerTramitesActivos();
-        require 'views/home/tramites.php'; 
+    public function mostrarTramitesDisponibles()
+    {
+        $voluntarioID = $_SESSION['user']['id'] ?? 0;
+        $tramites = $this->tramiteModel->obtenerTramitesActivos($voluntarioID);
+        require 'views/home/tramites.php';
     }
 
     /**
      * Devuelve los trámites como JSON (para AJAX)
      */
-    public function obtenerTramitesJSON() {
-        $tramites = $this->tramiteModel->obtenerTramitesActivos();
+    public function obtenerTramitesJSON()
+    {
+        $voluntarioID = $_SESSION['user']['id'] ?? 0;
+        $tramites = $this->tramiteModel->obtenerTramitesActivos($voluntarioID);
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($tramites, JSON_UNESCAPED_UNICODE);
     }
@@ -30,14 +36,15 @@ class TramiteController {
     /**
      * Obtiene los DatoSolicitudID de una solicitud recién creada
      */
-    public function obtenerDatosSolicitud() {
+    public function obtenerDatosSolicitud()
+    {
         try {
             $solicitudID = $_GET['solicitudID'] ?? 0;
-            
+
             if ($solicitudID == 0) {
                 throw new Exception('ID de solicitud no válido');
             }
-            
+
             $sql = "SELECT 
                         ds.DatoSolicitudID,
                         ds.RequerimientosID,
@@ -46,17 +53,16 @@ class TramiteController {
                     FROM DatoSolicitud ds
                     INNER JOIN CatRequerimientos cr ON ds.RequerimientosID = cr.RequerimientosID
                     WHERE ds.SolicitudID = :solicitudID";
-            
+
             $pdo = Database::getInstance()->getConnection();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':solicitudID', $solicitudID, PDO::PARAM_INT);
             $stmt->execute();
-            
+
             $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($datos, JSON_UNESCAPED_UNICODE);
-            
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['error' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -66,7 +72,8 @@ class TramiteController {
     /**
      * Obtiene los requerimientos de un trámite específico (para AJAX).
      */
-    public function obtenerRequerimientos() {
+    public function obtenerRequerimientos()
+    {
         try {
             $tramiteID = 0;
             if (isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -81,7 +88,6 @@ class TramiteController {
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($requerimientos, JSON_UNESCAPED_UNICODE);
-            
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['error' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -92,21 +98,21 @@ class TramiteController {
      * ACCIÓN 1: Se llama cuando el usuario hace clic en "Solicitar"
      * Inicia la solicitud y devuelve el nuevo SolicitudID.
      */
-    public function iniciar() {
+    public function iniciar()
+    {
         try {
             $voluntarioID = $_POST['voluntarioID'] ?? 0;
             $tipoTramiteID = $_POST['tipoTramiteID'] ?? 0;
             $observaciones = $_POST['observaciones'] ?? '';
 
             if ($voluntarioID == 0 || $tipoTramiteID == 0) {
-                 throw new Exception('Faltan IDs de voluntario o trámite.');
+                throw new Exception('Faltan IDs de voluntario o trámite.');
             }
 
             $resultado = $this->tramiteModel->iniciarSolicitud($voluntarioID, $tipoTramiteID, $observaciones);
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
-
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -117,7 +123,8 @@ class TramiteController {
      * ACCIÓN 2: Se llama cuando el usuario hace clic en "Enviar"
      * Guarda todos los datos del formulario.
      */
-    public function guardar() {
+    public function guardar()
+    {
         try {
             $datoSolicitudIDs = $_POST['DatoSolicitudID'] ?? [];
             $datosTexto = $_POST['DatoTexto'] ?? [];
@@ -125,7 +132,7 @@ class TramiteController {
             $datosFecha = $_POST['DatoFecha'] ?? [];
             $nombresArchivo = $_POST['NombreArchivo'] ?? [];
             $rutasArchivo = $_POST['RutaArchivo'] ?? [];
-            
+
             $nuevoEstatus = $_POST['nuevoEstatus'] ?? 'En Revisión';
 
             $datosArray = [];
@@ -141,16 +148,15 @@ class TramiteController {
                     ];
                 }
             }
-            
+
             if (empty($datosArray)) {
-                 throw new Exception('No se recibieron datos para guardar.');
+                throw new Exception('No se recibieron datos para guardar.');
             }
 
             $resultado = $this->tramiteModel->guardarDatosSolicitud($datosArray, $nuevoEstatus);
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
-
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -161,7 +167,8 @@ class TramiteController {
      * AÑADIDO: Recibe los datos de un formulario de "Nuevo Trámite" y
      * lo guarda en la base de datos.
      */
-    public function guardarTramite() {
+    public function guardarTramite()
+    {
         try {
             $nombreTramite = $_POST['nombre_tramite'] ?? '';
             $descripcionTramite = $_POST['descripcion_tramite'] ?? '';
@@ -199,7 +206,6 @@ class TramiteController {
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
-
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -209,7 +215,8 @@ class TramiteController {
     /**
      * ✅ NUEVO: Modifica un trámite existente
      */
-    public function modificarTramite() {
+    public function modificarTramite()
+    {
         try {
             $tipoTramiteID = $_POST['tipo_tramite_id'] ?? 0;
             $nombreTramite = $_POST['nombre_tramite'] ?? '';
@@ -253,7 +260,6 @@ class TramiteController {
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
-
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
@@ -263,7 +269,8 @@ class TramiteController {
     /**
      * ✅ NUEVO: Da de baja (desactiva) un trámite
      */
-    public function eliminarTramite() {
+    public function eliminarTramite()
+    {
         try {
             // Puede venir por POST o GET
             $tipoTramiteID = $_POST['tipo_tramite_id'] ?? $_GET['id'] ?? 0;
@@ -276,11 +283,9 @@ class TramiteController {
 
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode($resultado, JSON_UNESCAPED_UNICODE);
-
         } catch (Exception $e) {
             header('Content-Type: application/json; charset=utf-8');
             echo json_encode(['Estatus' => 'Error', 'Mensaje' => $e->getMessage()], JSON_UNESCAPED_UNICODE);
         }
     }
 }
-?>
