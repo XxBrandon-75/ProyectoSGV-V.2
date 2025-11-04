@@ -27,23 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Función para abrir el menú
     const openMenu = () => {
-        // Guardar posición actual del scroll
         scrollPosition = window.pageYOffset;
         
-        // Añadir clases con un pequeño delay para activar las transiciones
         requestAnimationFrame(() => {
             menubar.classList.add('fa-times');
             mynav.classList.add('active');
             body.classList.add('menu-open');
             overlay.classList.add('active');
             
-            // Bloquear scroll y mantener la posición
             body.style.overflow = 'hidden';
             body.style.position = 'fixed';
             body.style.top = `-${scrollPosition}px`;
             body.style.width = '100%';
             
-            // Prevenir scroll en touch devices
             document.addEventListener('touchmove', preventScroll, { passive: false });
         });
     };
@@ -55,17 +51,12 @@ document.addEventListener('DOMContentLoaded', function () {
         body.classList.remove('menu-open');
         overlay.classList.remove('active');
         
-        // RESTAURA EL SCROLL DESPUÉS DE LA TRANSICIÓN
         setTimeout(() => {
             body.style.overflow = '';
             body.style.position = '';
             body.style.top = '';
             body.style.width = '';
-            
-            // Restaurar la posición del scroll
             window.scrollTo(0, scrollPosition);
-            
-            // QUITA EL SCROLL EN EL TOUCH (CELULARES)
             document.removeEventListener('touchmove', preventScroll);
         }, 300); 
     };
@@ -82,14 +73,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // CERRAR AL HACER CLICK EN EL OVERLAY
     overlay.addEventListener('click', function (e) {
         e.preventDefault();
         e.stopPropagation();
         closeMenu();
     });
 
-    // CERRAR EL MENU CUANDO SE HAGA CLICK FUERA DE ÉL
     document.addEventListener('click', function (e) {
         const isClickInsideMenu = mynav.contains(e.target);
         const isClickOnMenuButton = menubar.contains(e.target);
@@ -99,28 +88,23 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // PREVENIR QUE AL HACER CLICK DENTRO DEL MENU LO CIERRE
     mynav.addEventListener('click', function (e) {
         e.stopPropagation();
     });
 
-    // CERRAR EL MENU UNA VEZ ELEGIDA LA NUEVA PAGINA
     const navLinks = mynav.querySelectorAll('a');
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
-            
             closeMenu();
         });
     });
 
-    // PODEMOS CERRAR EL MENU CON LA TECLA ESCAPE
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && mynav.classList.contains('active')) {
             closeMenu();
         }
     });
 
-    // SE AÑADE EL PODER CERRAR EL MENU SI SE DESBORDA DE LA PANTALLA
     let resizeTimer;
     window.addEventListener('resize', function () {
         clearTimeout(resizeTimer);
@@ -131,21 +115,85 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 250);
     });
 });
-// --- Contador de notificaciones (actualiza el badge del header) ---
-(function () {
-    // Determina base URL definida desde PHP en header (fallback a origin/)
-    var BASE_URL = window.baseUrl || (window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/') );
 
+// ====================================================================
+// CONTADOR DE NOTIFICACIONES CON MEJORAS
+// ====================================================================
+(function () {
+    var BASE_URL = window.baseUrl || (window.location.origin + window.location.pathname.replace(/\/[^\/]*$/, '/'));
+    var contadorAnterior = 0;
+    var tituloOriginal = document.title;
+
+    /**
+     * Reproduce sonido de notificación
+     */
+    function reproducirSonidoNotificacion() {
+        // Crear un tono simple usando Web Audio API
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (e) {
+            console.log('No se pudo reproducir el sonido de notificación');
+        }
+    }
+
+    /**
+     * Actualiza el título de la página con el contador
+     */
+    function actualizarTituloPagina(count) {
+        if (count > 0) {
+            document.title = `(${count}) ${tituloOriginal}`;
+        } else {
+            document.title = tituloOriginal;
+        }
+    }
+
+    /**
+     * Actualiza el contador del badge en el header
+     */
     function actualizarContadorHeader() {
         var url = BASE_URL + 'controllers/NotificacionesAjaxController.php?action=contador';
-        fetch(url, { credentials: 'same-origin' })
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                var badge = document.getElementById('notification-count');
-                if (!badge) return;
+        
+        fetch(url, { 
+            credentials: 'same-origin',
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        })
+        .then(function (res) { 
+            if (!res.ok) throw new Error('HTTP error! status: ' + res.status);
+            return res.json(); 
+        })
+        .then(function (data) {
+            var badge = document.getElementById('notification-count');
+            if (!badge) return;
 
-                if (data && data.success && parseInt(data.totalPendientes) > 0) {
-                    badge.textContent = data.totalPendientes;
+            if (data && data.success && data.totalGeneral !== undefined) {
+                var total = parseInt(data.totalGeneral);
+                
+                // Detectar si hay nuevas notificaciones
+                if (total > contadorAnterior && contadorAnterior > 0) {
+                    reproducirSonidoNotificacion();
+                    badge.classList.add('badge-bounce');
+                    setTimeout(() => badge.classList.remove('badge-bounce'), 500);
+                }
+                
+                contadorAnterior = total;
+                
+                if (total > 0) {
+                    badge.textContent = total;
                     badge.style.display = 'flex';
                     badge.classList.add('show');
                 } else {
@@ -153,26 +201,60 @@ document.addEventListener('DOMContentLoaded', function () {
                     badge.style.display = 'none';
                     badge.classList.remove('show');
                 }
-            })
-            .catch(function () { /* silent error */ });
+                
+                // Actualizar título de la página
+                actualizarTituloPagina(total);
+            } else {
+                badge.textContent = '';
+                badge.style.display = 'none';
+                badge.classList.remove('show');
+                actualizarTituloPagina(0);
+            }
+        })
+        .catch(function (error) { 
+            console.warn('Error al actualizar contador de notificaciones:', error);
+        });
     }
 
-    // Permitir que otras partes (ej. n.script.js) actualicen el badge manualmente
+    /**
+     * Función pública para actualizar el badge manualmente
+     */
     window.actualizarBadgeHeader = function (count) {
         var badge = document.getElementById('notification-count');
         if (!badge) return;
-        if (count && parseInt(count) > 0) {
-            badge.textContent = parseInt(count);
+        
+        var total = parseInt(count) || 0;
+        
+        if (total > 0) {
+            badge.textContent = total;
             badge.style.display = 'flex';
+            badge.classList.add('show');
+            badge.classList.add('badge-bounce');
+            setTimeout(() => badge.classList.remove('badge-bounce'), 500);
         } else {
             badge.textContent = '';
             badge.style.display = 'none';
+            badge.classList.remove('show');
         }
+        
+        actualizarTituloPagina(total);
     };
 
-    // Ejecutar al cargar y cada 30s
+    /**
+     * Función para forzar actualización desde el backend
+     */
+    window.refrescarContadorNotificaciones = function() {
+        actualizarContadorHeader();
+    };
+
+    // Ejecutar al cargar la página
     document.addEventListener('DOMContentLoaded', function () {
         actualizarContadorHeader();
         setInterval(actualizarContadorHeader, 30000);
     });
+
+    // Si la página ya está cargada, ejecutar inmediatamente
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+        setTimeout(actualizarContadorHeader, 100);
+    }
 })();

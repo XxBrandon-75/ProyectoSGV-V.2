@@ -130,6 +130,11 @@
   margin-left: auto;
 }
 
+.badge-tramites {
+  background: #2196f3;
+  color: white;
+}
+
 /* Lista de Notificaciones */
 .notificaciones-lista {
   display: flex;
@@ -157,6 +162,16 @@
 .notificacion-card.pendiente {
   background: #fff9e6;
   border-left-color: #ffa500;
+}
+
+/* Nuevos estilos para tarjetas de trámites */
+.notificacion-card.tramite-card {
+  background: #e3f2fd;
+  border-left-color: #2196f3;
+}
+
+.notificacion-card.tramite-card:hover {
+  background: #d1e7ff;
 }
 
 .notificacion-card.info {
@@ -191,6 +206,12 @@
 .pendiente-icono {
   background: #fff4e6;
   color: #ff9800;
+}
+
+/* Nuevo icono para trámites */
+.tramite-icono {
+  background: #bbdefb;
+  color: #1976d2;
 }
 
 .info-icono {
@@ -243,6 +264,19 @@
   color: #555;
   line-height: 1.6;
   margin-bottom: 1.5rem;
+}
+
+/* Nuevo estilo para submensaje en trámites */
+.notificacion-submensaje {
+  font-size: 1.4rem;
+  color: #666;
+  line-height: 1.5;
+  margin-top: 0.8rem;
+  padding-left: 1rem;
+  border-left: 3px solid #2196f3;
+  background: rgba(33, 150, 243, 0.05);
+  padding: 0.8rem 1rem;
+  border-radius: 4px;
 }
 
 /* Detalles de la Notificación */
@@ -363,23 +397,6 @@
     transform: translateX(100%);
     opacity: 0;
   }
-}
-
-.mensaje-vacio {
-  text-align: center;
-  padding: 4rem 2rem;
-  color: #666;
-}
-
-.mensaje-vacio i {
-  font-size: 6rem;
-  color: #ccc;
-  margin-bottom: 2rem;
-}
-
-.mensaje-vacio p {
-  font-size: 1.6rem;
-  margin: 0;
 }
 
 /* Estilos del Modal */
@@ -512,6 +529,43 @@
   min-width: 150px;
 }
 
+/* Estilos para formularios dentro del modal */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.8rem;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
 footer {
   display: none;
 }
@@ -555,6 +609,7 @@ footer {
     flex-direction: column;
     gap: 1rem;
   }
+  
   .modal-contenido {
     width: 95%;
   }
@@ -571,4 +626,78 @@ footer {
   .modal-footer .btn-accion {
     width: 100%;
   }
+
+  .notificaciones-filtros {
+    width: 100%;
+  }
+
+  .filtro-btn {
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .notificaciones-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .filtro-btn {
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+  }
+
+  .badge-contador {
+    font-size: 1rem;
+    min-width: 2rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .notificacion-header h4 {
+    font-size: 1.5rem;
+  }
+
+  .notificacion-mensaje {
+    font-size: 1.3rem;
+  }
+
+  .btn-accion {
+    font-size: 1.3rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+/* Estilos para requerimientos en el modal */
+.requerimientos-lista {
+    margin-top: 1rem;
+}
+
+.requerimiento-item {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.requerimiento-item strong {
+    display: block;
+    color: #333;
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+}
+
+.requerimiento-dato {
+    font-size: 1.4rem;
+    color: #666;
+}
+
+.requerimiento-dato a {
+    color: #2196f3;
+    text-decoration: none;
+}
+
+.requerimiento-dato a:hover {
+    text-decoration: underline;
 }
