@@ -38,7 +38,7 @@
           <button type="button" id="btn-add-requerimiento">+</button>
         </div>
       </div>
-
+      <!--CONFIESO QUE ME CUESTA TRABAJO DORMIR YA TIENE RATO QUE DUERMO TARDE-->
       <div class="form-buttons">
         <button type="submit" class="btn-guardar">Guardar</button>
         <button type="button" id="btn-cerrar" class="btn-cancelar">Cancelar</button>
@@ -62,19 +62,14 @@ $tramites_style = (isset($ver_cont_gest) && $ver_cont_gest) ? '' : 'style="margi
   <div id="lista-tramites-completados" class="lista-tramites">
     <p class="sin-tramites">No tienes trámites completados.</p>
   </div>
-</section>
 
-<div id="modal-solicitud" class="modal">
-  <div class="modal-contenido">
-    <span class="cerrar-modal" style="display: none;" id="cerrar-modal">&times;</span>
-    <h2 id="titulo-solicitud"></h2>
-    <p id="descripcion-solicitud"></p>
-    <!-- Fechas del trámite: ocultas por defecto (se usan desde JS al abrir el modal) -->
-    <p class="modal-fecha" style="display: none;"><strong>Inicio:</strong> <span id="inicio-solicitud"></span></p>
-    <p class="modal-fecha" style="display: none;"><strong>Corte:</strong> <span id="corte-solicitud"></span></p>
-    <form id="form-solicitud" class="form-solicitud"></form>
+  <h2 style="margin-top: 3rem; margin-bottom: 1rem;">
+    <i class="fa-solid fa-circle-check"></i> Trámites completados
+  </h2>
+  <div id="lista-tramites-completados" class="lista-tramites">
+    <p class="sin-tramites">No tienes trámites completados.</p>
   </div>
-</div>
+</section>
 
 <script>
   const CAN_EDIT_CARDS = <?php echo (isset($ver_card_edit) && $ver_card_edit) ? 'true' : 'false'; ?>;

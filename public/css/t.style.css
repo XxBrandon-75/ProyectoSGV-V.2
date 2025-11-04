@@ -799,16 +799,15 @@
 .badge-estatus {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   padding: 8px 18px;
   border-radius: 25px;
   font-size: 1.1rem;
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
   white-space: nowrap;
   transition: all 0.3s ease;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .badge-estatus i {
@@ -830,8 +829,8 @@
 .estatus-pendiente {
   background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
   color: #1a1a1a;
-  box-shadow: 0 3px 12px rgba(255, 193, 7, 0.4);
   font-weight: 800;
+  box-shadow: 0 3px 12px rgba(255, 193, 7, 0.4);
 }
 
 .estatus-rechazado {
@@ -842,7 +841,7 @@
 
 .badge-estatus:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
 /* ========================================== */
